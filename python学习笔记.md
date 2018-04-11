@@ -1,4 +1,3 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
 # 目录
 [TOC]
@@ -413,7 +412,9 @@ groups i mpl np pd x y z
 
 
 </br>
+
 ## 高级
+
 ### 1. 装饰器（Decorator）
 
 **基础装饰器**
