@@ -486,6 +486,23 @@ In Out abund abund1 abund2 abund3 abund_file dill filename
 groups i mpl np pd x y z
 ```
 
+### 18. python的搜索路径
+python搜索包是会从几个地方来查找路径：
+1. 当前路径
+2. $PYTHONPATH
+3. /lib/python2.7/site-package/*.pth
+4. /lib/python2.7/site-package  [默认]
+
+### 19. import
+`import numpy as np`
+相当于
+`np = __import__("numpy",fromlist=[""])`
+
+`from pandas import Series,Dataframe`
+相当于：
+`__import__("pandas",fromlist=["Series","Dataframe"])`
+
+
 
 </br>
 
