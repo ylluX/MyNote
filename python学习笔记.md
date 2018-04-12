@@ -1,6 +1,80 @@
 
 # 目录
+<!--自动插入TOC：https://github.com/ekalinin/github-markdown-toc-->
 [TOC]
+<!--ts-->
+   * [目录](#目录)
+   * [1. python基础](#1-python基础)
+      * [基础](#基础)
+         * [1. 字典格式化输出](#1-字典格式化输出)
+         * [2. str.split('
+')与<code>str.splitlines</code>区别](#2-strsplitn与strsplitlines区别)
+         * [3. exec, <code>eval</code>和<code>repr</code>区别](#3-exec-eval和repr区别)
+         * [4. 查看内建函数](#4-查看内建函数)
+         * [5. 查看模块的所有属性和方法](#5-查看模块的所有属性和方法)
+         * [6. input的新特性](#6-input的新特性)
+         * [7. python的标准流与shell的管道联用](#7-python的标准流与shell的管道联用)
+         * [8. 列表推导式中使用多个for](#8-列表推导式中使用多个for)
+         * [9. 智能排序](#9-智能排序)
+         * [10. 排列组合](#10-排列组合)
+         * [11.__import__ 与动态加载 python module](#11__import__-与动态加载-python-module)
+         * [12. print带汉字的字典或列表](#12-print带汉字的字典或列表)
+         * [13. 通过配置文件共享全局变量](#13-通过配置文件共享全局变量)
+         * [14. @staticmethod 和 @classmethod的区别](#14-staticmethod-和-classmethod的区别)
+         * [15. pip使用国内镜像](#15-pip使用国内镜像)
+         * [16. python内存变量保存到磁盘, 方便下次读入](#16-python内存变量保存到磁盘-方便下次读入)
+         * [17. 查看内存汇总的所有变量](#17-查看内存汇总的所有变量)
+      * [高级](#高级)
+         * [1. 装饰器（Decorator）](#1-装饰器decorator)
+         * [2. 回调函数](#2-回调函数)
+         * [3. 魔法方法](#3-魔法方法)
+         * [4. 多进程（multiprocessing和subprocess）](#4-多进程multiprocessing和subprocess)
+         * [5. 多线程](#5-多线程)
+         * [6. 字符编码](#6-字符编码)
+   * [2. 常用模块](#2-常用模块)
+      * [标准模块](#标准模块)
+         * [1. sys](#1-sys)
+         * [2. os](#2-os)
+         * [3. os.path](#3-ospath)
+         * [4. functools](#4-functools)
+         * [5. subprocess](#5-subprocess)
+         * [6. msvcrt](#6-msvcrt)
+         * [7.math](#7math)
+         * [8. itertools](#8-itertools)
+         * [9. str](#9-str)
+         * [10. collections](#10-collections)
+         * [11. logging](#11-logging)
+         * [12. time 和 <code>datetime</code>](#12-time-和-datetime)
+      * [第三方模块](#第三方模块)
+         * [1. scipy.stats](#1-scipystats)
+         * [2. pandas](#2-pandas)
+         * [3. numpy](#3-numpy)
+         * [4. click](#4-click)
+         * [5. sqlite3](#5-sqlite3)
+         * [6. JSON 和 pickle](#6-json-和-pickle)
+         * [7. six](#7-six)
+   * [3. 模块比较](#3-模块比较)
+      * [3.1. xml解析模块](#31-xml解析模块)
+   * [4. 学习资料](#4-学习资料)
+      * [4.1 Python 资源大全中文版](#41-python-资源大全中文版)
+      * [4.2 Python Code Examples](#42-python-code-examples)
+      * [4.2 openCV](#42-opencv)
+   * [5. 编写规范](#5-编写规范)
+      * [5.1 软件目录结构规范](#51-软件目录结构规范)
+      * [5.2 宏基因组项目框架](#52-宏基因组项目框架)
+   * [6. 常见问题](#6-常见问题)
+      * [6.1 mkl_serv_getenv: undefined symbol: mkl_serv_getenv](#61-mkl_serv_getenv-undefined-symbol-mkl_serv_getenv)
+   * [7. 优秀框架](#7-优秀框架)
+      * [爬虫](#爬虫)
+         * [pyspider](#pyspider)
+         * [scrapy](#scrapy)
+      * [web服务](#web服务)
+         * [Flask](#flask)
+         * [Django](#django)
+
+<!-- Added by: bmk, at: 2018-04-12T08:52+0800 -->
+
+<!--te-->
 
 # 1. python基础
 ## 基础
@@ -1152,7 +1226,9 @@ UnicodeDecodeError: 'utf8' codec can't decode byte 0xbe in position 0: invalid s
 ```
 
 </br>
+
 ----
+
 # 2. 常用模块
 
 ## 标准模块
@@ -2141,8 +2217,11 @@ time_struct与datetime之间的转换可以通过中间状态string来完成
 
 
 </br>
+
 ## 第三方模块
+
 ### 1. `scipy.stats`
+
 Scipy的stats模块包含了多种概率分布的随机变量，随机变量分为连续的和离散的两种。
 SciPy的stats模块提供了大约80种连续随机变量和10多种离散分布变量，这些分布都依赖于numpy.random函数。
 
@@ -3190,7 +3269,9 @@ python2和3的兼容库
 [Six: Python 2 and 3 Compatibility Library](http://pythonhosted.org/six/)
 
 </br>
+
 ----
+
 # 3. 模块比较
 
 ## 3.1. xml解析模块
