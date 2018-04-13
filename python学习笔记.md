@@ -85,6 +85,7 @@
 # python之禅
 
 >Beautiful is better than ugly.
+
 \# 优美胜于丑陋（Python以编写优美的代码为目标）
 
 >Explicit is better than implicit.
@@ -112,12 +113,12 @@
 \# 可读性很重要（优美的代码是可读的） 
 
 >Special cases aren't special enough to break the rules. 
-Although practicality beats purity.
+<br>Although practicality beats purity.
 
 \# 即便假借特例的实用性之名，也不可违背这些规则（这些规则至高无上） 
 
 >Errors should never pass silently. 
-Unless explicitly silenced.
+<br>Unless explicitly silenced.
 
 \# 不要包容所有错误，除非你确定需要这样做（精准地捕获异常，不写except:pass风格的代码） 
 
@@ -134,12 +135,12 @@ Unless explicitly silenced.
 \# 虽然这并不容易，因为你不是 Python 之父（这里的Dutch是指Guido）
 
 >Now is better than never.
-Although never is often better than *right* now.
+<br>Although never is often better than *right* now.
 
 \# 做也许好过不做，但不假思索就动手还不如不做（动手之前要细思量）
 
 >If the implementation is hard to explain, it's a bad idea.
-If the implementation is easy to explain, it may be a good idea.
+<br>If the implementation is easy to explain, it may be a good idea.
 
 \# 如果你无法向人描述你的方案，那肯定不是一个好方案；反之亦然（方案测评标准） 
 
