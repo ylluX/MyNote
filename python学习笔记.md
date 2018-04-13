@@ -25,7 +25,7 @@
          * [16. python内存变量保存到磁盘, 方便下次读入](#16-python内存变量保存到磁盘-方便下次读入)
          * [17. 查看内存汇总的所有变量](#17-查看内存汇总的所有变量)
          * [18. python的搜索路径](#18-python的搜索路径)
-         * [19. import](#19-import)
+         * [19. 数据的归一化/标准化/正则化](#19-数据的归一化标准化正则化)
       * [高级](#高级)
          * [1. 装饰器（Decorator）](#1-装饰器decorator)
          * [2. 回调函数](#2-回调函数)
@@ -33,6 +33,7 @@
          * [4. 多进程（multiprocessing和subprocess）](#4-多进程multiprocessing和subprocess)
          * [5. 多线程](#5-多线程)
          * [6. 字符编码](#6-字符编码)
+         * [7. 内建函数](#7-内建函数)
    * [2. 常用模块](#2-常用模块)
       * [标准模块](#标准模块)
          * [1. sys](#1-sys)
@@ -74,7 +75,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: bmk, at: 2018-04-12T13:05+0800 -->
+<!-- Added by: bmk, at: 2018-04-13T08:58+0800 -->
 
 <!--te-->
 
@@ -216,8 +217,22 @@ def strnum(s):
 
 x = ['M1','M10','M11','M2','M3']
 print sorted(x, key=strnum) # ['M1','M2','M3','M10','M11']
-
 ```
+
+**根据某个列表对另一个列表排序**
+```
+import numpy as np
+a=['b','d','a','c']
+b=[2,4,1,3]
+ind=np.lexsort((a,b)) #array([2, 0, 3, 1])
+print [a[i] for i in ind] #['a', 'b', 'c', 'd']
+```
+
+**根据字典的值排序**
+```
+sorted(dict.items(), key=lambda e:e[1], reverse=True)
+```
+
 
 ### 10. 排列组合
 [Python 排列组合的计算](http://blog.csdn.net/lanchunhui/article/details/51824602)
@@ -278,6 +293,15 @@ import foo
 
 foo = __import__('foo', globals(), locals(), [], -1)
 ```
+
+`import numpy as np`
+相当于
+`np = __import__("numpy",fromlist=[""])`
+
+`from pandas import Series,Dataframe`
+相当于：
+`__import__("pandas",fromlist=["Series","Dataframe"])`
+
 但如果使用不善，也容易踩坑：
 ```
 >>> __import__("os")
@@ -495,14 +519,139 @@ python搜索包是会从几个地方来查找路径：
 3. /lib/python2.7/site-package/*.pth
 4. /lib/python2.7/site-package  [默认]
 
-### 19. import
-`import numpy as np`
-相当于
-`np = __import__("numpy",fromlist=[""])`
+### 19. 数据的归一化/标准化/正则化
+[http://www.cnblogs.com/chaosimple/p/4153167.html](http://www.cnblogs.com/chaosimple/p/4153167.html)
 
-`from pandas import Series,Dataframe`
-相当于：
-`__import__("pandas",fromlist=["Series","Dataframe"])`
+**标准化（Z-Score），或者去除均值和方差缩放**
+
+公式为：(X-mean)/std  计算时对每个属性/每列分别进行。
+将数据按期属性（按列进行）减去其均值，并处以其方差。得到的结果是，对于每个属性/每列来说所有数据都聚集在0附近，方差为1。
+实现时，有两种不同的方式：
+
+1. 使用sklearn.preprocessing.scale()函数，可以直接将给定数据进行标准化。
+
+```
+>>> from sklearn import preprocessing
+>>> import numpy as np
+>>> X = np.array([[ 1., -1.,  2.],
+...               [ 2.,  0.,  0.],
+...               [ 0.,  1., -1.]])
+>>> X_scaled = preprocessing.scale(X)
+ 
+>>> X_scaled                                          
+array([[ 0.  ..., -1.22...,  1.33...],
+       [ 1.22...,  0.  ..., -0.26...],
+       [-1.22...,  1.22..., -1.06...]])
+ 
+>>>#处理后数据的均值和方差
+>>> X_scaled.mean(axis=0)
+array([ 0.,  0.,  0.])
+ 
+>>> X_scaled.std(axis=0)
+array([ 1.,  1.,  1.])
+```
+
+2. 使用sklearn.preprocessing.StandardScaler类，使用该类的好处在于可以保存训练集中的参数（均值、方差）直接使用其对象转换测试集数据。
+
+```
+>>> scaler = preprocessing.StandardScaler().fit(X)
+>>> scaler
+StandardScaler(copy=True, with_mean=True, with_std=True)
+ 
+>>> scaler.mean_                                      
+array([ 1. ...,  0. ...,  0.33...])
+ 
+>>> scaler.std_                                       
+array([ 0.81...,  0.81...,  1.24...])
+ 
+>>> scaler.transform(X)                               
+array([[ 0.  ..., -1.22...,  1.33...],
+       [ 1.22...,  0.  ..., -0.26...],
+       [-1.22...,  1.22..., -1.06...]])
+ 
+ 
+>>>#可以直接使用训练集对测试集数据进行转换
+>>> scaler.transform([[-1.,  1., 0.]])                
+array([[-2.44...,  1.22..., -0.26...]])
+```
+
+**将属性缩放到一个指定范围**
+
+除了上述介绍的方法之外，另一种常用的方法是将属性缩放到一个指定的最大和最小值（通常是1-0）之间，这可以通过preprocessing.MinMaxScaler类实现。
+使用这种方法的目的包括：
+1、对于方差非常小的属性可以增强其稳定性。
+2、维持稀疏矩阵中为0的条目。
+
+```
+>>> X_train = np.array([[ 1., -1.,  2.],
+...                     [ 2.,  0.,  0.],
+...                     [ 0.,  1., -1.]])
+...
+>>> min_max_scaler = preprocessing.MinMaxScaler()
+>>> X_train_minmax = min_max_scaler.fit_transform(X_train)
+>>> X_train_minmax
+array([[ 0.5       ,  0.        ,  1.        ],
+       [ 1.        ,  0.5       ,  0.33333333],
+       [ 0.        ,  1.        ,  0.        ]])
+ 
+>>> #将相同的缩放应用到测试集数据中
+>>> X_test = np.array([[ -3., -1.,  4.]])
+>>> X_test_minmax = min_max_scaler.transform(X_test)
+>>> X_test_minmax
+array([[-1.5       ,  0.        ,  1.66666667]])
+ 
+ 
+>>> #缩放因子等属性
+>>> min_max_scaler.scale_                             
+array([ 0.5       ,  0.5       ,  0.33...])
+ 
+>>> min_max_scaler.min_                               
+array([ 0.        ,  0.5       ,  0.33...])
+```
+
+当然，在构造类对象的时候也可以直接指定最大最小值的范围：feature_range=(min, max)，此时应用的公式变为：
+```
+X_std=(X-X.min(axis=0))/(X.max(axis=0)-X.min(axis=0))
+
+X_scaled=X_std/(max-min)+min
+```
+
+**正则化（Normalization）**
+
+正则化的过程是将每个样本缩放到单位范数（每个样本的范数为1），如果后面要使用如二次型（点积）或者其它核方法计算两个样本之间的相似性这个方法会很有用。
+Normalization主要思想是对每个样本计算其p-范数，然后对该样本中每个元素除以该范数，这样处理的结果是使得每个处理后样本的p-范数（l1-norm,l2-norm）等于1。
+             p-范数的计算公式：||X||p=(|x1|^p+|x2|^p+...+|xn|^p)^1/p
+该方法主要应用于文本分类和聚类中。例如，对于两个TF-IDF向量的l2-norm进行点积，就可以得到这两个向量的余弦相似性。
+
+1. 可以使用preprocessing.normalize()函数对指定数据进行转换：
+```
+>>> X = [[ 1., -1.,  2.],
+...      [ 2.,  0.,  0.],
+...      [ 0.,  1., -1.]]
+>>> X_normalized = preprocessing.normalize(X, norm='l2')
+ 
+>>> X_normalized                                      
+array([[ 0.40..., -0.40...,  0.81...],
+       [ 1.  ...,  0.  ...,  0.  ...],
+       [ 0.  ...,  0.70..., -0.70...]])
+```
+
+2. 可以使用processing.Normalizer()类实现对训练集和测试集的拟合和转换：
+```
+>>> normalizer = preprocessing.Normalizer().fit(X)  # fit does nothing
+>>> normalizer
+Normalizer(copy=True, norm='l2')
+ 
+>>>
+>>> normalizer.transform(X)                            
+array([[ 0.40..., -0.40...,  0.81...],
+       [ 1.  ...,  0.  ...,  0.  ...],
+       [ 0.  ...,  0.70..., -0.70...]])
+ 
+>>> normalizer.transform([[-1.,  1., 0.]])             
+array([[-0.70...,  0.70...,  0.  ...]])
+```
+
 
 
 
@@ -1245,6 +1394,180 @@ UnicodeDecodeError: 'utf8' codec can't decode byte 0xbe in position 0: invalid s
 >>> print y.decode("unicode-escape")
 评价线性模型
 ```
+
+### 7. 内建函数
+
+* `abs(x)`: abs()函数返回数字（可为普通型、长整型或浮点型）的绝对值。如果给出复数，返回值就是该复数的模.
+* `apply(function,args[,keywords])`: apply()函数将args参数应用到function上。function参数必须是可调用对象（函数、方法或其他可调用对象）。args参数必须以序列形式给出。列表在应用之前被转换为元组。function对象在被调用时，将args列表的内容分别作为独立的参数看待。例如： apply(add,(1,3,4))等价于add(1,3,4). 在以列表或元组定义了一列参数，且需要将此列表参数分别作为个个独立参数使用的情况下，必须使用apply()函数。在要把变长参数列应用到已函数上时，apply()函数非常有用。可选项keywords参数应是个字典，字典的关键字是字符串。这些字符串在apply()函数的参数列末尾处给出，它们将被用作关键字参数。
+* `buffer(object[,offset[,size]])`: 如果object对象支持缓存调用接口buffer()函数就为object对象创建一个新缓存。这样的对象包括字符串、数组和缓存。该新缓存通过使用从offset参数值开始知道该对象末尾的存储片段或从offset参数值开始直到size参数给出的尺寸为长度的存储片段来引用object对象。如果没给出任何选项参数，缓存区域就覆盖整个序列，最终得到的缓存对象是object对象数据的只读拷贝。缓存对象用于给某个对象类型创建一个更友好的接口。比如，字符串对象类型通用缓存对象而变得可用，允许逐个字节地访问字符串中的信息。
+* `callable(object)`: callable()函数在object对象是可调用对象的情况下，返回真(true)；否则假(false)，可调用对象包括函数、方法、代码对象、类（在调用时返回新的实例）和已经定义‘调用’方法的类实例
+* `chr(i)`: chr()函数返回与ASCII码i相匹配的一个单一字符串，如下例所示：`>>>print chr(72)+chr(101)+chr(108)+chr(111)`结果为`hello`.
+chr()函数是ord()函数的反函数，其中ord()函数将字符串转换回ASCII整数码，参数i的取值应在0~255范围内。如果参数i的取值在此范围之外，将引发ValueError异常。
+* `cmp(x,y)`: cmp()函数比较x和y这两个对象，且根据比较结果返回一个整数。如果xy，则返回正数。请注意，此函数特别用来比较数值大小，而不是任何引用关系，因而有下面的结果：
+```
+>>>a=99
+>>>b=int('99')
+>>>cmp(a,b)
+0
+```
+* `coerce(x,y)`: coerce()函数返回一个元组，该元组由两个数值型参数组成。此函数将两个数值型参数转换为同一类型数字，其转换规则与算术转换规则一样。一下是两个例子：
+```
+>>>a=1
+>>>b=1.2
+>>>coerce(a,b)
+(1.0,1.2)
+>>>a=1+2j
+>>>b=4.3e10
+>>>coerce(a,b)
+((1+2j),(43000000000+0j))
+```
+* `compile(string,filename,kind)`: compile()函数将string编译为代码对象，编译生成的代码对象接下来被exec语句执行，接着能利用eval()函数对其进行求值。filename参数应是代码从其中读出的文件名。如果内部生成文件名，filename参数值应是相应的标识符。kind参数指定string参数中所含代码的类别，有关kind可能取值的详细信息，请参见表8-1,举例如下： 
+```
+>>>a=compile(‘print “Hello World”’,’’,’single’)
+>>>exec(a)
+Hello World
+>>>eval(a)
+Hello World
+``` 
+由compile()函数编译的代码的类别
+``` 
+Kind取值 编译生成的代码
+exec 语句序列 
+eval 简单表达式
+Single 简单交互语句
+```
+* `complex(real,[image])`: Complex()函数返回一个复数，其实部为real参数值。如果给出image参数的值，则虚部就为image；如果默认image参数，则虚部为0j。
+* `delattr(object,name)`: delattr()函数在object对象许可时，删除object对象的name属性，此函数等价于如下语句: `del object.attr`,而delattr()函数允许利用编程方法定义来定义object和name参数，并不是在代码中显示指定。
+* `dir([object])`: 当没有提供参数时，dir()函数列出在当前局部符号表中保存的名字，如下例所示：
+```
+>>>import sys
+>>>dir(sys)
+``` 
+* `divmod(a,b)`: devmod()函数返回一个元组，该元组包含a除以b的商和余数，如下例所示：
+```
+>>>divmod(7,4)
+(1,3)
+``` 
+对整数而言，返回值与a/b和a%b相同。如果给出的参数值是浮点数，则结果就是（q,a%b），其中：q通常是math.floor(a/b)，但是也可能比这小1，不管在什么情况下，q*b+a%b都非常逼近a；如果a%b是个非零值，则其正负号与b相同，并且有0<=abs(a%b) 
+```
+>>>divmod(3.75,1.125)
+(3.0,0.375)
+>>>divmod(4.99,1.001)
+(4.0,0.98600000000000065)
+>>>divmod(-3.5,1.1)
+(-4.0,0.90000000000000036)
+```
+* `eval(expression[,global[,locals]])`: eval()函数将expression字符串作为python标准表达式进行分析并求值，返回expression字符串的值，当不可调用其他可选参数时，expression访问调用该函数的程序段的全局和局部对象。另一个选择是：以字典形式给出全局和局部符号表（参见后面部分对global()和local()函数的论述）。Eval()函数的返回值是被求职表达式的值，如下例所示： 
+```
+>>>a=99
+>>>eval(‘divmod(a,7)’)
+(14,1)
+```
+任何求职操作的语法错误，都将引发成异常. eval()函数还能用来编译诸如由complie()函数创建的代码对象，但仅当该代码对象用“eval”模式编译过后才可用eval()函数编译。要执行混合了语句和表达式的python任意代码，请使用exec语句或使用execfile()函数来动态地执行含有任意代码的文件。
+* `execfile(file[,globals[,locals]])`: execfile()函数与exec语句等价，不同之处在于：execfile()函数执行文件中的语句，而exec语句处理字符串。其中globals和locals参数应是字典，该字典包含文件在执行期间有效的符号表；如果locals参数省略，则所有的引用都使用globals名称空间。如果两个可选参数都省略，文件就访问运行期间的当前符号表。
+* `filter(function,list)`: filter()函数根据function参数返回的结果是否为真(true)来过滤list参数中的项，最后返回一个新列表，如下例所示：
+```
+a=[1,2,3, 4, 5,6,,7,8,9]
+b=filter(lambda x:x>6,a)
+print b
+[7,8,9]
+```
+如果function参数值为None，就是用identity函数，list参数中的所有为假(false)的元素都被删除。
+* `flaot(x)`: float()函数将x参数转换为浮点数，其中:x可以是字符串，也可以是数字。
+* `getattr(object,name[,default])`: getattr()函数返回object的name属性值。在语法上，以下语句：`getattr(x,’myvalue’)`等价于`x.myvalue`. 如果name参数不存在，但给出defalut参数的值，则此函数就返回default参数值；否则引发AttributeError异常
+* `globals()`: globals()函数返回一个表示当前全局符号表的字典。这个字典通常就是当前模块的字典。如果globals()函数是在一函数或方法中被调用，它就返回定义该函数或方法的模块的符号表，而不是调用此函数的模块的符号表。
+* `hasattr(object,name)`: 如果object对象具有与name字符串相匹配的属性，hasattr()函数返回真(true)；否则返回0。
+* `hash(object)`: hash()函数返回关于object对象的整数散列值。如任何两个对象比较起来是等价的，则它们的散列值是一样的。此函数不应用于可便对向上。
+* `hex(x)`: hex()函数将一整数转换为十六进制字符串，该字符串是个有效的python表达式、
+* `id(object)`: id()函数返回值为一个整数(或长整型整数)——该对象的“标识“——该标识在其对应对象的生命期内，确保是唯一的和恒定不变的。
+* `input([prompt])`: input()函数与eval(raw_input(prompt))等价。
+* `int(x,[radix])`: int()函数将使数字或字符串x转换为“普通”整数。如果给出radix参数的值，则radix参数值用作转换的基数，该参数应是2~36范围内的一个整数。
+* `intern(string)`: intern()函数将string加入到保留字符串的表，返回值为保留的版本号。“保留字符串”通过指针可用，而不是一个纯的字符串；因此允许利用指针比较代替字符串比较来进行字典关键字的查找，这比通常的字符串比较方法功能有所改善。在python名称空间表和用于保留模块、类或实力属性的字典中使用的名字通常被保留用以加速脚本执行。保留字符串定义后不能被作为无用单元收集，所以必须注意在大字典关键字集上使用保留字符串将大大增加内存需求，即使字典关键字应急超出了作用域。
+* `isinstance(object,class)`: isinstance()函数在object参数是class参数的一个实例时，返回真。函数值的确定服从普通继承法则和子类。如果object参数是在types模块中利用类型类定义的特殊类型的实例，也能用isinstance()函数来识别。如果class参数不是类，也不是类型对象，就引发TypeError异常
+* `issubclass(class1,class2)`: 如果class1参数是class2参数的子类，issubclass()函数则返回真。类通常被认为是其自身的子类。若两个参数中任一个都不是类对象，则引发TypeError异常
+* `len(s)`: len()函数返回一序列（字符串、元组或列表）或字典对象的长度
+* `list(sequence)`: list()函数返回以列表。该列表的项及顺序与sequence参数的项及顺序相同，如下例所示：
+* `locals()`: locals()函数返回表示当前局部符号表的字典
+* `long(x)`: long()函数将字符串或数字转换为长整型数，对浮点数的转换遵循与int()相同的规则
+* `map(function,list,…)`: map()函数将function运用到list中的每一项上，并返回新的列表，如下例所示：
+```
+>>>a=[1,2,3,4]
+>>>map(lambda x:pow(x,2),a)
+[1,4,9,16]
+```
+若提供附加的列表，则它们就被并行地提供给function。在后续无元素的列表增加None，直到所有参数列表达到相同的长度为止。如果function参数值为None，则假定为identify函数，将使map()函数返回删除所有为假的参数的list。如果function参数值为None，且给定多个列表参数，返回的列表由一个个元组组成，这些元组由函数中的每一个参数列表内相同对应位置上的参数组成，如下例所示：
+``` 
+>>>map(None,[1,2,3,4],[4,5,6,7])
+[(1,4),(2,5),(3,6),(4,7)]
+``` 
+上例的结果与zip()函数产生的结果等价
+* `max(s,[,args…])`: 当仅给定一个参数时，max()函数返回序列s的最大值。当给定一列参数时，max()函数返回给定参数的最大参数
+* `min(s[,args…])`: 当仅给定一个参数时，min()函数返回序列s的最小值。当给定一列参数时，min()函数返回给定参数中的最小值。记住：多参数调用的序列不被遍历，每个列表参数作为一个整体进行比较，如：
+``` 
+min([1,2,3],[4,5,6])
+返回
+[1,2,3]
+```
+而不是通常所想的结果为1，要得到一个或多个列表中元素的最小值，可将所有列表连成一串，如下所示：
+``` 
+min([1,2,3]+[4,5,6])
+```
+* `oct(x)`: 该函数将整数转换为八进制字符串。其结果是个有效的python表达式，如下例所示：`>>>oct(2001)`:`'03721'`. 请注意，返回值通常是无符号数。这样致使oct(-1)在32位机器上产生’037777777777’的结果
+* `open(filename[,mode[,bufsize]])`: open()函数通过使用mode和缓存bufsize类型来打开filename标识的文件。此函数返一文件对象. 其中mode与系统函数fopen()使用的模式相同。如果mode参数省略，其默认取值为r. 模式含义
+```
+r 打开用于读
+w 打开用于写
+a 打开用于附加(打开期间，文件位置自动移到文件末尾)
+r+ 打开用于更新(读和写)
+w+ 截断(或清空)文件，接着打开文件用于读写
+a+ 打开文件用于读和写，并自动改变当前为止到文件尾. 当附加任何模式选项时，以二进制模式而不是文本模式，打开文件(这种模式
+b 仅对windows、dos和其他一些操作系统有效，对Unix、MacOS和BeOS则不管选项为何值，以二进制模式对待所有文件)
+```
+open()函数的bufsize选项参数决定从文件中读取数据时所使用的缓存的大小，如果bufsize省略，就使用系统默认的缓存容量. bufsize值 说明
+```
+禁用缓存
+行缓存
+>1 使用大小近似为bufsize字符长度的缓存
+<0 使用系统默认
+``` 
+* `ord(c)`: 该函数返回由一个字符c组成的字符串的ASCII码值或Unicode数字码。ord()函数是chr()函数和nuichr()函数的反函数
+* `pow(x,y[,z])`: 该函数返回以x为底数以y为指数的幂值。如果给出z，该函数就计算x的y次幂值被z取模的值，这样的计算比利用：`pow(x,y)%z`
+的效率更高. 提供给pow()函数的参数应是数值型，并且给定的类型决定返回值的类型。如果计算得出的数值不能用给定参数值的类型表示，则引发异常，比如，以下对pow()的调用将失败： `pow(2,-1)`, 但是`pow(2.0,-1)`是有效的
+* `range([start,]stop[,step])`: 该函数返回数值列表，该数值列表从start开始，以step为步长，于stop之前结束。所有的数字都应列出，并且以普通整型数返回。如果step省略，则默认取1.如果start省略，则从0开始求值。如果以两个参数形式调用，则认作给定的参数是start和stop，如果要定义步长就必须给出全部的三个参数。下面对range()函数的调用使用了值为正数的步长step: `>>>range(5,25,5)`. 请注意，最后的数值是stop减去step，range()函数的返回值从小递增到大，趋近stop的值，但不包含stop这个值. 如果step的给定值是负数，range()函数的返回值从大递增到小，而不是递增，stop必须比stop小；否则返回的列表为空。下列说明了step取值为负数的运用情况：`>>>range(10,0,-1)`
+* `raw_input([prompt])`: 该函数从sys.stdin接受原始输入并返回字符串。输入以换行符为结束，其中换行符在输入字符串返回给调用者之前被去除。如果给出prompt，末尾不含换行符的prompt就被写到sys.stdout中，并用作输入的提示，如下例所示：`>>>name=raw_input(‘Name?’)`. 如果已加载readline模块，则诸如行编辑和历史记录的特性在输入期间就得到支持
+* `reduce(function,sequence[,initializer])`: 该函数一次应用function（支持两个函数）到sequence中的每个元素上，逐渐缩短整个语句直到为一个单一的值。举例，下面的语句模拟了算术运算符“！”：`reduce(lambda x,y:x*y,[1,2,3,4,5])`, 其结果如同执行以下计算一样：`（（（（1*2）*3）*4）*5）`, 结果等于120. 如果给出initializer参数值，则initializer参数值就被用作序列的第一个元素，如下列所示：`>>>reduce(lambda x,y:x*y,[1,2,3,4,5],10)`结果等于1200
+* `reload(module)`: reload()函数将以前导入过的模块再加载一次。重新加载(reload)包括最初导入模块是应用的分析过程和初始化过程。这样就允许在不退出解释器的情况重新加载已更改的python模块。使用reload()函数的若干注意事项如下： 1.如果模块在语法上是正确的，但在初始化过程中失败，则导入过程不能正确地将模块的名字绑定到符号表中，这时，必须在模块能被重新加载之前使用import()函数加载该模块。2.重新加载的模块不删除最初旧版本在符号表中的登记项。对于有恒定名字的对象和函数，这当然不是问题；但是，若对一模块实体更改了名字，模块名在重新加载后仍保持在符号表中. 3.支持扩展模块(它依赖与内置的或所支持的动态加载的函数库)的重新加载，但可能是无目标的，并且确定可能导致失败，这完全依赖于动态加载的函数库的行为. 4.如果以模块利用from…import…方式从另一个模块导入对象，reload()函数不重定义导入的对象，可利用import…形式避免这个问题. 5.提供类的重新加载模块不影响所提供类的任何已存实例——已存实例将继续使用原来的方法定义；只有该类的新实例使用新格式。这个原则对派生类同样适用.
+* `repr(object)`: repr()函数返回对象的字符串表示。这与将对象或属性适用单反引号(‘)的结果是一致的。返回的字符串产生一个对象，该对象的值与将object传递给eval()函数产生的值一样，如下例所示：
+```
+>>>dict={‘One’:1,’Two:2’,’Many’:{‘Many’:4,’ManyMany’:8}}
+>>>repr(dict)
+“{‘One’:1,’Many’:{‘Many’:4,’ManyMany’:8},’Two’:2}”
+```
+* `round(x[,n])`: round()函数返回浮点型参数x舍入到十进制小数点后n位的值，如下例所示：
+```
+>>>round(0.4)
+0.0
+>>>round(0.5)
+1.0
+>>>round(-0.5)
+-1.0
+>>>round(1985,-2)
+2000.0
+```
+* `setattr(object,name,value)`: 该函数将object参数的name属性设置为value参数值。setattr()函数是getattr()函数的反函数，后者仅获得信息，以下语句：`setattr(myattr’,’new value’)`等价于`myobj.myattr=’new value’`. setattr()函数能用在这样的情况下：属性是通过name参数以编程方式命名，而不是显式地命名属性
+* `slice([start,]stop,[,step])`: 该函数返回已序列切片(slice)对象，该对象表示由range(start,stop,step)指定的索引集。如果给出一个参数，此参数就作为stop参数值；如果给出两个参数，它们就作为start和stop的参数值；任何未给出参数值的参数默认取值为None。序列切片对象有3个属性(start,stop,和step)，这3个属性仅仅返回要提供给slice()函数的参数
+* `str(object)`: 返回对象的一个字符串表示。这与repr()函数相似，唯一不同之处在于：此函数返回值设计为可打印字符串而不是与eval()函数相兼容的字符串 
+* `tuple(object)`: tuple()函数返回一个元组，该元组的项及项的顺序与sequence参数完全一样，以下就是tuple()函数的举例：
+* `type(object)`: 该函数返回object参数的类型。返回值是个如类型模块所描述一样的类型对象，举例如下：
+* `unichr(i)`: 该函数返回代码是一个整型参数i的Unicode字符的Unicode字符串。此函数等价于前面论述的chr()函数。请注意，要将Unicode字符转换回其整数格式，可使用ord()函数；没有uniord()函数、如果给出的整数超出0~65535这个范围，则引发ValueError异常
+* `unicode(string[,encoding[,errors]]))`: 该函数利用编码格式解码器将给定的字符串从一种格式解码为另一种格式。编码的任何错误都用errors参数定义的字符串标记. 此函数特别用于在字符串和Unicode编码格式之间转换。默认（当不给出encoding参数值）操作是以严格方式将字符串解码为UTF-8格式，发生errors错误时就引发ValueError异常。有关合适的解码列表，请见codecs模块
+* `vars([object])`: 该函数返回对应于当前局部符号表的字典。当给出模块、类或实例时，vars()函数返回对应那个对象的符号表的字典。因为结果是非定义的，所以一定不要修改返回的字典
+* `xrange([start,]stop[,step])`: 该函数的作用与range()函数一样，唯一的区别是：xrange()函数返回一个xrange对象。xrange()对象是个不透明对象类型，此类型返回的信息与所请求的参数列表是一致的，但是它不必存储列表中每个独立的元素。在创建非常巨大列表的情况下，此函数特别有用；利用xrange()函数节省下来的内存比起用range()函数是相当可观的
+* `zip(seq1,…)`: zip()函数处理一系列序列，将这些序列返回一个元组列表。其中，每个元组包含了给定的每个序列的第n个元素。
+* `exec`: exec语句被设计为执行能使用函数和语句的任意组合的python的任何代码片段。执行的代码访问相同的全局定义和局部定义的对象、类和方法或函数。以下是使用exec语句的简单例子：`exec “print ‘Hello World’”` 也能通过提供一个包含对象及其取值的列表的字典来限定对exec语句有效的资源，如下例这样：`exec “print message”in myglobals,mylocals` 能用globals()和locals()函数来获得当前的字典. 请注意，exec语句执行表达式和语句、或者对表达式和语句求值，但是exec语句不返回任何值。因为exec是语句不是函数，所以任何获取返回值的试图都将导致语法错误
+* `execfile()函数`: 该函数执行与exec语句同样的操作，正如前面所描述的那样，它们的不同之处在于：execfile()函数从问几十年中读取被执行的语句，执行的对象不是字符串，不是代码对象；execfile()函数的其他所有方面都与exec语句等价
+* `eval()函数`: 该函数不允许执行任意的python语句。eval()函数被设计为：执行一个python表达式，并返回值，如下例中一样：`result=eval(userexpression)` 或者在语句中更显式地给出表达式，如下例所示：`result=eval(“3+6”)` 不能使用eval()函数去执行语句，根据经验，通常使用eval()函数开将一表达式求值并返回一个值，而在其他所有情况下则使用exec语句`exec()`
+
 
 </br>
 
