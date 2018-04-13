@@ -2825,14 +2825,21 @@ tst.log中没有root logger输出的信息，因为logging.conf中配置了只�
 3. 元组(struct_time)   ：struct_time元组共有9个元素共九个元素:(年，月，日，时，分，秒，一年中第几周，一年中第几天，夏令时) 
 
 `时间戳`：`time.time()` 从1970年1月1日00:00:00到此刻的秒数，主要用于计算程序的执行时间等。
+
 `结构化时间`：`time.localtime()`        `time.gmtime()`世界标准时间（格林尼治时间）
+
 `结构化时间`转成`时间戳`：`time.mktime(time.localtime())`
+
 `结构化时间`转成`字符串时间`：`time.strftime('%Y-%m-%d %X',time.localtime())`
+
 `字符串时间`转成`结构化时间`：`time.strptime('2017:05:07:19:47:36','%Y-%m-%d %X')`
+
 <img src="https://images2015.cnblogs.com/blog/1103523/201705/1103523-20170507194943070-1402300767.png" width = "500" height = "500" />
 
 `结构化时间`转`标准字符串显示` : `time.asctime()`
+
 `时间戳`转`标准字符串显示` : `time.ctime()`
+
 <img src="https://images2015.cnblogs.com/blog/1103523/201705/1103523-20170507195016336-212158981.png" width = "500" height = "500" />
 
 
@@ -3026,6 +3033,7 @@ Scipy的stats模块包含了多种概率分布的随机变量，随机变量分�
 SciPy的stats模块提供了大约80种连续随机变量和10多种离散分布变量，这些分布都依赖于numpy.random函数。
 
 **所有的连续随机变量都是`rv_continuous`的派生类的对象**
+
 |对象方法|说明|
 | ----- | ---- |
 | rv_continuous([momtype, a, b, xtol, ...]) | A generic continuous random variable class meant for subclassing. |
