@@ -81,17 +81,27 @@
 <!--te-->
 
 ----
+
 # python之禅
+
 Beautiful is better than ugly.         # 优美胜于丑陋（Python以编写优美的代码为目标）
+
 Explicit is better than implicit.      # 明了胜于晦涩（优美的代码应当是明了的，命名规范，风格相似） 
+
 Simple is better than complex.         # 简洁胜于复杂（优美的代码应当是简洁的，不要有复杂的内部实现） 
+
 Complex is better than complicated.    # 复杂胜于凌乱（如果复杂不可避免，那代码间也不能有难懂的关系，要保持接口简洁）
+
 Flat is better than nested.            # 扁平胜于嵌套（优美的代码应当是扁平的，不能有太多的嵌套） 
+
 Sparse is better than dense.           # 间隔胜于紧凑（优美的代码有适当的间隔，不要奢望一行代码解决问题） 
+
 Readability counts.                    # 可读性很重要（优美的代码是可读的） 
+
 Special cases aren't special enough to break the rules.
 Although practicality beats purity.
                                        # 即便假借特例的实用性之名，也不可违背这些规则（这些规则至高无上） 
+
 Errors should never pass silently.
 Unless explicitly silenced.
                                        # 不要包容所有错误，除非你确定需要这样做（精准地捕获异常，不写except:pass风格的代码） 
