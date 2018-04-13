@@ -100,7 +100,6 @@ Readability counts.                    # 可读性很重要（优美的代码是
 
 Special cases aren't special enough to break the rules. 
 Although practicality beats purity.
-
                                        # 即便假借特例的实用性之名，也不可违背这些规则（这些规则至高无上） 
 
 Errors should never pass silently. 
