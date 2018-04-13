@@ -3665,51 +3665,6 @@ third   0.9  0  0.49
 ```
 
 
-### 3. numpy
-
-1. **基本操作**
-
-**获得矩阵的上三角数据 : np.triu_indices()**
-
-```
->>> iu1 = np.triu_indices(4)
->>> iu2 = np.triu_indices(4, 2)
-# Here is how they can be used with a sample array:
->>> a = np.arange(16).reshape(4, 4)
->>> a
-array([[ 0,  1,  2,  3],
-       [ 4,  5,  6,  7],
-       [ 8,  9, 10, 11],
-       [12, 13, 14, 15]])
-# Both for indexing:
->>> a[iu1]
-array([ 0,  1,  2,  3,  5,  6,  7, 10, 11, 15])
-# And for assigning values:
->>> a[iu1] = -1
->>> a
-array([[-1, -1, -1, -1],
-       [ 4, -1, -1, -1],
-       [ 8,  9, -1, -1],
-       [12, 13, 14, -1]])
-# These cover only a small part of the whole array (two diagonals right of the main one):
->>> a[iu2] = -10
->>> a
-array([[ -1,  -1, -10, -10],
-       [  4,  -1,  -1, -10],
-       [  8,   9,  -1,  -1],
-       [ 12,  13,  14,  -1]])
-```
-
-**将多维数组转化为一维数组flatten()**
-
-```
->>> a = np.array([[1,2], [3,4]])
->>> a.flatten()
-array([1, 2, 3, 4])
->>> a.flatten('F')
-array([1, 3, 2, 4])
-```
-
 
 **<font color="green",size=5>自我总结</font>**
 
@@ -3798,6 +3753,50 @@ class MyDataFrame(pd.DataFrame):
 
 
 
+### 3. numpy
+
+1. **基本操作**
+
+**获得矩阵的上三角数据 : np.triu_indices()**
+
+```
+>>> iu1 = np.triu_indices(4)
+>>> iu2 = np.triu_indices(4, 2)
+# Here is how they can be used with a sample array:
+>>> a = np.arange(16).reshape(4, 4)
+>>> a
+array([[ 0,  1,  2,  3],
+       [ 4,  5,  6,  7],
+       [ 8,  9, 10, 11],
+       [12, 13, 14, 15]])
+# Both for indexing:
+>>> a[iu1]
+array([ 0,  1,  2,  3,  5,  6,  7, 10, 11, 15])
+# And for assigning values:
+>>> a[iu1] = -1
+>>> a
+array([[-1, -1, -1, -1],
+       [ 4, -1, -1, -1],
+       [ 8,  9, -1, -1],
+       [12, 13, 14, -1]])
+# These cover only a small part of the whole array (two diagonals right of the main one):
+>>> a[iu2] = -10
+>>> a
+array([[ -1,  -1, -10, -10],
+       [  4,  -1,  -1, -10],
+       [  8,   9,  -1,  -1],
+       [ 12,  13,  14,  -1]])
+```
+
+**将多维数组转化为一维数组flatten()**
+
+```
+>>> a = np.array([[1,2], [3,4]])
+>>> a.flatten()
+array([1, 2, 3, 4])
+>>> a.flatten('F')
+array([1, 3, 2, 4])
+```
 
 
 
