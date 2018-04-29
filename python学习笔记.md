@@ -3023,6 +3023,174 @@ datetime.datetime(2013, 8, 10, 11, 14, 50, 842812)
 time_struct与datetime之间的转换可以通过中间状态string来完成
 
 
+
+### 13. `inspect`
+
+[关于python中inspect模块的一些探究](https://blog.csdn.net/weixin_35955795/article/details/53053762)
+
+[python的inspect模块](https://www.cnblogs.com/walkerwang/archive/2011/08/03/2125903.html)
+
+[inspect模块详解](https://www.cnblogs.com/mosson/p/7244480.html)
+
+根据度娘搜到的，inspect模块主要提供了四种用处：
+
+(1). 对是否是模块，框架，函数等进行类型检查。
+
+(2). 获取源码
+
+(3). 获取类或函数的参数的信息
+
+(4). 解析堆栈
+
+
+查看源文件发现它提供了不少好用的方法：
+```
+Here are some of the useful functions provided by this module:
+
+ismodule(), isclass(), ismethod(), isfunction(), isgeneratorfunction(), 
+isgenerator(), istraceback(), isframe(), iscode(), isbuiltin(),isroutine() – check object types
+
+getmembers() – get members of an object that satisfy a given condition
+
+getfile(), getsourcefile(), getsource() – find an object’s source code 
+getdoc(), getcomments() – get documentation on an object 
+getmodule() – determine the module that an object came from 
+getclasstree() – arrange classes so as to represent their hierarchy
+
+getargspec(), getargvalues() – get info about function arguments 
+formatargspec(), formatargvalues() – format an argument spec 
+getouterframes(), getinnerframes() – get info about frames 
+currentframe() – get the current stack frame 
+stack(), trace() – get info about frames on the stack or in a traceback 
+```
+
+**自我总结**
+
+***获得函数的参数***
+
+首先定义一些函数
+
+```
+def t1():
+  pass
+
+def t2(a):
+  pass
+
+def t3(b=1):
+  pass
+
+def t4(*c):
+  pass
+
+def t5(**d):
+  pass
+
+def t6(a,b=1,*c,**d):
+  pass
+
+```
+
+`python2`：
+
+```
+>>> inspect.getargspec(t1)
+ArgSpec(args=[], varargs=None, keywords=None, defaults=None)
+
+>>> inspect.getargspec(t2)
+ArgSpec(args=['a'], varargs=None, keywords=None, defaults=None)
+
+>>> inspect.getargspec(t3)
+ArgSpec(args=['b'], varargs=None, keywords=None, defaults=(1,))
+
+>>> inspect.getargspec(t4)
+ArgSpec(args=[], varargs='c', keywords=None, defaults=None)
+
+>>> inspect.getargspec(t5)
+ArgSpec(args=[], varargs=None, keywords='d', defaults=None)
+
+>>> inspect.getargspec(t6)
+ArgSpec(args=['a', 'b'], varargs='c', keywords='d', defaults=(1,))
+
+```
+
+`python3`:
+
+python3与python2有所不同，比如定义函数：`def x(a, b=0, *c, d, e=1, **f)`，python3能够正确编译，
+但python2就会报错：`SyntaxError: invalid syntax`。具体原因待会再讲，先来看看python3对参数的解析
+
+python3中`inspect.getargspec`函数已经被舍弃，所以可以使用`inspect.getfullargspec`或者`inspect.signature`
+
+```
+>>> inspect.getfullargspec(t1)
+FullArgSpec(args=[], varargs=None, varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={})
+
+>>> inspect.getfullargspec(t2)
+FullArgSpec(args=['a'], varargs=None, varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={})
+
+>>> inspect.getfullargspec(t3)
+ FullArgSpec(args=['b'], varargs=None, varkw=None, defaults=(1,), kwonlyargs=[], kwonlydefaults=None, annotations={})
+
+>>> inspect.getfullargspec(t4)
+FullArgSpec(args=[], varargs='c', varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={})
+
+>>> inspect.getfullargspec(t5)
+FullArgSpec(args=[], varargs=None, varkw='d', defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={})
+
+>>> inspect.getfullargspec(t6)
+FullArgSpec(args=['a', 'b'], varargs='c', varkw='d', defaults=(1,), kwonlyargs=[], kwonlydefaults=None, annotations={})
+
+>>> def t7(a, b=0, *c, d, e=1, **f):
+        pass
+
+>>> inspect.getfullargspec(t7):
+ FullArgSpec(args=['a', 'b'], varargs='c', varkw='f', defaults=(0,), kwonlyargs=['d', 'e'], kwonlydefaults={'e': 1}, annotations={})
+
+# 使用inspect.signature
+
+>>> x = inspect.signature(t7).parameters
+
+>>> x
+mappingproxy({'a': <Parameter "a">,
+              'b': <Parameter "b=0">,
+              'c': <Parameter "*c">,
+              'd': <Parameter "d">,
+              'e': <Parameter "e=1">,
+              'f': <Parameter "**f">})
+
+>>> for k,v in x.items():
+        print("{}.kind: {} ({})".format(k, v.kind, v.kind.name))
+
+a.kind: 1 (POSITIONAL_OR_KEYWORD)
+b.kind: 1 (POSITIONAL_OR_KEYWORD)
+c.kind: 2 (VAR_POSITIONAL)
+d.kind: 3 (KEYWORD_ONLY)
+e.kind: 3 (KEYWORD_ONLY)
+f.kind: 4 (VAR_KEYWORD)
+```
+
+对比python2和python3的结果，我们发现python2中参数有3种类型：`args`(位置参数或关键字参数), `varargs`(可变位置参数), `keywords`(可变关键字参数)；而python3中的参数有4种(其实是5种)类型：`args`(位置参数或关键字参数), `varargs`(可变位置参数), `varkw`(可变关键字参数), `kwonlyargs`(关键字参数)，而且python3还专门为这几种参数类型设置了数据类型：
+
+```
+>>> inspect._ParameterKind.__members__
+mappingproxy({'KEYWORD_ONLY': <_ParameterKind.KEYWORD_ONLY: 3>,
+              'POSITIONAL_ONLY': <_ParameterKind.POSITIONAL_ONLY: 0>,
+              'POSITIONAL_OR_KEYWORD': <_ParameterKind.POSITIONAL_OR_KEYWORD: 1>,
+              'VAR_KEYWORD': <_ParameterKind.VAR_KEYWORD: 4>,
+              'VAR_POSITIONAL': <_ParameterKind.VAR_POSITIONAL: 2>})
+
+# POSITIONAL_ONLY ： 位置参数 (0)
+# POSITIONAL_OR_KEYWORD ： 位置或关键字参数 (1)
+# VAR_POSITIONAL ： 可变位置参数 (2)
+# KEYWORD_ONLY ： 关键字参数 (3)
+# VAR_KEYWORD ： 可变关键字参数 (4)
+
+```
+
+
+
+
+
 </br>
 
 ## 第三方模块
