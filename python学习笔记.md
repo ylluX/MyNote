@@ -49,6 +49,7 @@
          * [10. collections](#10-collections)
          * [11. logging](#11-logging)
          * [12. time 和 <code>datetime</code>](#12-time-和-datetime)
+         * [13. inspect](#13-inspect)
       * [第三方模块](#第三方模块)
          * [1. scipy.stats](#1-scipystats)
          * [2. pandas](#2-pandas)
@@ -76,7 +77,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: bmk, at: 2018-04-13T11:09+0800 -->
+<!-- Added by: bmk, at: 2018-05-02T14:14+0800 -->
 
 <!--te-->
 
