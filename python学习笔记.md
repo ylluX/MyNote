@@ -27,6 +27,7 @@
          * [17. 查看内存汇总的所有变量](#17-查看内存汇总的所有变量)
          * [18. python的搜索路径](#18-python的搜索路径)
          * [19. 数据的归一化/标准化/正则化](#19-数据的归一化标准化正则化)
+         * [20. for...else...语法](#20-forelse语法)
       * [高级](#高级)
          * [1. 装饰器（Decorator）](#1-装饰器decorator)
          * [2. 回调函数](#2-回调函数)
@@ -50,6 +51,7 @@
          * [11. logging](#11-logging)
          * [12. time 和 <code>datetime</code>](#12-time-和-datetime)
          * [13. inspect](#13-inspect)
+         * [14. operator](#14-operator)
       * [第三方模块](#第三方模块)
          * [1. scipy.stats](#1-scipystats)
          * [2. pandas](#2-pandas)
@@ -77,7 +79,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: bmk, at: 2018-05-02T14:14+0800 -->
+<!-- Added by: bmk, at: 2018-05-03T09:45+0800 -->
 
 <!--te-->
 
@@ -812,6 +814,30 @@ array([[-0.70...,  0.70...,  0.  ...]])
 ```
 
 
+### 20. for...else...语法
+
+[Python循环语句中else的用法总结](http://www.jb51.net/article/92440.htm)
+
+```
+#coding:utf-8
+
+def findn(n):
+    for i in range(5):
+        if i == n:
+            print "find {}".format(n)
+            break
+    else:
+        print "not find {}".format(n)
+
+findn(5)
+findn(3)
+```
+
+总结：`for...else...`和`while...else...`语法在满足一下情况时，`else`会被执行：
+
+. `for`或`while`循环里的语句执行完成
+. `for`或`while`循环里的语句没有被`break`或`return`语句打断
+
 
 
 </br>
@@ -1177,6 +1203,8 @@ __str__
 
 [廖雪峰的官方网站-多进程](
 https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431927781401bb47ccf187b24c3b955157bb12c5882d000)
+
+[python的threading和multiprocessing模块初探](https://blog.csdn.net/mydear_11000/article/details/52767976)
 
 多进程
 
@@ -3188,7 +3216,117 @@ mappingproxy({'KEYWORD_ONLY': <_ParameterKind.KEYWORD_ONLY: 3>,
 
 ```
 
+### 14. operator
 
+[operator 模块简单介绍](https://www.cnblogs.com/nju2014/p/5568139.html)
+
+简单介绍几个常用的函数，其他的请参考[文档](https://docs.python.org/2/library/operator.html#operator.delitem)。
+
+`operator.concat(a, b)`: 对于 a、b序列，返回 a + b(列表合并）
+
+`operator.countOf(a, b)`: 返回 b 在 a 中出现的次数
+
+`operator.delitem(a, b)`: 删除 a 中索引为 b 的值
+
+`operator.getitem(a, b)`: 返回 a 中索引为 b 的值
+
+`operator.indexOf(a, b)`: 返回 b 在 a 中首次出现位置的索引值。
+
+`operator.setitem(a, b, c)`: 设置 a 中索引值为 b 的项目值更改为 c
+
+operator 模块也为属性和项目的查找提供了一些工具。这些工具使得 map(), sorted(), itertools.groupby() 或其他函数 需要的参数的提取更方便更快速。上面的函数有一个共同点，即均接受函数参数。
+
+`operator.attrgetter(attr)`, `operator.attrgetter(*attrs)`: 返回一个可调用的对象，该对象从运算中获取 'attr' 。如果请求的属性不止一个的话， 返回属性的元组。这些属性的名字可以包括 '.'。比如：
+
+`f = attrgetter('name')`: 调用 `f(b)` 返回 `b.name`
+
+`f = attrgetter('name', 'date')`: 调用 `f(b)` 返回 `(b.name, b.date)`
+
+`f = attrgetter('name.first', 'name.last')`: 调用 `f(b)` 返回 `(b.name.first, b.name.last)`
+
+`operator.itemgetter(item)`, `operator.itemgetter(*items)`: 返回一个可调用的对象，该对象通过运算符的 __getitem__()的方法 从运算中获取 item 。如果指定了多个 item ， 返回查找值的元组。比如：
+
+`f = itemgetter(2)`: 调用 `f(r)` 返回 `r[2]`
+
+`g = itemgetter(2, 5, 3)`, 调用 `f(r)` 返回 `(r[2], r[3], r[3])`
+
+相当于：
+
+```
+def itemgetter(*items):
+    if len(items) == 1:
+        item = items[0]
+        def g(obj):
+            return obj[item]
+    else:
+        def g(obj):
+            return tuple(obj[item] for item in items)
+    return g
+```   
+ 
+运算符的`__getitem__()`方法可接受任意类型的项目。字典接收任意的哈希值。列表、元组和字符串接收一个索引或字符片段。
+
+```
+>>> itemgetter(1)('ABCDEFG')
+'B'
+>>> itemgetter(1,3,5)('ABCDEFG')
+('B', 'D', 'F')
+>>> itemgetter(slice(2,None))('ABCDEFG')
+'CDEFG'
+```
+
+使用 `itemgetter()` 从元组序列中获取指定的域值，比如：
+
+```
+>>> inventory = [('apple', 3), ('banana', 2), ('pear', 5), ('orange', 1)]
+>>> getcount = itemgetter(1)
+>>> map(getcount, inventory)
+[3, 2, 5, 1]
+>>> sorted(inventory, key=getcount)
+[('orange', 1), ('banana', 2), ('apple', 3), ('pear', 5)]
+```
+
+`operator` 相关的信息对应如下：
+
+|名称|符号|函数|
+|----|----|----|
+|Operation|Syntax|Function|
+|Addition|a + b|add(a, b)|
+|Concatenation|seq1 + seq2|concat(seq1, seq2)|
+|Containment Test|obj in seq|contains(seq, obj)|
+|Division|a / b|div(a, b) (without future.division)|
+|Division|a / b|truediv(a, b) (with future.division)|
+|Division|a // b|floordiv(a, b)|
+|Bitwise And|a & b|and_(a, b)|
+|Bitwise Exclusive Or|a ^ b|xor(a, b)|
+|Bitwise Inversion|~ a|invert(a)|
+|Bitwise Or|a b|or_(a, b)|
+|Exponentiation|a ** b|pow(a, b)|
+|Identity|a is b|is_(a, b)|
+|Identity|a is not b|is_not(a, b)|
+|Indexed Assignment|obj[k] = v|setitem(obj, k, v)|
+|Indexed Deletion|del obj[k]|delitem(obj, k)|
+|Indexing|obj[k]|getitem(obj, k)|
+|Left Shift|a << b|lshift(a, b)|
+|Modulo|a % b|mod(a, b)|
+|Multiplication|a * b|mul(a, b)|
+|Negation (Arithmetic)|- a|neg(a)|
+|Negation (Logical)|not a|not_(a)|
+|Positive|+ a|pos(a)|
+|Right Shift|a >> b|rshift(a, b)|
+|Sequence Repetition|seq * i|repeat(seq, i)|
+|Slice Assignment|seq[i:j] = values|setitem(seq, slice(i, j), values)|
+|Slice Deletion|del seq[i:j]|delitem(seq, slice(i, j))|
+|Slicing|seq[i:j]|getitem(seq, slice(i, j))|
+|String Formatting|s % obj|mod(s, obj)|
+|Subtraction|a - b|sub(a, b)|
+|Truth Test|obj|truth(obj)|
+|Ordering|a < b|lt(a, b)|
+|Ordering|a <= b|le(a, b)|
+|Equality|a == b|eq(a, b)|
+|Difference|a != b|ne(a, b)|
+|Ordering|a >= b|ge(a, b)|
+|Ordering|a > b|gt(a, b)|
 
 
 
