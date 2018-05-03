@@ -52,6 +52,7 @@
          * [12. time 和 <code>datetime</code>](#12-time-和-datetime)
          * [13. inspect](#13-inspect)
          * [14. operator](#14-operator)
+         * [15. contextlib](#15-contextlib)
       * [第三方模块](#第三方模块)
          * [1. scipy.stats](#1-scipystats)
          * [2. pandas](#2-pandas)
@@ -79,7 +80,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: bmk, at: 2018-05-03T09:45+0800 -->
+<!-- Added by: bmk, at: 2018-05-03T17:32+0800 -->
 
 <!--te-->
 
@@ -998,6 +999,59 @@ def log(*params, **kwparams):
 @log("xxx")
 ```
 参考：[Python怎么将两个功能相同的装饰器高阶函数，一个带参数一个不带参数的合并成一个装饰器？请前辈指点一二，十分感谢？](https://segmentfault.com/q/1010000007149687)
+
+
+
+**装饰器的深入理解**
+
+```
+def before(func):
+    print "callback before"
+    def decorator(*args, **kwargs):
+        print "add <before>"
+        f = func(*args, **kwargs)
+        print "<before>"+f
+        return "<before>"+f
+    return decorator
+
+def after(func):
+    print "callback after"
+    def decorator(*args, **kwargs):
+        print "add </after>"
+        f = func(*args, **kwargs)
+        print f+"</after>"
+        return f+"</after>"
+    return decorator
+
+@argument
+@after
+def hello():
+    return "hello world!"
+```
+
+返回的结果是什么？？？
+
+```
+callback after
+callback before
+add <before>
+add </after>
+hello world!</after>
+<before>hello world!</after>
+```
+
+和我们想的不一样？为什么是这个结果呢？
+
+1. after先装饰hello，  所以先输出："callback after"， 然后返回after_decorator(hello)函数
+2. before再装饰after装饰过的hello, 所以再输出："callback before"， 然后返回before_decorator(after_decorator(hello))函数
+3. 调用before_decorator(after_decorator(hello))()函数，所以接着输出："add <before>"
+4. 然后调用after_decorator(hello)()函数， 再接着输出："add </after>"
+5. 最后调用hello()函数， 返回"hello world!"
+6. after_decorator(hello)()函数获得了hello()函数的返回值，进行修饰，所以输出： "hello world!</after>"
+7. before_decorator(after_decorator(hello))()函数获得了after_decorator(hello)()函数修饰后的结果，再进行修饰，所以输出："<before>hello world!</after>"
+
+
+
 
 ### 2. 回调函数
 
@@ -3331,6 +3385,17 @@ def itemgetter(*items):
 |Difference|a != b|ne(a, b)|
 |Ordering|a >= b|ge(a, b)|
 |Ordering|a > b|gt(a, b)|
+
+
+
+### 15. contextlib
+
+[contextlib-廖雪峰的官方网站](https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001478651770626de401ff1c0d94f379774cabd842222ff000)
+
+[详解Python中contextlib上下文管理模块的用法-脚本之家](http://www.jb51.net/article/87533.htm)
+
+[python上下文管理器ContextLib及with语句-CSDN](https://blog.csdn.net/pipisorry/article/details/50444736)
+
 
 
 
