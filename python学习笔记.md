@@ -835,8 +835,8 @@ findn(3)
 
 总结：`for...else...`和`while...else...`语法在满足一下情况时，`else`会被执行：
 
-. `for`或`while`循环里的语句执行完成
-. `for`或`while`循环里的语句没有被`break`或`return`语句打断
+- `for`或`while`循环里的语句执行完成
+- `for`或`while`循环里的语句没有被`break`或`return`语句打断
 
 
 
@@ -2207,18 +2207,22 @@ itertools模块可创建的迭代器一般分为三类:
 
 1. **无限迭代器**
 
-`count`  : itertools.count(start, step)             # count(5, 2)     #从5开始的整数循环器，每次增加2，即5, 7, 9, 11, 13, 15 ...
-`cycle`  : itertools.cycle(iterable)                  # cycle('abc')    #重复序列的元素，既a, b, c, a, b, c ...
-`repeat` :  itertools.repeat(object[, times])    # repeat(1.2)     #重复1.2，构成无穷循环器，即1.2, 1.2, 1.2, ...
+`count` : itertools.count(start, step)  # count(5, 2): 从5开始的整数循环器，每次增加2，即5, 7, 9, 11, 13, 15 ...
+
+`cycle` : itertools.cycle(iterable)     # cycle('abc'): 重复序列的元素，既a, b, c, a, b, c ...
+
+`repeat` : itertools.repeat(object[, times])   # repeat(1.2): 重复1.2，构成无穷循环器，即1.2, 1.2, 1.2, ...
 
 2. **终止于最短输入序列的迭代器**
 
-`chain`   :  itertools.chain(*iterables)            # chain([1, 2, 3], [4, 5, 7])      # 连接两个迭代器成为一个。1, 2, 3, 4, 5, 7
-`compress` :  itertools.compress(data, selectors)  # data为数据对象, selectors为选择器(规则) # compress([1,2,3], True,False,True])  # 返回数据对象中对应规则为True的元素 1,3
+`chain` : itertools.chain(*iterables)  # chain([1, 2, 3], [4, 5, 7]): 连接两个迭代器成为一个。1, 2, 3, 4, 5, 7
+
+`compress` : itertools.compress(data, selectors)  # data为数据对象, selectors为选择器(规则), compress([1,2,3], True,False,True]): 返回数据对象中对应规则为True的元素 1,3
 
 ### 9. str
 
 `str.partition` : 根据指定的分隔符将字符串进行分割。 "os.path.abspath".partition(".")   # ('os', '.', 'path.abspath')
+
 `str.rpartition` : 类似`str.partiton`。 "os.path.baspath".rpartition(".") # ('os.path', '.', 'abspath')
 
 
