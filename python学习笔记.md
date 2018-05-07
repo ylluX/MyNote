@@ -65,8 +65,9 @@
       * [3.1. xml解析模块](#31-xml解析模块)
    * [4. 学习资料](#4-学习资料)
       * [4.1 Python 资源大全中文版](#41-python-资源大全中文版)
-      * [4.2 Python Code Examples](#42-python-code-examples)
-      * [4.2 openCV](#42-opencv)
+      * [4.4 python各路大神](#44-python各路大神)
+      * [4.3 Python Code Examples](#43-python-code-examples)
+      * [4.4 openCV](#44-opencv)
    * [5. 编写规范](#5-编写规范)
       * [5.1 软件目录结构规范](#51-软件目录结构规范)
       * [5.2 宏基因组项目框架](#52-宏基因组项目框架)
@@ -80,7 +81,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: bmk, at: 2018-05-03T17:32+0800 -->
+<!-- Added by: bmk, at: 2018-05-07T14:34+0800 -->
 
 <!--te-->
 
@@ -4656,11 +4657,18 @@ except ImportError:
  
 Awesome 系列虽然挺全，但基本只对收录的资源做了极为简要的介绍，如果有更详细的中文介绍，对相应开发者的帮助会更大。这也是我们发起这个开源项目的初衷。
 
-## 4.2 Python Code Examples
+
+## 4.4 python各路大神
+
+* [Armin Ronacher(阿明·罗纳彻)](https://github.com/pallets), 代表作：flask，werkzeug，jinja，click
+* [Kenneth Reitz()](https://github.com/kennethreitz), 代表作：requests, pipenv, python-guide
+
+
+## 4.3 Python Code Examples
 
 [Python Code Examples](https://www.programcreek.com/python/)
 
-## 4.2 openCV
+## 4.4 openCV
 
 [http://blog.csdn.net/gangzhucoll/article/category/7284578/1](http://blog.csdn.net/gangzhucoll/article/category/7284578/1)
 
