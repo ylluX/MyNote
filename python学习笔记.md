@@ -4661,7 +4661,7 @@ Awesome 系列虽然挺全，但基本只对收录的资源做了极为简要的
 ## 4.4 python各路大神
 
 * [Armin Ronacher(阿明·罗纳彻)](https://github.com/pallets), 代表作：flask，werkzeug，jinja，click
-* [Kenneth Reitz()](https://github.com/kennethreitz), 代表作：requests, pipenv, python-guide
+* [Kenneth Reitz(肯尼斯·赖茨)](https://github.com/kennethreitz), 代表作：requests, pipenv, python-guide
 
 
 ## 4.3 Python Code Examples
