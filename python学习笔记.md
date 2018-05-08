@@ -5026,6 +5026,18 @@ MKL( Intel Math Kernel Library)是`英特尔`的`数学核心函数库`。
 
 ### scrapy
 
+**scrapy如何处理404等状态的地址**
+
+>默认情况下scrapy会把404等一些错误状态码的response直接过滤掉，我现在想让它不过滤掉，然后我自己判断状态码是否为404，进行后续操作，我查过官方文档，可以通过自己编写一个中间件，设置HttpErrorMiddleware.handle_httpstatus_list=[404]，就可以处理返回为404的response，但我试了，也不行，我想问问有什么办法可以达到我说的这种效果？
+
+在spider的类中把404放在handle_httpstatus_list中。如下就行。
+
+```
+class MySpider(CrawlSpider):
+    handle_httpstatus_list = [404]
+```
+
+
 ## web服务
 
 ### Flask
