@@ -363,6 +363,10 @@ $$A_2^3=6,  \binom{3}{2}=3$$
 
 * 调用itertools获取排列组合的全部情况数
 
+[廖雪峰的官方网站-itertools](https://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001415616001996f6b32d80b6454caca3d33c965a07611f000)
+
+[Python中的分组函数（groupby、itertools）- 爱做梦的鱼](https://www.cnblogs.com/dreamer-fish/p/5522687.html)
+
 ```
 >>> from itertools import combinations, permutations
 >>> permutations([1, 2, 3], 2)
