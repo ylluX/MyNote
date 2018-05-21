@@ -61,6 +61,7 @@
          * [5. sqlite3](#5-sqlite3)
          * [6. JSON 和 pickle](#6-json-和-pickle)
          * [7. six](#7-six)
+         * [8. pathlib](#8-pathlib)
    * [3. 模块比较](#3-模块比较)
       * [3.1. xml解析模块](#31-xml解析模块)
    * [4. 学习资料](#4-学习资料)
