@@ -4597,6 +4597,15 @@ python2和3的兼容库
 
 </br>
 
+
+### 8. pathlib
+
+pathlib是python3中的新模块，比os.path使用更方便。
+
+[python3中pathlib库的Path类的使用-AManFromEarth的博客](https://blog.csdn.net/amanfromearth/article/details/80265843)
+
+[让我们重新认识python3的pathlib-豆瓣](https://www.douban.com/group/topic/106994006/)
+
 ----
 
 # 3. 模块比较
