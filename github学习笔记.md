@@ -103,3 +103,8 @@ git remote add origin git@github.com:ylluX/python_script.git
 ```
 
 之后，你就可以愉快的使用git fetch, git pull , git push，再也不用输入烦人的密码了
+
+
+## [在Windows下清除ssh-key私钥访问密码](https://www.jianshu.com/p/3543f71dca9a)
+
+## [一台电脑同时使用GitLab和GitHub仓库](https://blog.csdn.net/KingBoyWorld/article/details/69221031?locationNum=1&fps=1)
