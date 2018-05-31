@@ -7,9 +7,10 @@
       * [参考资料](#参考资料)
       * [修改远端仓库的标签](#修改远端仓库的标签)
       * [push到Github每次都要输入密码](#push到github每次都要输入密码)
-      * [在Windows下清除ssh-key私钥访问密码](#在Windows下清除ssh-key私钥访问密码)
-      * [一台电脑同时使用GitLab和GitHub仓库](#一台电脑同时使用GitLab和GitHub仓库)
-<!-- Added by: bmk, at: 2018-05-02T14:23+0800 -->
+      * [一台电脑同时使用GitLab和GitHub仓库](#一台电脑同时使用gitlab和github仓库)
+   * [ssh-keygen](#ssh-keygen)
+
+<!-- Added by: luyl, at: 2018-05-31T09:38+08:00 -->
 
 <!--te-->
 
@@ -108,12 +109,14 @@ git remote add origin git@github.com:ylluX/python_script.git
 
 
 
-## 在Windows下清除ssh-key私钥访问密码
-
-[在Windows下清除ssh-key私钥访问密码](https://www.jianshu.com/p/3543f71dca9a)
-
-
-
 ## 一台电脑同时使用GitLab和GitHub仓库
 
 [一台电脑同时使用GitLab和GitHub仓库](https://blog.csdn.net/KingBoyWorld/article/details/69221031?locationNum=1&fps=1)
+
+
+
+# ssh-keygen
+
+* [SSH配置以及多个SSH & config文件](https://blog.csdn.net/wiki_su/article/details/50247551)
+* [在Windows下清除ssh-key私钥访问密码](https://www.jianshu.com/p/3543f71dca9a)
+* [ssh-keygen之后，生成的密码都叫id_rsa.pub，我想改名不行吗？](https://segmentfault.com/q/1010000005698184)
