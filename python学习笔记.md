@@ -28,6 +28,7 @@
          * [18. python的搜索路径](#18-python的搜索路径)
          * [19. 数据的归一化/标准化/正则化](#19-数据的归一化标准化正则化)
          * [20. for...else...语法](#20-forelse语法)
+         * [21. 将png合成gif](#21-将png合成gif)
       * [高级](#高级)
          * [1. 装饰器（Decorator）](#1-装饰器decorator)
          * [2. 回调函数](#2-回调函数)
@@ -82,7 +83,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: bmk, at: 2018-05-07T14:34+0800 -->
+<!-- Added by: luyl, at: 2018-06-01T14:02+08:00 -->
 
 <!--te-->
 
@@ -314,6 +315,8 @@ print(sum(int(line) for line in sys.stdin))
 ```
 
 ### 9. 智能排序
+
+[根据字符串中的数字排序，如f10应该在f2后面](https://blog.csdn.net/houyj1986/article/details/22966799)
 
 ```
 # 排序后效果：['M1','M2','M3','M10','M11']
@@ -841,6 +844,48 @@ findn(3)
 - `for`或`while`循环里的语句执行完成
 - `for`或`while`循环里的语句没有被`break`或`return`语句打断
 
+
+### 21. 将png合成gif
+
+[Python3.4.3中使用imageio库png合成gif](https://blog.csdn.net/qq_30650153/article/details/78374647?locationNum=5&fps=1)
+
+分解操作步骤
+
+* step1：找到所有给定的png图片 
+* step2：使用glob将所有png图片放入一个list 
+* step3：Save them as frames into a gif
+
+demo
+
+```
+#!/bin/python3
+
+import imageio
+import glob
+import re
+
+def create_gif(image_list, gif_name):  
+
+    frames = []  
+    for image_name in image_list:  
+        frames.append(imageio.imread(image_name))  
+    # Save them as frames into a gif   
+    imageio.mimsave(gif_name, frames, 'GIF', duration = 0.8)  
+
+    return 
+def find_all_png():
+
+    png_filenames = glob.glob(r"/home/py_learning/createGIF/*.png") 
+    buf=[]
+    for png_file in png_filenames:
+        buf.append(png_file)
+    return buf
+
+if __name__ == '__main__':
+
+    buff = find_all_png()
+    create_gif(buff,'created_gif.gif' )
+```
 
 
 </br>
