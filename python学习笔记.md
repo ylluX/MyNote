@@ -54,6 +54,7 @@
          * [13. inspect](#13-inspect)
          * [14. operator](#14-operator)
          * [15. contextlib](#15-contextlib)
+         * [16. PIL](#16-pil)
       * [第三方模块](#第三方模块)
          * [1. scipy.stats](#1-scipystats)
          * [2. pandas](#2-pandas)
@@ -83,7 +84,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: luyl, at: 2018-06-01T14:02+08:00 -->
+<!-- Added by: luyl, at: 2018-06-15T09:59+08:00 -->
 
 <!--te-->
 
@@ -3448,6 +3449,51 @@ def itemgetter(*items):
 [python上下文管理器ContextLib及with语句-CSDN](https://blog.csdn.net/pipisorry/article/details/50444736)
 
 
+### 16. PIL
+
+[基于Python的PIL库的学习（一）](https://blog.csdn.net/louishao/article/details/69879981)
+
+[python PIL 图像处理 （二）](https://blog.csdn.net/u013378306/article/details/70156842)
+
+[python，使用PIL库对图片进行操作](https://www.cnblogs.com/meitian/p/3699223.html)
+
+[python使用pil在图片上添加中文文字](http://outofmemory.cn/code-snippet/6640/python-draw-chinese-text-with-pil)
+
+代码实战
+
+```
+from PIL import Image, ImageDraw, ImageFont
+
+p1 = "../callcnv/14E023-05.cnv.chr1.png"
+p2 = "../callcnv/14E023-05.cnv.chr2.png"
+
+i1 = Image.open(p1)
+i2 = Image.open(p2)
+
+w, h = i1.size
+
+# 裁剪图片
+region = (0, 0, w, h/2)
+i2 = i2.crop(region)
+
+# 粘贴图片
+i1.paste(i2, (0, int(h/2)))
+
+# 添加字体
+font = ImageFont.truetype('simsun.ttc',24)
+draw = ImageDraw.Draw(i1)
+draw.text( (0,50), unicode(txt,'UTF-8'), font=font)
+del draw
+
+# 缩小图片
+i1 = i1.resize((int(w/2), int(h/2)))
+
+# 显示图片
+#i1.show()
+
+# 保存图片
+i1.save("merge.png")
+```
 
 
 </br>
@@ -4091,6 +4137,19 @@ second  0.0  1  0.58
 third   0.9  0  0.49
 ```
 
+1.2. [pandas.DataFrame对行和列求和及添加新行和列](https://www.cnblogs.com/wuzhiblog/p/python_new_row_or_col.html)
+
+**计算各列数据总和并作为新列添加到末尾**
+
+```
+df['Col_sum'] = df.apply(lambda x: x.sum(), axis=1)
+```
+
+**计算各行数据总和并作为新行添加到末尾**
+
+```
+df.loc['Row_sum'] = df.apply(lambda x: x.sum())
+```
 
 
 **<font color="green",size=5>自我总结</font>**
