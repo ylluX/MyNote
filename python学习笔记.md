@@ -58,6 +58,10 @@
       * [第三方模块](#第三方模块)
          * [1. scipy.stats](#1-scipystats)
          * [2. pandas](#2-pandas)
+            * [1. <strong>基本操作</strong>](#1-基本操作)
+               * [1.1. 小数位数 精度的处理round()](#11-小数位数-精度的处理round)
+               * [1.2. <a href="https://www.cnblogs.com/wuzhiblog/p/python_new_row_or_col.html" rel="nofollow">pandas.DataFrame对行和列求和及添加新行和列</a>](#12-pandasdataframe对行和列求和及添加新行和列)
+               * [1.3. <a href="https://blog.csdn.net/jinruoyanxu/article/details/79150896" rel="nofollow">在Pandas中更改列的数据类型</a>](#13-在pandas中更改列的数据类型)
          * [3. numpy](#3-numpy)
          * [4. click](#4-click)
          * [5. sqlite3](#5-sqlite3)
@@ -84,7 +88,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: luyl, at: 2018-06-15T09:59+08:00 -->
+<!-- Added by: luyl, at: 2018-06-15T17:18+08:00 -->
 
 <!--te-->
 
@@ -4104,9 +4108,9 @@ scipy,stats.kendalltau(a, b, initial_lexsort=None, nan_policy='omit')
 
 ### 2. pandas
 
-1. **基本操作**
+#### 1. **基本操作**
 
-1.1. 小数位数 精度的处理round()
+##### 1.1. 小数位数 精度的处理round()
 
 ```
 # 控制台打印时显示的2位小数
@@ -4137,7 +4141,7 @@ second  0.0  1  0.58
 third   0.9  0  0.49
 ```
 
-1.2. [pandas.DataFrame对行和列求和及添加新行和列](https://www.cnblogs.com/wuzhiblog/p/python_new_row_or_col.html)
+##### 1.2. [pandas.DataFrame对行和列求和及添加新行和列](https://www.cnblogs.com/wuzhiblog/p/python_new_row_or_col.html)
 
 **计算各列数据总和并作为新列添加到末尾**
 
@@ -4150,6 +4154,40 @@ df['Col_sum'] = df.apply(lambda x: x.sum(), axis=1)
 ```
 df.loc['Row_sum'] = df.apply(lambda x: x.sum())
 ```
+
+##### 1.3. [在Pandas中更改列的数据类型](https://blog.csdn.net/jinruoyanxu/article/details/79150896)
+
+如果想要将这个操作应用到多个列，依次处理每一列是非常繁琐的，所以可以使用`DataFrame.apply`处理每一列。
+
+```
+>>> a = [['a', '1.2', '4.2'], ['b', '70', '0.03'], ['x', '5', '0']]
+>>> df = pd.DataFrame(a, columns=['col1','col2','col3'])
+>>> df
+  col1 col2  col3
+0    a  1.2   4.2
+1    b   70  0.03
+2    x    5     0
+```
+
+然后可以写：
+
+```
+df[['col2','col3']] = df[['col2','col3']].apply(pd.to_numeric)
+```
+
+那么'col2'和'col3'根据需要具有float64类型。
+
+但是，可能不知道哪些列可以可靠地转换为数字类型。在这种情况下，设置参数：
+
+```
+df.apply(pd.to_numeric, errors='ignore')
+```
+
+然后该函数将被应用于整个DataFrame，可以转换为数字类型的列将被转换，而不能(例如，它们包含非数字字符串或日期)的列将被单独保留。
+
+另外pd.to_datetime和pd.to_timedelta可将数据转换为日期和时间戳。
+
+
 
 
 **<font color="green",size=5>自我总结</font>**
