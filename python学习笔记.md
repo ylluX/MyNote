@@ -29,6 +29,7 @@
          * [19. 数据的归一化/标准化/正则化](#19-数据的归一化标准化正则化)
          * [20. for...else...语法](#20-forelse语法)
          * [21. 将png合成gif](#21-将png合成gif)
+         * [22. 捕获警告](#22-捕获警告)
       * [高级](#高级)
          * [1. 装饰器（Decorator）](#1-装饰器decorator)
          * [2. 回调函数](#2-回调函数)
@@ -88,7 +89,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: luyl, at: 2018-06-15T17:18+08:00 -->
+<!-- Added by: luyl, at: 2018-06-20T09:02+08:00 -->
 
 <!--te-->
 
@@ -891,6 +892,26 @@ if __name__ == '__main__':
     buff = find_all_png()
     create_gif(buff,'created_gif.gif' )
 ```
+
+
+### 22. 捕获警告
+
+[python捕获警告的方法](https://blog.csdn.net/YMD8005/article/details/77980718)
+
+```
+ import warnings
+ warnings.filterwarnings('error')
+
+ try:
+    ...
+except Warning:
+    print 'Warning was raised as an exception!'
+```
+
+
+
+
+
 
 
 </br>
