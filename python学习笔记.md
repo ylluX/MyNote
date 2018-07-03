@@ -30,6 +30,8 @@
          * [20. for...else...语法](#20-forelse语法)
          * [21. 将png合成gif](#21-将png合成gif)
          * [22. 捕获警告](#22-捕获警告)
+         * [23. 将PDF转成PNG](#23-将pdf转成png)
+         * [24. os.walk()和os.path.walk()区别](#24-oswalk和ospathwalk区别)
       * [高级](#高级)
          * [1. 装饰器（Decorator）](#1-装饰器decorator)
          * [2. 回调函数](#2-回调函数)
@@ -89,7 +91,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: luyl, at: 2018-06-20T09:02+08:00 -->
+<!-- Added by: luyl, at: 2018-07-03T15:55+08:00 -->
 
 <!--te-->
 
@@ -908,8 +910,20 @@ except Warning:
     print 'Warning was raised as an exception!'
 ```
 
+### 23. 将PDF转成PNG
+
+[windows下用Python把pdf文件转化为图片(png格式)](https://blog.csdn.net/sqlserverdiscovery/article/details/51425543)
+
+[PythonMagick](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pythonmagick) 需要先安装ImageMagick，还需要安装ghostscript
+
+ghostscript 需要先安装 [Ghostscript](https://www.ghostscript.com/download/gsdnld.html)
 
 
+### 24. os.walk()和os.path.walk()区别
+
+[python os.walk()和os.path.walk()](https://www.cnblogs.com/zmlctt/p/4222621.html)
+
+> os.path.walk()在python3中被取消
 
 
 
