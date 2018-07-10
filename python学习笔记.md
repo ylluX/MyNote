@@ -40,6 +40,9 @@
          * [5. 多线程](#5-多线程)
          * [6. 字符编码](#6-字符编码)
          * [7. 内建函数](#7-内建函数)
+      * [python3新特性](#python3新特性)
+         * [1. pathlib](#1-pathlib)
+         * [2. f-string](#2-f-string)
    * [2. 常用模块](#2-常用模块)
       * [标准模块](#标准模块)
          * [1. sys](#1-sys)
@@ -91,7 +94,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: luyl, at: 2018-07-03T15:55+08:00 -->
+<!-- Added by: luyl, at: 2018-07-10T15:47+08:00 -->
 
 <!--te-->
 
@@ -2032,6 +2035,24 @@ open()函数的bufsize选项参数决定从文件中读取数据时所使用的�
 * `exec`: exec语句被设计为执行能使用函数和语句的任意组合的python的任何代码片段。执行的代码访问相同的全局定义和局部定义的对象、类和方法或函数。以下是使用exec语句的简单例子：`exec “print ‘Hello World’”` 也能通过提供一个包含对象及其取值的列表的字典来限定对exec语句有效的资源，如下例这样：`exec “print message”in myglobals,mylocals` 能用globals()和locals()函数来获得当前的字典. 请注意，exec语句执行表达式和语句、或者对表达式和语句求值，但是exec语句不返回任何值。因为exec是语句不是函数，所以任何获取返回值的试图都将导致语法错误
 * `execfile()函数`: 该函数执行与exec语句同样的操作，正如前面所描述的那样，它们的不同之处在于：execfile()函数从问几十年中读取被执行的语句，执行的对象不是字符串，不是代码对象；execfile()函数的其他所有方面都与exec语句等价
 * `eval()函数`: 该函数不允许执行任意的python语句。eval()函数被设计为：执行一个python表达式，并返回值，如下例中一样：`result=eval(userexpression)` 或者在语句中更显式地给出表达式，如下例所示：`result=eval(“3+6”)` 不能使用eval()函数去执行语句，根据经验，通常使用eval()函数开将一表达式求值并返回一个值，而在其他所有情况下则使用exec语句`exec()`
+
+
+
+## python3新特性
+
+
+### 1. pathlib
+
+* [8. pathlib](#8-pathlib)
+
+
+
+### 2. f-string
+
+[python3 f-string格式化字符串的高级用法](http://www.mlln.cn/2018/05/19/python3%20f-string%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/)
+
+
+
 
 
 </br>
@@ -4783,6 +4804,57 @@ pathlib是python3中的新模块，比os.path使用更方便。
 [python3中pathlib库的Path类的使用-AManFromEarth的博客](https://blog.csdn.net/amanfromearth/article/details/80265843)
 
 [让我们重新认识python3的pathlib-豆瓣](https://www.douban.com/group/topic/106994006/)
+
+**基本用法:**
+
+* `Path.iterdir()`　　#遍历目录的子目录或者文件
+* `Path.is_dir()`　　#判断是否是目录
+* `Path.glob()`　　#过滤目录(返回生成器)
+* `Path.resolve()`　　#返回绝对路径
+* `Path.exists()`　　#判断路径是否存在
+* `Path.open()`　　#打开文件(支持with)
+* `Path.unlink()`　　#删除文件或目录(目录非空触发异常)
+
+**基本属性:**
+
+* `Path.parts`　　#分割路径 类似os.path.split(), 不过返回元组
+* `Path.drive`　　#返回驱动器名称
+* `Path.root`　　#返回路径的根目录
+* `Path.anchor`　　#自动判断返回drive或root
+* `Path.parents`　　#返回所有上级目录的列表
+* `Path.suffix`   #文件后缀
+* `Path.stem`     #文件名不带后缀
+* `Path.name`     #带后缀的完整文件名
+* `Path.parent`   #路径的上级目录
+
+**改变路径:**
+
+* `Path.with_name()`　　#更改路径名称, 更改最后一级路径名
+* `Path.with_suffix()`　　#更改路径后缀
+* `Path.joinpath()`　　#拼接路径
+* `Path.relative_to()`　　#计算相对路径
+
+**测试路径:**
+
+* `Path.match()`　　#测试路径是否符合pattern
+* `Path.is_dir()`　　#是否是文件
+* `Path.is_absolute()`　　#是否是绝对路径
+* `Path.is_reserved()`　　#是否是预留路径
+* `Path.exists()`　　#判断路径是否真实存在
+
+**其他方法:**
+
+* `Path.cwd()`　　#返回当前目录的路径对象
+* `Path.home()`　　#返回当前用户的home路径对象
+* `Path.stat()`　　#返回路径信息, 同os.stat()
+* `Path.chmod()`　　#更改路径权限, 类似os.chmod()
+* `Path.expanduser()`　　#展开~返回完整路径对象
+* `Path.mkdir()`　　#创建目录
+* `Path.rename()`　　#重命名路径
+* `Path.rglob()`　　#递归遍历所有子目录的文件
+
+
+
 
 ----
 
