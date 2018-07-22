@@ -4922,7 +4922,7 @@ except ImportError:
 Awesome 系列虽然挺全，但基本只对收录的资源做了极为简要的介绍，如果有更详细的中文介绍，对相应开发者的帮助会更大。这也是我们发起这个开源项目的初衷。
 
 
-## 4.2 <<Python Cookbook>>
+## 4.2 \<\<Python Cookbook\>\>
 
 [Python Cookbook 3rd Edition Documentation](https://python3-cookbook-personal.readthedocs.io/zh_CN/latest/index.html)
 
