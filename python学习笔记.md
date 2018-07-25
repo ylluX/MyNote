@@ -350,6 +350,7 @@ print sorted(x, key=strnum) # ['M1','M2','M3','M10','M11']
 import numpy as np
 a=['b','d','a','c']
 b=[2,4,1,3]
+# 根据b对a排序
 ind=np.lexsort((a,b)) #array([2, 0, 3, 1])
 print [a[i] for i in ind] #['a', 'b', 'c', 'd']
 ```
