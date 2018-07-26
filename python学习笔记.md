@@ -78,7 +78,7 @@
       * [3.1. xml解析模块](#31-xml解析模块)
    * [4. 学习资料](#4-学习资料)
       * [4.1 Python 资源大全中文版](#41-python-资源大全中文版)
-      * [4.2 &lt;&gt;](#42-)
+      * [4.2 &lt;&lt;Python Cookbook&gt;&gt;](#42-python-cookbook)
       * [4.3 python各路大神](#43-python各路大神)
       * [4.4 Python Code Examples](#44-python-code-examples)
       * [4.5 openCV](#45-opencv)
@@ -95,7 +95,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: luyl, at: 2018-07-12T14:51+08:00 -->
+<!-- Added by: luyl, at: 2018-07-25T12:39+08:00 -->
 
 <!--te-->
 
@@ -350,6 +350,7 @@ print sorted(x, key=strnum) # ['M1','M2','M3','M10','M11']
 import numpy as np
 a=['b','d','a','c']
 b=[2,4,1,3]
+# 根据b对a排序
 ind=np.lexsort((a,b)) #array([2, 0, 3, 1])
 print [a[i] for i in ind] #['a', 'b', 'c', 'd']
 ```
@@ -4387,6 +4388,8 @@ array([1, 3, 2, 4])
 [官网](http://click.pocoo.org/6/)
 
 [命令行神器 Click 简明笔记](http://python.jobbole.com/87111/)
+
+[Python Click 学习笔记](https://isudox.com/2016/09/03/learning-python-package-click/)
 
 [pyspider源代码-run.py click模块](https://www.jianshu.com/p/fb75bcacaaa0)
 
