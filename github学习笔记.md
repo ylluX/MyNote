@@ -3,6 +3,7 @@
 <!--自动插入TOC：https://github.com/ekalinin/github-markdown-toc-->
 <!--ts-->
    * [目录](#目录)
+   * [基本概念](#基本概念)
    * [常见问题](#常见问题)
       * [参考资料](#参考资料)
       * [修改远端仓库的标签](#修改远端仓库的标签)
@@ -10,17 +11,62 @@
       * [一台电脑同时使用GitLab和GitHub仓库](#一台电脑同时使用gitlab和github仓库)
       * [git如何clone所有的远程分支](#git如何clone所有的远程分支)
       * [git本地的撤销修改和删除操作](#git本地的撤销修改和删除操作)
-      * [测ce](#测ce)
+   * [常见操作](#常见操作)
+      * [分支(branch)](#分支branch)
+      * [log](#log)
+      * [标签(tag)](#标签tag)
    * [ssh-keygen](#ssh-keygen)
 
-<!-- Added by: luyl, at: 2018-06-26T14:22+08:00 -->
+<!-- Added by: luyl, at: 2018-08-08T14:33+08:00 -->
 
 <!--te-->
 
 ----
 
-# 常见问题
+# 基本概念
 
+[Git仓库分支(Branch)和标签(Tag)](https://blog.csdn.net/iprettydeveloper/article/details/53944125)
+
+基于我们当前团队的协作能力和提交代码的质量水平，并考虑方便持续集成CI（自动化构建、 
+测试、发布），我们约定下列常驻Branch：
+
+	* **develop** 分支：顾名思义即持续开发的分支，我们希望每个开发组都在这个分支上保 
+持线性的持续小步迭代，正常的CodeReview WorkFlow和开发级的自动CI也在这里进行。 
+当开发完一个迭代(Sprint)，开发小组有信心转测时，就将代码合并到 release 分支， 
+并要求打一个alpha级的Tag(如5.2.0-alpha)
+	* **release** 分支：顾名思义即用于发布过程的分支，包括开发转测(实际上我们认为这里的测试集成测试)、测试和BugFix以及发布上线的过程，当发布成功时要打一个发布beta Tag(如 
+5.2.1-beta)，并将代码合并到 master 分支
+	* **master** 分支：即有质量保证的、可安全运行的分支，禁止直接代码提交，避免被污染，仅用 
+于代码合并和归集，在这个分支上的代码应该永远是可用的、稳定的。当需要拉一个特别的开发分时， 
+应该基于 master。
+
+当需要fix线上的一个问题是，应该基于上线时的那个beta Tag做hotfix。当出现线上Bug需要hotfix时，我们需要在上次上线的Tag处拉一个临时的 hotfix 分支进行 
+修正，或者在未被其他开发迭代污染的release分支上直接hotfix上线并合并到master和 
+develop，然后打一个新的Tag(如5.2.2-beta）
+
+这个分支体系是我们期望长期持续迭代的分支规划，其它临时分支的删除、创建、命名，都由团队自己 
+决定，保持一定的灵活性。但每个团队都应该努力避免对上述常规情况造成破坏的情况发生，如果有特 
+殊情况（如有两个并行的开发分支同步进行），需要由各组Leader和QA团队协商提供临时方案，这会 
+影响到团队协同中的转测、CI基准分支等。
+
+关于打 Tag 的规则 ：
+
+鼓励开发和QA团队共同对勤于打Tag，这便于真正的版本管理，避免有rollback需要或者需要查看和 
+对比历史版本的时候的混乱和低效局面。但同时也要求一定的规范性，让人一看便知。
+
+Tag格式为： MajorVersion.MinorVersion.FixVersion-TypeLabel，其中TypeLabel 
+为 alpha、 beta、 devel。具体参见下图举例，其中devel是留给开发过程中 
+使用的。
+
+分工上，开发团队负责打 tag-alpha，测试团队负责打 tag-beta。
+
+但是，自己决定并不意味着胡乱命名，大家仍然要以 语义明（白）（准）确 的原则 
+来管理自己的分支和标签名，因为所有这些都是为了提高协作效率。
+
+
+----
+
+# 常见问题
 
 
 ## 参考资料
@@ -29,8 +75,7 @@
 
 [GitHub详细教程 - 后山人的专栏 - CSDN博客](https://blog.csdn.net/lishuo_os_ds/article/details/8078475)
 
-[]()
-
+[Git命令大全](https://upload-images.jianshu.io/upload_images/290760-e8491f69473bf200.jpg)
 
 
 ## 修改远端仓库的标签
@@ -47,8 +92,6 @@ git remote remove origin
 git remote rename 旧名称 新名称
 git remote rename origin origin1
 ```
-
-
 
 
 ## push到Github每次都要输入密码
@@ -111,7 +154,6 @@ git remote add origin git@github.com:ylluX/python_script.git
 
 
 
-
 ## 一台电脑同时使用GitLab和GitHub仓库
 
 [一台电脑同时使用GitLab和GitHub仓库](https://blog.csdn.net/KingBoyWorld/article/details/69221031?locationNum=1&fps=1)
@@ -147,8 +189,34 @@ git clone只能clone远程库的master分支，无法clone所有分支，解决�
 
 如果已经add到暂存区，但还没有commit，想要回退到修改前的状态：`git reset HEAD <file>`
 
-## 测ce
 
+----
+
+
+# 常见操作
+
+## 分支(branch)
+
+* 查看本地分支： `git branch` 或 `git branch -l`
+* 查看远程分支： `git branch -a`
+* 切换分支：`git checkout branch2`
+* 将远程分支release克隆到本地：`git checkout -b release origin/release`
+
+## log
+
+* 查看log时每行显示一个：`git log --oneline`
+
+## 标签(tag)
+
+* 查看所有tag：`git tag`
+* 查看tag信息：`git show tagname`
+
+`git checkout tag1`可以跳到某个标签，但此时HEAD不会指向任何分支,严谨的说是HEAD指向了一个没有分支名字的修订版本，
+此时恭喜你,已经处于游离状态了(detached HEAD).这时候我们在进行commit操作不会提交到任何分支上去. 
+参考：[git问题记录--如何从从detached HEAD状态解救出来](https://www.jianshu.com/p/ae4857d2f868)
+
+
+----
 
 # ssh-keygen
 
