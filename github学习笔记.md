@@ -25,7 +25,8 @@
 
 # 基本概念
 
-[Git仓库分支(Branch)和标签(Tag)](https://blog.csdn.net/iprettydeveloper/article/details/53944125)
+* [Git仓库分支(Branch)和标签(Tag)](https://blog.csdn.net/iprettydeveloper/article/details/53944125)
+* [GIT分支管理是一门艺术](http://roclinux.cn/?p=2129)
 
 基于我们当前团队的协作能力和提交代码的质量水平，并考虑方便持续集成CI（自动化构建、 
 测试、发布），我们约定下列常驻Branch：
