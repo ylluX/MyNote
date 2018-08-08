@@ -26,6 +26,7 @@
          * [16. python内存变量保存到磁盘, 方便下次读入](#16-python内存变量保存到磁盘-方便下次读入)
          * [17. 查看内存汇总的所有变量](#17-查看内存汇总的所有变量)
          * [18. python的搜索路径](#18-python的搜索路径)
+         * [18.1 python的环境变量](#181-python的环境变量)
          * [19. 数据的归一化/标准化/正则化](#19-数据的归一化标准化正则化)
          * [20. for...else...语法](#20-forelse语法)
          * [21. 将png合成gif](#21-将png合成gif)
@@ -95,7 +96,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: luyl, at: 2018-07-25T12:39+08:00 -->
+<!-- Added by: luyl, at: 2018-08-08T11:04+08:00 -->
 
 <!--te-->
 
@@ -695,6 +696,16 @@ python搜索包是会从几个地方来查找路径：
 2. $PYTHONPATH
 3. /lib/python2.7/site-package/*.pth
 4. /lib/python2.7/site-package  [默认]
+
+### 18.1 python的环境变量
+
+```
+export PATH=/share/public/software/python/2.7.14/bin:$PATH
+export LD_LIBRARY_PATH=/share/public/software/python/2.7.14/lib:$LD_LIBRARY_PATH
+```
+
+`LD_LIBRARY_PATH`可以设置PYTHONPATH为`/share/public/software/python/2.7.14/lib/python2.7`
+
 
 ### 19. 数据的归一化/标准化/正则化
 
