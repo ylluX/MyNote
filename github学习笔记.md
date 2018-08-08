@@ -217,6 +217,13 @@ git clone只能clone远程库的master分支，无法clone所有分支，解决�
 参考：[git问题记录--如何从从detached HEAD状态解救出来](https://www.jianshu.com/p/ae4857d2f868)
 
 
+## diff
+
+* 显示出所有有差异的文件列表：`git diff branch1 branch2 --stat`
+* 显示指定文件的详细差异：`git diff branch1 branch2 文件名(带路径)`
+* 显示出所有有差异的文件的详细差异：`git diff branch1 branch2`
+
+
 ----
 
 # ssh-keygen
