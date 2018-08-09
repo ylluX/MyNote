@@ -154,6 +154,32 @@ git remote add origin git@github.com:ylluX/python_script.git
 之后，你就可以愉快的使用git fetch, git pull , git push，再也不用输入烦人的密码了
 
 
+## 解决gitlab需要输入用户名密码的问题
+
+[解决gitlab需要输入用户名密码的问题](https://www.jianshu.com/p/7f94238d24d4)
+
+```
+# 1. 进入~（用户）目录
+cd ~
+# 2. 建立文件 .git-credentials
+touch  .git-credentials
+# 3. 编辑文件 .git-credentials
+vi .git-credentials
+# 4. 添加信息
+http://用户名:密码@gitlab.com
+# 5. 执行命令
+git config --global credential.helper store
+# 6. 查看文件：
+more .gitconfig
+
+# 可以看到如下信息，设置成功。
+# [user]
+#     email = xxx@xxx.com
+#     name = xxx
+# [credential]
+#     helper = store
+```
+
 
 ## 一台电脑同时使用GitLab和GitHub仓库
 
