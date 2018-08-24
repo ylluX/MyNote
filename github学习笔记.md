@@ -8,6 +8,7 @@
       * [参考资料](#参考资料)
       * [修改远端仓库的标签](#修改远端仓库的标签)
       * [push到Github每次都要输入密码](#push到github每次都要输入密码)
+      * [添加了ssh-key还是需要输入用户名密码的问题](#添加了ssh-key还是需要输入用户名密码的问题)
       * [一台电脑同时使用GitLab和GitHub仓库](#一台电脑同时使用gitlab和github仓库)
       * [git如何clone所有的远程分支](#git如何clone所有的远程分支)
       * [git本地的撤销修改和删除操作](#git本地的撤销修改和删除操作)
@@ -15,9 +16,11 @@
       * [分支(branch)](#分支branch)
       * [log](#log)
       * [标签(tag)](#标签tag)
+      * [diff](#diff)
+      * [根据commit id查询包含该提交id的所有分支](#根据commit-id查询包含该提交id的所有分支)
    * [ssh-keygen](#ssh-keygen)
 
-<!-- Added by: luyl, at: 2018-08-08T14:33+08:00 -->
+<!-- Added by: luyl, at: 2018-08-24T13:42+08:00 -->
 
 <!--te-->
 
@@ -154,9 +157,31 @@ git remote add origin git@github.com:ylluX/python_script.git
 之后，你就可以愉快的使用git fetch, git pull , git push，再也不用输入烦人的密码了
 
 
-## 解决gitlab需要输入用户名密码的问题
+## 添加了ssh-key还是需要输入用户名密码的问题
 
-[解决gitlab需要输入用户名密码的问题](https://www.jianshu.com/p/7f94238d24d4)
+* [解决gitlab需要输入用户名密码的问题](https://www.jianshu.com/p/7f94238d24d4)
+* [Git使用手册：HTTPS和SSH方式的区别和使用](https://www.cnblogs.com/lqfxyy/p/5740720.html)
+
+在管理Git项目上，很多时候都是直接使用`https url`克隆到本地，当然也有有些人使用`SSH url`克隆到本地。这两种方式的主要区别在于：
+使用`https url`克隆对初学者来说会比较方便，复制`https url`然后到git Bash里面直接用clone命令克隆到本地就好了，
+但是每次fetch和push代码都需要输入账号和密码，这也是https方式的麻烦之处。
+而使用`SSH url`克隆却需要在克隆之前先配置和添加好SSH key，因此，**如果你想要使用`SSH url`克隆的话，你必须是这个项目的拥有者。
+否则你是无法添加SSH key的**，另外ssh默认是每次fetch和push代码都不需要输入账号和密码，
+如果你想要每次都输入账号密码才能进行fetch和push也可以另外进行设置。
+
+那么如果你不是项目的拥有者，怎么避免每次都输入账号密码呢？
+
+我们可以使用https方式进行访问。
+
+先在项目中的.git/config中添加：
+
+```
+[credential]      
+    helper = store 
+```
+那么下次输入用户名密码 时，git就会记住，从而在home目录下形成一个 `.git-credentials` 文件，里面就是保存的你的用户名和密码。
+
+或者我们也可以手动构建`.git-credentials`文件：
 
 ```
 # 1. 进入~（用户）目录
@@ -169,6 +194,8 @@ vi .git-credentials
 http://用户名:密码@gitlab.com
 # 5. 执行命令
 git config --global credential.helper store
+## 也可以将.git-credentials放在其他目录，只需要添加--file参数即可：
+## git config credential.helper store --file=/path/.git-credentials
 # 6. 查看文件：
 more .gitconfig
 
@@ -247,6 +274,16 @@ git clone只能clone远程库的master分支，无法clone所有分支，解决�
 * 显示出所有有差异的文件列表：`git diff branch1 branch2 --stat`
 * 显示指定文件的详细差异：`git diff branch1 branch2 文件名(带路径)`
 * 显示出所有有差异的文件的详细差异：`git diff branch1 branch2`
+* 比较本地与远端版本的差异：
+```
+# 获取远端库最新信息
+git fetch origin
+
+#做diff
+git diff dev origin/dev
+# 或者 
+git diff dev remote/dev
+```
 
 ## 根据commit id查询包含该提交id的所有分支
 
@@ -266,3 +303,4 @@ git branch -a --contains CommitID
 * [SSH配置以及多个SSH & config文件](https://blog.csdn.net/wiki_su/article/details/50247551)
 * [在Windows下清除ssh-key私钥访问密码](https://www.jianshu.com/p/3543f71dca9a)
 * [ssh-keygen之后，生成的密码都叫id_rsa.pub，我想改名不行吗？](https://segmentfault.com/q/1010000005698184)
+* [Linux两台主机之间建立信任（ssh免密码）](https://www.cnblogs.com/zhaojiedi1992/p/zhaojiedi_linux_023_sshgenkey.htm)

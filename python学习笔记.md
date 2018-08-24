@@ -96,7 +96,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: luyl, at: 2018-08-08T11:04+08:00 -->
+<!-- Added by: luyl, at: 2018-08-24T13:42+08:00 -->
 
 <!--te-->
 
@@ -4414,7 +4414,7 @@ array([1, 3, 2, 4])
 * `click.pass_context` : 返回当前上下文作为第一个参数传递给对应的方法. 每次一个命令被调用,一个新的上下文被处创建和指向父类上下文.通常,你看不到这些上下文.但是,上下文自动传递给参数和方法.命令可以通过 pass_context()来请求和传递上下文.在这种情况下上下文作文第一个参数.
 *  `click.Choice` : 让一个参数有一个选择列表.
 
-**自我总结**
+**自我总结1**
 
 ```
 import click
@@ -4455,6 +4455,13 @@ cli()
 
 
 ```
+
+**自我总结2**
+
+1. 如果想用`-h`代替`--help`，可以使用`@cli.command(context_settings=dict(help_option_names=['-h', '--help']))`
+2. 
+
+
 
 ### 5. sqlite3
 
