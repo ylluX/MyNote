@@ -33,6 +33,7 @@
          * [22. 捕获警告](#22-捕获警告)
          * [23. 将PDF转成PNG](#23-将pdf转成png)
          * [24. os.walk()和os.path.walk()区别](#24-oswalk和ospathwalk区别)
+         * [25. 以非root身份安装module](#25-以非root身份安装module)
       * [高级](#高级)
          * [1. 装饰器（Decorator）](#1-装饰器decorator)
          * [2. 回调函数](#2-回调函数)
@@ -69,6 +70,7 @@
                * [1.1. 小数位数 精度的处理round()](#11-小数位数-精度的处理round)
                * [1.2. <a href="https://www.cnblogs.com/wuzhiblog/p/python_new_row_or_col.html" rel="nofollow">pandas.DataFrame对行和列求和及添加新行和列</a>](#12-pandasdataframe对行和列求和及添加新行和列)
                * [1.3. <a href="https://blog.csdn.net/jinruoyanxu/article/details/79150896" rel="nofollow">在Pandas中更改列的数据类型</a>](#13-在pandas中更改列的数据类型)
+            * [1.4 其它](#14-其它)
          * [3. numpy](#3-numpy)
          * [4. click](#4-click)
          * [5. sqlite3](#5-sqlite3)
@@ -96,7 +98,7 @@
          * [Flask](#flask)
          * [Django](#django)
 
-<!-- Added by: luyl, at: 2018-08-24T13:42+08:00 -->
+<!-- Added by: luyl, at: 2018-09-03T09:07+08:00 -->
 
 <!--te-->
 
@@ -940,6 +942,20 @@ ghostscript 需要先安装 [Ghostscript](https://www.ghostscript.com/download/g
 [python os.walk()和os.path.walk()](https://www.cnblogs.com/zmlctt/p/4222621.html)
 
 > os.path.walk()在python3中被取消
+
+
+### 25. 以非root身份安装module
+
+`pip`
+
+```
+pip install six --target="/usr/lib/python2.7/dist-packages"
+```
+
+`setup.py`
+
+```
+```
 
 
 
@@ -4257,6 +4273,11 @@ df.apply(pd.to_numeric, errors='ignore')
 另外pd.to_datetime和pd.to_timedelta可将数据转换为日期和时间戳。
 
 
+#### 1.4 其它
+
+* 将NaN和inf替换为0 ： `df[df.isin([np.nan, np.inf])] = 0`
+
+
 
 
 **<font color="green",size=5>自我总结</font>**
@@ -4407,6 +4428,9 @@ array([1, 3, 2, 4])
 [Python click.pass_context() Examples](https://www.programcreek.com/python/example/86569/click.pass_context)
 
 [使用 Flask 开发 Web 应用（二）](https://segmentfault.com/a/1190000008426273)
+
+[怎样定制help或epilog格式--format_epilog()](https://stackoverflow.com/questions/42446923/python-click-help-formatting-newline#)
+
 
 * `click.group` : 命令可以通过group添加其他的命令.可以在脚本中随意嵌套
 * `click.option` : 使用option()和argument()添加参数
