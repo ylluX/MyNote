@@ -217,6 +217,242 @@ filter
 * -S, –set-GTs set genotypes of failed samples to missing value (.) or reference allele (0)（将不符合要求的个体基因型改为./.）
 
 
+## python模块
+
+### pysam
+
+* [pysam: htslib interface for python](https://pysam.readthedocs.io/en/latest/index.html)
+* [pysam - 多种格式基因组数据（sam/bam/vcf/bcf/cram/…）读写与处理模块（python)](https://www.cnblogs.com/nkwy2012/p/6558069.html)
+
+
+在开发基因组相关流程或工具时，经常需要读取、处理和创建bam、vcf、bcf文件。
+目前已经有一些主流的处理此类格式文件的工具，如samtools、picard、vcftools、bcftools，
+但此类工具集成的大多是标准功能，在编程时如果直接调用的话往往显得不够灵活。
+
+本文介绍的是一个处理基因组数据的python模块，它打包了htslib-1.3、samtools-1.3 和 
+bcftools-1.3的核心功能，能在编程时非常灵活的处理bam和bcf文件。
+
+
+#### 基础操作
+
+**1.安装**
+
+如果Linux上安装了pip，可以一键安装
+```
+pip3 install pysam
+```
+
+
+**2.读取bam文件(pysam.AlignmentFile)**
+
+bam是sam的二进制文件，因其占用空间少，所以都会使用bam进行存储和操作。
+
+要读取bam文件,必须先创建一个`AlignmentFile`对象.
+
+```
+path_in = './test.bam'
+samfile = pysam.AlignmentFile(path_in, "rb")
+```
+
+之后就可以逐行读取和处理bam文件了(顺序读取),以下打印出了bam的一行.
+
+```
+for line in samfile:
+    print(line)
+    break
+```
+
+其中，每个line都是`AlignedSegment`对象。
+
+```
+line = next(samfile)
+print(type(line))
+```
+
+
+**3.读取vcf/bcf文件(pysam.VariantFile)**
+
+读取方法同上,只是使用的是VariantFile方法:
+
+```
+gvcf = "./MHC.unified.g.vcf.gz"
+vcf_in = pysam.VariantFile(gvcf)
+```
+
+
+**4.创建并写入到新的bam或vcf文件**
+
+pysam的核心功能是可以随心所欲的读取数据,处理之后,写入到一个新建的bam或bcf文件里.
+
+我们可以完全自定义一些内容,然后写入到一个新的bam文件里,如下:
+
+```
+header = { ‘HD‘: {‘VN‘: ‘1.0‘},
+            ‘SQ‘: [{‘LN‘: 1575, ‘SN‘: ‘chr1‘},
+                   {‘LN‘: 1584, ‘SN‘: ‘chr2‘}] }
+
+with pysam.AlignmentFile(tmpfilename, "wb", header=header) as outf:
+    a = pysam.AlignedSegment()
+    a.query_name = "read_28833_29006_6945"
+    a.query_sequence="AGCTTAGCTAGCTACCTATATCTTGGTCTTGGCCG"
+    a.flag = 99
+    a.reference_id = 0
+    a.reference_start = 32
+    a.mapping_quality = 20
+    a.cigar = ((0,10), (2,1), (0,25))
+    a.next_reference_id = 0
+    a.next_reference_start=199
+    a.template_length=167
+    a.query_qualities = pysam.qualitystring_to_array("<<<<<<<<<<<<<<<<<<<<<:<9/,&,22;;<<<")
+    a.tags = (("NM", 1),
+              ("RG", "L1"))
+    outf.write(a)
+```
+同理,我们也可以读取一个已有的bam文件,逐个修改以上的属性,然后存储到一个新的bam文件里.
+这里不再举例.
+
+上面设置header可能有点麻烦,容易出错,但我们可以复制一个已有bam文件的header到一个新的bam文件里.
+
+```
+outf = pysam.AlignmentFile(path_out, "wb", template=samfile)
+```
+以上template参数指定了模板bam文件.
+
+
+**5.关闭文件**
+
+```
+outf.close()
+```
+
+**总结:**
+
+pysam模块非常实用,有了pysam模块,我们就可以非常灵活的操纵bam/bcf文件,
+而不必依赖于samtools或bcftools. pysam可以随机读取bam/bcf文件,
+也可以将处理后的内容自定义输出到bam/bcf文件.
+
+
+#### API
+
+##### SAM/BAM/CRAM files
+
+>pysam.AlignmentFile
+
+>pysam.AlignedSegment(AlignmentHeader header=None)
+
+**aend**: 参考序列结束位置(抛弃，用reference_end代替)
+**alen**: 参考序列长度(抛弃，用reference_length代替)
+**aligned_pairs**: 查询序列和参考序列一一对应的比对位点(抛弃，用get_aligned_pairs()代替)
+**bin**: 
+**blocks**: 参考序列的起始和终止位点(抛弃，用get_blocks()代替)
+**cigar**: cigar属性，简要比对信息表达式(抛弃，用cigar代替)
+**cigarstring**: 简要比对信息表达式，比如：'3S6M1P1I4M'
+**cigartuples**: 简要比对信息表达式, 返回列表，如： (operation, length)
+operation的类型：
+| 简写 | 类型 | 数字 |
+| ----- | ----:|:---- |
+|M|BAM_CMATCH|0|
+|I|BAM_CINS|1|
+|D|BAM_CDEL|2|
+|N|BAM_CREF_SKIP3|
+|S|BAM_CSOFT_CLIP4|
+|H|BAM_CHARD_CLIP5|
+|P|BAM_CPAD	6|
+|=|BAM_CEQUAL|7|
+|X|BAM_CDIFF|8|
+|B|BAM_CBACK|9|
+**compare(self, AlignedSegment other)**: return -1,0,1, if contents in this are binary <,=,> to other
+**flag**: flag属性
+**from_dict(type cls, sam_dict, AlignmentHeader header)**: 解析代表aligned segment的字典
+**fromstring(type cls, sam, AlignmentHeader header)**: 
+**get_aligned_pairs(self, matches_only=False, with_seq=False)**: 查询序列和参考序列一一对应的比对位点
+**get_blocks(self)**: a list of start and end positions of aligned gapless blocks
+**get_cigar_stats(self)**: 
+**get_forward_qualities(self)**: 原始reads的碱基质量(map到负链上的reads将是反的)
+**get_forward_sequence(self)**: 原始reads的碱基序列(map到负链上的reads将是反的)
+**get_overlap(self, uint32_t start, uint32_t end)**: 
+**get_reference_positions(self, full_length=False)**: reads比对到参考基因组的位置列表
+**get_reference_sequence(self)**: 参考序列
+**get_tag(self, tag, with_value_type=False)**: 
+**get_tags(self, with_value_type=False)**: 可选字段 [('XT', 'U'), ('NM', 1), ('X0', 1), ('MD', '24G11')]
+**has_tag(self, tag)**: 
+**infer_query_length(self, always=False)**: 从CIGAR字段推断查询序列长度
+**infer_read_length(self)**: 从CIGAR字段推断read长度
+**inferred_length**: 抛弃，用 infer_query_length()代替
+**is_duplicate**: 是否是 optical 或者PCR重复
+**is_paired**: 是否是paired序列
+**is_proper_pair**: 是否是适当、正确的pair？
+**is_qcfail**: 是否质控失败
+**is_read1**: 
+**is_read2**: 
+**is_reverse**: 是否map到负链
+**is_secondary**: 是否不是主要的比对(有更好的比对位置)
+**is_supplementary**: 是否是补充对齐
+**is_unmapped**: 是否没有比对上
+**isize**: 抛弃，使用template_length代替
+**mapping_quality**: mapping的质量
+**mapq**: 抛弃，用mapping_quality代替
+**mate_is_reverse**: 是否mate比对到了负链
+**mate_is_unmapped**: mate是否没有比对上
+**mpos**: 抛弃，用next_reference_start代替
+**mrnm**: 抛弃， 用next_reference_id代替
+**next_reference_id**:  mate/next read的reference id
+**next_reference_name**: 
+**next_reference_start**: 
+**opt(self, tag)**: 抛弃，用get_tag()代替
+**overlap(self)**: 抛弃，用get_overlap() 代替
+**pnext**: 抛弃，用next_reference_start 代替
+**pos**: 抛弃，用reference_start代替
+**positions**: 抛弃，用 get_reference_positions()代替
+**qend**: 抛弃，用query_alignment_end代替
+**qlen**: 抛弃，用query_alignment_length代替
+**qname**: 抛弃，用query_name代替
+**qqual**: 抛弃，用query_alignment_qualities代替
+**qstart**: 抛弃，用query_alignment_start代替
+**qual**: 抛弃，用query_qualities 代替
+**query**: 抛弃，用query_alignment_sequence 代替
+**query_alignment_end**: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****: 
+****:
+
+
+>class pysam.PileupColumn
+
+>class pysam.PileupRead
+
+>class pysam.IndexedReads(AlignmentFile samfile, int multiple_iterators=True)
+
+
+
 
 ----
 
@@ -253,8 +489,8 @@ samtools faidx genome.fasta
 ```
 chr1	17	19
 ```
-chr1，17都很好理解，20表示的是第一个A在文件中开始的坐标，我们从第一个字符开始数
->:0,c:1,h:2,r:3,1:4,(空格):5,<:6,n:7,o:8,(空格):9,d:10,e:11,s:12,r:13,i:14,b:15,
+chr1，17都很好理解，20表示的是第一个A在文件中开始的坐标，我们从第一个字符开始数>:0,
+c:1,h:2,r:3,1:4,(空格):5,<:6,n:7,o:8,(空格):9,d:10,e:11,s:12,r:13,i:14,b:15,
 e:16,>:17,\n(最后有一个看不见的换行符):18。所以A开始的位置是19。（希望我这么解释能够说明白）
 4. 一行有多少个碱基：因为一般情况下，基因组的序列不可能写到一行中，会分行开始写，
 但是每一行的碱基数是固定的（除了最后一行），假设每一行写60个碱基，那么第四列的数字就是60.

@@ -958,6 +958,112 @@ pip install six --target="/usr/lib/python2.7/dist-packages"
 ```
 
 
+### 26. 执行shell命令
+
+这篇文章主要介绍了python中执行shell命令的几个方法,本文一共给出4种方法实现执行shell命令,需要的朋友可以参考下
+
+最近有个需求就是页面上执行shell命令，第一想到的就是`os.system`，
+
+ ```
+ os.system('cat /proc/cpuinfo')
+ ```
+
+但是发现页面上打印的命令执行结果 0或者1，当然不满足需求了。
+
+ 
+尝试第二种方案 `os.popen()`
+
+```
+output = os.popen('cat /proc/cpuinfo')
+print output.read()
+```
+
+通过 `os.popen()` 返回的是 file read 的对象，对其进行读取 `read()` 的操作可以看到执行的输出。但是无法读取程序执行的返回值）
+
+ 
+
+尝试第三种方案 `commands.getstatusoutput()` 一个方法就可以获得到返回值和输出，非常好用。
+
+```
+(status, output) = commands.getstatusoutput('cat /proc/cpuinfo')
+print status, output
+```
+
+Python Document 中给的一个例子，
+
+```
+>>> import commands
+>>> commands.getstatusoutput('ls /bin/ls')
+(0, '/bin/ls')
+#【返回一个元组（status，output）】
+>>> commands.getstatusoutput('cat /bin/junk')    
+(256, 'cat: /bin/junk: No such file or directory')
+>>> commands.getstatusoutput('/bin/junk')
+(256, 'sh: /bin/junk: not found')
+#【判断Shell命令的输出内容】【会阻塞】
+>>> commands.getoutput('ls /bin/ls') 
+'/bin/ls'
+#【返回Shell命令返回值的方法， 但是这个结果只能判读其成功执行与否】
+#【该函数已被python丢弃，不建议使用，它返回ls -ld file 的结果（String）】
+>>> commands.getstatus('/bin/ls')  
+'-rwxr-xr-x 1 root 13352 Oct 14 1994 /bin/ls'
+```
+ 
+
+第四种方法`subprocess.call`
+
+```
+import subprocess
+subprocess.call(['ls','-a','/'])
+subprocess.Popen('ls -a /',shell=True)
+```
+
+如果通过subrpocess利用nohup向后台提交一个任务，怎么获得后台运行任务的pid：
+
+```
+a=subprocess.Popen('nohup python a.py >nohup.out & echo $!', shell=True,stdout=subprocess.PIPE)
+a.communicate()   【缺点：只有等待后台任务运行完毕，才能获得pid】，记得要加参数：stdout=subprocess.PIPE
+a.pid()  【注意：返回的是当前脚本的pid，而不是后台任务的pid】
+```
+
+更好的方法，还没有想到！，有个折中的方法：
+
+```
+a=subprocess.Popen('nohup python a.py >nohup.out & echo "$!\ta.py">>run.pid', shell=True)
+```
+
+
+### 27. Python 对数字的千分位处理
+
+法1：
+
+```
+>>> "{:,}".format(56381779049)
+'56,381,779,049'
+>>> "{:,}".format(56381779049.1)
+'56,381,779,049.1'
+```
+
+法2：
+
+```
+>>> import re
+>>> subject = '1234567'
+>>> result = re.sub(r"(?<=\d)(?=(?:\d\d\d)+$)", ",", subject)
+>>> result
+'1,234,567'
+```
+
+法3：
+
+```
+>>> import re
+>>> subject = '1234567'
+>>> result = re.sub(r"(\d)(?=(\d\d\d)+(?!\d))", r"\1,", subject)
+>>> result
+'1,234,567'
+```
+
 
 
 </br>
@@ -1637,19 +1743,16 @@ Get C from queue.
 
 ### 5. 多线程
 
-[Python-threading并发操作](http://blog.csdn.net/y2701310012/article/details/40863145)
+* [Python：使用threading模块实现多线程编程一[综述]](https://blog.csdn.net/bravezhe/article/details/8585437)
+* [Python-threading并发操作](http://blog.csdn.net/y2701310012/article/details/40863145)
 
 ### 6. 字符编码
 
-[Python中文字符的理解：str()、repr()、print](https://www.cnblogs.com/omg24/p/5048319.html)
-
-[python中文编码问题深入分析（二）：print打印中文异常及显示乱码问题分析与解决](https://www.cnblogs.com/litaozijin/p/6416133.html)
-
-[廖雪峰的官方网站-字符串和编码](https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431664106267f12e9bef7ee14cf6a8776a479bdec9b9000)
-
-[Python中的str与unicode处理方法](http://python.jobbole.com/81244/)
-
-[从原理上搞定编码-- Base64编码](http://www.cnblogs.com/chengxiaohui/articles/3951129.html) 
+* [Python中文字符的理解：str()、repr()、print](https://www.cnblogs.com/omg24/p/5048319.html)
+* [python中文编码问题深入分析（二）：print打印中文异常及显示乱码问题分析与解决](https://www.cnblogs.com/litaozijin/p/6416133.html)
+* [廖雪峰的官方网站-字符串和编码](https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431664106267f12e9bef7ee14cf6a8776a479bdec9b9000)
+* [Python中的str与unicode处理方法](http://python.jobbole.com/81244/)
+* [从原理上搞定编码-- Base64编码](http://www.cnblogs.com/chengxiaohui/articles/3951129.html) 
 
 
 <font color="red">
@@ -4900,6 +5003,33 @@ pathlib是python3中的新模块，比os.path使用更方便。
 * `Path.rglob()`　　#递归遍历所有子目录的文件
 
 
+
+### 9. schedule
+
+* [官网](https://schedule.readthedocs.io/en/stable/)
+* [使用Python完美管理和调度你的多个任务](https://blog.csdn.net/oh5W6HinUg43JvRhhB/article/details/78589009)
+* [python中schedule模块的使用](https://blog.csdn.net/kamendula/article/details/51452352)
+* [python中的轻量级定时任务调度库：schedule](http://www.cnblogs.com/anpengapple/p/8051923.html)
+
+例子：
+
+```
+import schedule
+import time
+
+def job():
+    print("I'm working...")
+
+schedule.every(10).minutes.do(job)
+schedule.every().hour.do(job)
+schedule.every().day.at("10:30").do(job)
+schedule.every().monday.do(job)
+schedule.every().wednesday.at("13:15").do(job)
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
+```
 
 
 ----
