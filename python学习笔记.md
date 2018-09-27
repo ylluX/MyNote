@@ -5515,3 +5515,27 @@ class MySpider(CrawlSpider):
 
 
 ### Django
+
+----
+
+# 8. 第三方包安装教程
+
+## 8.1 pypcap
+
+[github](https://github.com/pynetwork/pypcap)
+
+pypcap 是 WinPcap 的python接口。安装前需要先安装WinPcap，但win10系统不支持WinPcap，
+所以可以使用Npcap来代替WinPcap。
+
+具体安装步骤如下：
+
+1. Npcap需要先安装nmap，而nmap又需要安装 Microsoft Visual C++ 14.0，所以第一步我们先安装VC++。[点击此处下载](https://go.microsoft.com/fwlink/?LinkId=691126), 差不多3G左右。 （python2可能需要Microsoft Visual C++ 9.0） [参考](https://blog.csdn.net/weixin_41184241/article/details/80144707)
+2. 安装nmap: [nmap-7.70-setup.exe](https://nmap.org/dist/nmap-7.70-setup.exe), 安装时**一定要勾选Install Npcap in WinPcap API-compatible Mode**. [参考](https://nmap.org/download.html)
+3. 下载[pypcap](https://github.com/pynetwork/pypcap)和[npcap-sdk-0.1.zip](https://nmap.org/npcap/), 并将他们解压后的文件夹放到同一级目录下，同时将npcap-sdk-0.1文件夹重命名为wpdpack
+4. 进入pypcap文件夹中，执行：python setup.py install
+5. 进入python， import pcap 检测是否成功
+
+
+
+
+
