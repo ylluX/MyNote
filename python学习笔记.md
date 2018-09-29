@@ -80,6 +80,12 @@
          * [7. six](#7-six)
          * [8. pathlib](#8-pathlib)
          * [9. schedule](#9-schedule)
+      * [黑客模块](#黑客模块)
+         * [1. pywin32](#1-pywin32)
+         * [2. psutil](#2-psutil)
+         * [3. pypcap](#3-pypcap)
+         * [4. pyhook](#4-pyhook)
+         * [5. PyUserInput](#5-pyuserinput)
    * [3. 模块比较](#3-模块比较)
       * [3.1. xml解析模块](#31-xml解析模块)
    * [4. 学习资料](#4-学习资料)
@@ -103,7 +109,7 @@
    * [8. 第三方包安装教程](#8-第三方包安装教程)
       * [8.1 pypcap](#81-pypcap)
 
-<!-- Added by: luyl, at: 2018-09-29T13:34+08:00 -->
+<!-- Added by: luyl, at: 2018-09-29T17:35+08:00 -->
 
 <!--te-->
 
