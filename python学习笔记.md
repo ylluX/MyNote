@@ -5037,6 +5037,45 @@ while True:
 ```
 
 
+## 黑客模块
+
+### 1. pywin32
+
+* [Win32API参考手册](http://www.yfvb.com/help/win32sdk/index.htm?page=html/tizm5q.htm)
+* [pywin32-docs](http://timgolden.me.uk/pywin32-docs/contents.html)
+
+
+### 2. psutil
+
+* [github](https://github.com/giampaolo/psutil)
+* [python模块之psutil详解](https://www.cnblogs.com/saneri/p/7528283.html)
+* [psutil 实现netstat的功能来获得本机的所有网络连接(网络端口)](https://github.com/giampaolo/psutil/blob/master/scripts/netstat.py)
+
+psutil是一个跨平台库(http://pythonhosted.org/psutil/)能够轻松实现获取系统运行的进程和系统利用率
+（包括CPU、内存、磁盘、网络等）信息。它主要用来做系统监控，性能分析，进程管理。它实现了同等命令行工具提供的功能，
+如ps、top、lsof、netstat、ifconfig、who、df、kill、free、nice、ionice、iostat、iotop、uptime、pidof、tty、taskset、pmap等。
+目前支持32位和64位的Linux、Windows、OS X、FreeBSD和Sun Solaris等操作系统.
+
+### 3. pypcap
+
+pypcap 是 WinPcap 或libpcap 的 python 接口, 可以捕获网络数据封包
+
+
+### 4. pyhook
+
+[pyHook监测键盘鼠标事件等](https://www.cnblogs.com/franknihao/p/7904434.html)
+
+pyHook是一个用来进行键盘、鼠标等层面事件监控的库。这个库的正常工作需要pythoncom等操作系统的API的支持
+
+
+### 5. PyUserInput
+
+[Python-模拟鼠标键盘动作](https://www.jianshu.com/p/552f96aa85dc)
+
+PyUserInput中的pymouse和pykeyboard模块可以用来进行键盘、鼠标等层面事件监控
+
+
+
 ----
 
 # 3. 模块比较
