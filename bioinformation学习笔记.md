@@ -13,10 +13,15 @@
       * [生物信息软件参数解析](#生物信息软件参数解析)
          * [samtools](#samtools)
          * [bcftools](#bcftools)
+      * [python模块](#python模块)
+         * [pysam](#pysam)
+            * [基础操作](#基础操作)
+            * [API](#api)
+               * [SAM/BAM/CRAM files](#sambamcram-files)
    * [文件格式](#文件格式)
       * [.fai (索引文件)](#fai-索引文件)
 
-<!-- Added by: luyl, at: 2018-09-10T13:18+08:00 -->
+<!-- Added by: luyl, at: 2018-09-29T13:34+08:00 -->
 
 <!--te-->
 

@@ -20,10 +20,11 @@
       * [标签(tag)](#标签tag)
       * [diff](#diff)
       * [rm](#rm)
+      * [merge](#merge)
       * [根据commit id查询包含该提交id的所有分支](#根据commit-id查询包含该提交id的所有分支)
    * [ssh-keygen](#ssh-keygen)
 
-<!-- Added by: luyl, at: 2018-09-03T09:07+08:00 -->
+<!-- Added by: luyl, at: 2018-09-29T13:35+08:00 -->
 
 <!--te-->
 
@@ -323,6 +324,16 @@ git diff dev remote/dev
 * 删除文件：`git rm myfile`
 * 递归移除目录：`git rm -r mydir`
 * 从版本库中删除，但仍保留在本地：`git rm --cached myfile`
+
+
+## merge
+[Git 分支 - 分支的新建与合并](https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E6%96%B0%E5%BB%BA%E4%B8%8E%E5%90%88%E5%B9%B6)
+[廖雪峰的官方网站](https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/001375840038939c291467cc7c747b1810aab2fb8863508000)
+
+```
+# 将dev分支merge到当前分支，但不要自动进行新的提交
+git merge --no-commit dev
+```
 
 
 ## 根据commit id查询包含该提交id的所有分支

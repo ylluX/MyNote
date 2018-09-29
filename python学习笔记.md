@@ -34,6 +34,8 @@
          * [23. 将PDF转成PNG](#23-将pdf转成png)
          * [24. os.walk()和os.path.walk()区别](#24-oswalk和ospathwalk区别)
          * [25. 以非root身份安装module](#25-以非root身份安装module)
+         * [26. 执行shell命令](#26-执行shell命令)
+         * [27. Python 对数字的千分位处理](#27-python-对数字的千分位处理)
       * [高级](#高级)
          * [1. 装饰器（Decorator）](#1-装饰器decorator)
          * [2. 回调函数](#2-回调函数)
@@ -77,6 +79,7 @@
          * [6. JSON 和 pickle](#6-json-和-pickle)
          * [7. six](#7-six)
          * [8. pathlib](#8-pathlib)
+         * [9. schedule](#9-schedule)
    * [3. 模块比较](#3-模块比较)
       * [3.1. xml解析模块](#31-xml解析模块)
    * [4. 学习资料](#4-学习资料)
@@ -97,8 +100,10 @@
       * [web服务](#web服务)
          * [Flask](#flask)
          * [Django](#django)
+   * [8. 第三方包安装教程](#8-第三方包安装教程)
+      * [8.1 pypcap](#81-pypcap)
 
-<!-- Added by: luyl, at: 2018-09-03T09:07+08:00 -->
+<!-- Added by: luyl, at: 2018-09-29T13:34+08:00 -->
 
 <!--te-->
 
