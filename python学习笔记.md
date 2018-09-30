@@ -87,6 +87,8 @@
          * [3. pypcap](#3-pypcap)
          * [4. pyhook](#4-pyhook)
          * [5. PyUserInput](#5-pyuserinput)
+         * [6. pydivert](#6-pydivert)
+         * [7. redsails](#7-redsails)
    * [3. 模块比较](#3-模块比较)
       * [3.1. xml解析模块](#31-xml解析模块)
    * [4. 学习资料](#4-学习资料)
@@ -110,7 +112,7 @@
    * [8. 第三方包安装教程](#8-第三方包安装教程)
       * [8.1 pypcap](#81-pypcap)
 
-<!-- Added by: luyl, at: 2018-09-30T11:13+08:00 -->
+<!-- Added by: luyl, at: 2018-09-30T17:10+08:00 -->
 
 <!--te-->
 
@@ -5123,8 +5125,26 @@ pyHook是一个用来进行键盘、鼠标等层面事件监控的库。这个�
 PyUserInput中的pymouse和pykeyboard模块可以用来进行键盘、鼠标等层面事件监控
 
 
+### 6. pydivert
+
+[github](https://github.com/ffalcinelli/pydivert)
+
+pydivert 是 WinDivert 的python接口。与WinPcap只能复制封包副本不同，WinDivert能够截获封包，
+修改并发送到目标地址。
+
+
+
+### 7. redsails
+
+[超级隐蔽之后门技巧](https://blog.csdn.net/Fly_hps/article/details/80428167)
+
+Redsails是使用python开发的一款后渗透测试工具，其目的是可以使我们在目标主机上执行命令且无需创建任何事件日志以及网络连接.
+
+
+
 
 ----
+
 
 # 3. 模块比较
 
@@ -5626,8 +5646,5 @@ pypcap 是 WinPcap 的python接口。安装前需要先安装WinPcap，但win10�
 3. 下载[pypcap](https://github.com/pynetwork/pypcap)和[npcap-sdk-0.1.zip](https://nmap.org/npcap/), 并将他们解压后的文件夹放到同一级目录下，同时将npcap-sdk-0.1文件夹重命名为wpdpack
 4. 进入pypcap文件夹中，执行：python setup.py install
 5. 进入python， import pcap 检测是否成功
-
-
-
 
 
