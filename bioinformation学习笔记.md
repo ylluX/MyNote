@@ -213,17 +213,17 @@ FISH即染色体荧光原位杂交(Flourescence in situ hybridization,FISH)是�
 内的DNA靶序列杂交，从而获得细胞核内染色体或基因状态的信息。FISH是将传统的细胞遗传学同DNA技术相结合，开
 创了一门新的学科——分子细胞遗传学。（如下图所示)
 
-![](http://image109.360doc.com/DownloadImg/2018/09/1623/144477371_2_20180916110354270)
+![](https://mmbiz.qpic.cn/mmbiz_png/kMeQ2TpoXzo1fMadhxq6WHR205wPw1JkSwjdow97lQB2aD0IWR0dy6YFrUU2ng1AzvBRHoibSR2V37HiaP9EeKug/0?wx_fmt=png)
 
-**2.FISH信号解读-红红绿绿是什么 **
+**2.FISH信号解读-红红绿绿是什么**
 
- 目前临床上用于FISH检测的探针的荧光素大都是绿色的和橙红色标记，可大致分为：染色体计数(着丝粒)探针
- (centromere-enumeration probes，CEP)，位点特异性识别探针(locus-specific identifier probes，LSI)，染色体
- 涂染(paint，WCP)探针。其中CEP和LSI探针中的计数探针、融合探针及分离重排探针，在血液病诊断与预后分型中最
- 为常用。比如骨髓增生异常综合征(MDS)中8号染色体数目会增加;又或者多发性骨髓瘤(MM)中IGH基因的结构重排和
- AML-M3中的PML/RARA融合基因。检测的结果可以是扩增、缺失、融合、断裂等。
+目前临床上用于FISH检测的探针的荧光素大都是绿色的和橙红色标记，可大致分为：染色体计数(着丝粒)探针
+(centromere-enumeration probes，CEP)，位点特异性识别探针(locus-specific identifier probes，LSI)，染色体
+涂染(paint，WCP)探针。其中CEP和LSI探针中的计数探针、融合探针及分离重排探针，在血液病诊断与预后分型中最
+为常用。比如骨髓增生异常综合征(MDS)中8号染色体数目会增加;又或者多发性骨髓瘤(MM)中IGH基因的结构重排和
+AML-M3中的PML/RARA融合基因。检测的结果可以是扩增、缺失、融合、断裂等。
 
- ![](http://image109.360doc.com/DownloadImg/2018/09/1623/144477371_3_20180916110354333)
+![](https://mmbiz.qpic.cn/mmbiz_png/kMeQ2TpoXzo1fMadhxq6WHR205wPw1JkyDy5Jn7X9527EUicRJBiaziarH7uVBd4hm0WoQvxtXQKjiaaT3L9a8fHgA/0?wx_fmt=png)
 
 **3.计数探针的原理**
 
@@ -231,7 +231,7 @@ FISH即染色体荧光原位杂交(Flourescence in situ hybridization,FISH)是�
 的染色体是二倍体，那么正常人的检测信号就是两个，当信号多于两个或者少于两个(排除切片影响)，该染色体或者基
 因就异常(扩增或缺失);如下图8号染色体三体。
 
-![](http://image109.360doc.com/DownloadImg/2018/09/1623/144477371_4_20180916110354427)
+![](https://mmbiz.qpic.cn/mmbiz_png/kMeQ2TpoXzo1fMadhxq6WHR205wPw1JkmtuHhicRutxnmVZMMicXSVXqoGyqLbbQB7icIjsJO3spxXhunEibW0tQ9Q/0?wx_fmt=png)
 
 **4.双色双融合探针的原理**
 
@@ -239,7 +239,7 @@ FISH即染色体荧光原位杂交(Flourescence in situ hybridization,FISH)是�
 基因位点相互融合就会形成典型的两个融合信号(黄色)和一个正常的绿色信号及一个正常的红色信号;如下图慢性粒细胞
 白血病BCR/ABL融合基因形成模式图。
 
-![](http://image109.360doc.com/DownloadImg/2018/09/1623/144477371_5_20180916110354505)
+![](https://mmbiz.qpic.cn/mmbiz_png/kMeQ2TpoXzo1fMadhxq6WHR205wPw1JkCkqVS1fmWChyzTB8gzpCM5INMlEOASPV357vFBp9jhwATeWziawlib7Q/0?wx_fmt=png)
 
 **5.重排探针的原理**
 
@@ -247,9 +247,9 @@ FISH即染色体荧光原位杂交(Flourescence in situ hybridization,FISH)是�
 红色和绿色靠近会发生混合色形成黄色;如果发生断裂，则形成单独的颜色(如单独的红或绿)，当然，重排探针同样能够
 提示数目异常(如多倍体)。如下图IGH基因的重排。
 
-![](http://image109.360doc.com/DownloadImg/2018/09/1623/144477371_6_20180916110354567)
+![](https://mmbiz.qpic.cn/mmbiz_png/kMeQ2TpoXzo1fMadhxq6WHR205wPw1JkY8PG8JaxSsq4jL0yNLdsKZgceibCs1lQYc7VoibOlv0xPZD9KyYoFqNg/0?wx_fmt=png)
 
-**6..FISH检测的优势是什么**
+**6.FISH检测的优势是什么**
 
 FISH技术一般用于了解基因或染色体发生扩增、缺失、融合或断裂，只需分析间期细胞，每次可分析间期细胞500-1000个，
 不受细胞是否分裂的影响，能更好地全面判断患者某种染色体异常比例。由于使用的是特异的探针，使人为的判断误差大
