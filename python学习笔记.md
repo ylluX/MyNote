@@ -37,6 +37,7 @@
          * [26. 执行shell命令](#26-执行shell命令)
          * [27. Python 对数字的千分位处理](#27-python-对数字的千分位处理)
          * [28. 按位运算](#28-按位运算)
+         * [29. 进制](#29-进制)
       * [高级](#高级)
          * [1. 装饰器（Decorator）](#1-装饰器decorator)
          * [2. 回调函数](#2-回调函数)
@@ -112,7 +113,7 @@
    * [8. 第三方包安装教程](#8-第三方包安装教程)
       * [8.1 pypcap](#81-pypcap)
 
-<!-- Added by: luyl, at: 2018-09-30T17:10+08:00 -->
+<!-- Added by: luyl, at: 2018-10-11T10:49+08:00 -->
 
 <!--te-->
 
@@ -1120,6 +1121,60 @@ a ^ 0xFF          # 按位异或运算  26214667
 a << 2            # 左移          104859600
 a >> 2            # 右移          6553725
 ```
+
+
+### 29. 进制
+
+进制间的相互转化
+
+```
+a10 = 100
+a2 = bin(a10)      # '0b1100100'
+a8 = oct(a10)      # '0o144'
+a16 = hex(a10)     # '0x64'
+a2 = int(a16, 16)
+a2 = int(a8, 8)
+a2 = int(a2, 2)
+```
+
+|   | 2进制 | 8进制 | 10进制 | 16进制 |
+| :---- | :----: | :----: | :----: |
+| 2进制 | - | bin(int(x, 8)) | bin(int(x, 10)) | bin(int(x, 16)) |
+| 8进制 | oct(int(x, 2)) | - | oct(int(x, 10)) | oct(int(x, 16)) |
+| 10进制 | int(x, 2) | int(x, 8) | - | int(x, 16) |
+| 16进制 | hex(int(x, 2)) | hex(int(x, 8)) | hex(int(x, 10)) | - |
+
+字符串与二进制间的相互转换
+
+```
+def encode(s):
+    return ' '.join([bin(ord(c)).replace('0b', '') for c in s])
+ 
+def decode(s):
+    return ''.join([chr(i) for i in [int(b, 2) for b in s.split(' ')]])
+
+>>>encode('hello')
+'1101000 1100101 1101100 1101100 1101111'
+>>>decode('1101000 1100101 1101100 1101100 1101111')
+'hello'
+```
+
+字符串与十六进制间的相互转换
+
+```
+def encode(s):
+	return (' '.join([hex(ord(c)).replace('0x', '') for c in s])).upper()
+
+def decode(s):
+	return ''.join([chr(i) for i in [int(b,16) for b in s.split(' ')]])
+
+>>>encode('hello')
+'68 65 6C 6C 6F'
+>>>decode('68 65 6C 6C 6F')
+'hello'
+```
+
+
 
 </br>
 
