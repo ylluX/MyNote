@@ -68,11 +68,11 @@
 
 4. 伴随矩阵
 
-[伴随矩阵](https://baike.baidu.com/item/%E4%BC%B4%E9%9A%8F%E7%9F%A9%E9%98%B5/10034983)
+    [百度百科](https://baike.baidu.com/item/%E4%BC%B4%E9%9A%8F%E7%9F%A9%E9%98%B5/10034983)
 
 5. 矩阵的行列式
 
-[矩阵的行列式](https://baike.baidu.com/item/%E7%9F%A9%E9%98%B5%E8%A1%8C%E5%88%97%E5%BC%8F/18882017?fr=aladdin)
+    [百度百科](https://baike.baidu.com/item/%E7%9F%A9%E9%98%B5%E8%A1%8C%E5%88%97%E5%BC%8F/18882017?fr=aladdin)
 
 
 **矩阵的加法与减法**
