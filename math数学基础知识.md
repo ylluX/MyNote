@@ -66,9 +66,13 @@
         * 若A可逆，则kA可逆 <=> k!=0,且![](https://latex.codecogs.com/gif.latex?(kA)^{-1}=\frac{1}{k}(A)^{-1})
         * A、B均可逆 <=> ![](https://latex.codecogs.com/gif.latex?(AB)^{-1}=(B)^{-1}(A)^{-1})。
 
-4. 
+4. 伴随矩阵
 
+[伴随矩阵](https://baike.baidu.com/item/%E4%BC%B4%E9%9A%8F%E7%9F%A9%E9%98%B5/10034983)
 
+5. 矩阵的行列式
+
+[矩阵的行列式](https://baike.baidu.com/item/%E7%9F%A9%E9%98%B5%E8%A1%8C%E5%88%97%E5%BC%8F/18882017?fr=aladdin)
 
 
 **矩阵的加法与减法**
@@ -215,7 +219,7 @@
 
 # 3 常见问题
 
-# 3.1 范数与距离的关系
+## 3.1 范数与距离的关系
 
 [范数与距离的关系](https://www.cnblogs.com/wt869054461/p/5935961.html)
 
