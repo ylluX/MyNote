@@ -5,10 +5,15 @@
    * [目录](#目录)
    * [1. 线性代数](#1-线性代数)
       * [1.1 矩阵的运算及其运算规则](#11-矩阵的运算及其运算规则)
-   * [2. 常见问题](#2-常见问题)
+   * [2. 常见概念](#2-常见概念)
       * [2.1 微积分](#21-微积分)
       * [2.2 卷积](#22-卷积)
       * [2.3 傅里叶变换](#23-傅里叶变换)
+      * [2.4 欧拉公式](#24-欧拉公式)
+      * [2.5 泰勒公式](#25-泰勒公式)
+      * [2.6 多项式](#26-多项式)
+   * [3 常见问题](#3-常见问题)
+   * [3.1 范数与距离的关系](#31-范数与距离的关系)
    * [LaTeX](#latex)
       * [常见问题](#常见问题)
          * [latex 加减号堆积，放在一起](#latex-加减号堆积放在一起)
@@ -17,9 +22,10 @@
    * [参考资料](#参考资料)
       * [1. 华夏大地教育网](#1-华夏大地教育网)
       * [2 python线性代数](#2-python线性代数)
+      * [3. 马同学高等数学](#3-马同学高等数学)
    * [希腊字母](#希腊字母)
 
-<!-- Added by: luyl, at: 2018-07-25T12:39+08:00 -->
+<!-- Added by: luyl, at: 2018-10-24T13:20+08:00 -->
 
 <!--te-->
 
@@ -56,7 +62,7 @@
     * 若A为可逆矩阵，则A的逆矩阵是唯一的。
     * 设A、B是数域P上的n阶矩阵，![](https://latex.codecogs.com/gif.latex?k\in&space;P)。
         * 若A可逆，则![](https://latex.codecogs.com/gif.latex?A^{-1})和![](http://latex.codecogs.com/gif.latex?A^T)也可逆,
-且https://latex.codecogs.com/gif.latex?((A)^{-1})^{-1}=A，![](https://latex.codecogs.com/gif.latex?(A^{T})^{-1}=(A^{-1})^{T})
+且![](https://latex.codecogs.com/gif.latex?((A)^{-1})^{-1}=A), ![](https://latex.codecogs.com/gif.latex?(A^{T})^{-1}=(A^{-1})^{T})
         * 若A可逆，则kA可逆 <=> k!=0,且![](https://latex.codecogs.com/gif.latex?(kA)^{-1}=\frac{1}{k}(A)^{-1})
         * A、B均可逆 <=> ![](https://latex.codecogs.com/gif.latex?(AB)^{-1}=(B)^{-1}(A)^{-1})。
 
