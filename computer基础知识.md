@@ -16,9 +16,9 @@
 
 ## 浮点数
 
-*[浮点数在内存中的存储方式](https://blog.csdn.net/d_leo/article/details/53046721)
-*[浮点数比较大小的问题](https://blog.csdn.net/liujian20150808/article/details/50630546)
-*[浮点数的大小比较为什么不能用等号](https://www.cnblogs.com/xiehongfeng100/p/4851201.html)
+* [浮点数在内存中的存储方式](https://blog.csdn.net/d_leo/article/details/53046721)
+* [浮点数比较大小的问题](https://blog.csdn.net/liujian20150808/article/details/50630546)
+* [浮点数的大小比较为什么不能用等号](https://www.cnblogs.com/xiehongfeng100/p/4851201.html)
 
 **浮点数在内存中的存储方式**
 
