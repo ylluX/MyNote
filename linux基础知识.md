@@ -2,6 +2,13 @@
 
 <!--自动插入TOC：https://github.com/ekalinin/github-markdown-toc-->
 <!--ts-->
+   * [目录](#目录)
+   * [基础命令](#基础命令)
+   * [VIM](#vim)
+      * [基础操作](#基础操作)
+
+<!-- Added by: luyl, at: 2018-11-01T13:54+08:00 -->
+
 <!--te-->
 
 ----
