@@ -7,7 +7,7 @@
    * [VIM](#vim)
       * [基础操作](#基础操作)
 
-<!-- Added by: luyl, at: 2018-11-01T13:54+08:00 -->
+<!-- Added by: luyl, at: 2018-11-06T16:30+08:00 -->
 
 <!--te-->
 
@@ -24,6 +24,7 @@
 
 * [vim中使用正则表达式](https://blog.csdn.net/whaoXYSH/article/details/24652361)
 * [Vim 中读写特殊字符](https://blog.csdn.net/chenster/article/details/53307707)
+
 
 * 删除空行：`:g/^$/d`
 * 输入`^M`：`Ctrl+V Ctrl+M`

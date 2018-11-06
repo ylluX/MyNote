@@ -38,6 +38,7 @@
          * [27. Python 对数字的千分位处理](#27-python-对数字的千分位处理)
          * [28. 按位运算](#28-按位运算)
          * [29. 进制](#29-进制)
+         * [30. 模拟SSH登录和SCP传输](#30-模拟ssh登录和scp传输)
       * [高级](#高级)
          * [1. 装饰器（Decorator）](#1-装饰器decorator)
          * [2. 回调函数](#2-回调函数)
@@ -113,7 +114,7 @@
    * [8. 第三方包安装教程](#8-第三方包安装教程)
       * [8.1 pypcap](#81-pypcap)
 
-<!-- Added by: luyl, at: 2018-10-11T10:49+08:00 -->
+<!-- Added by: luyl, at: 2018-11-06T16:30+08:00 -->
 
 <!--te-->
 
@@ -1157,6 +1158,19 @@ def decode(s):
 '1101000 1100101 1101100 1101100 1101111'
 >>>decode('1101000 1100101 1101100 1101100 1101111')
 'hello'
+
+# str to bytes  
+bytes(s, encoding = "utf8")
+
+# bytes to str  
+str(b, encoding = "utf-8")
+  
+# an alternative method
+# str to bytes
+str.encode(s)
+
+# bytes to str  
+bytes.decode(b)  
 ```
 
 字符串与十六进制间的相互转换
@@ -1172,6 +1186,66 @@ def decode(s):
 '68 65 6C 6C 6F'
 >>>decode('68 65 6C 6C 6F')
 'hello'
+```
+
+
+### 30. 模拟SSH登录和SCP传输
+
+* [Python的scp小工具](https://www.jianshu.com/p/aa7411f346cc)
+* [_scp_read_response checking for wrong response values](https://bitbucket.org/ericvsmith/scpclient/issues/7/_scp_read_response-checking-for-wrong)
+* [paramiko 详解](https://blog.csdn.net/weixin_39912556/article/details/80576624)
+* []()
+
+scp是我们在shell上经常使用的命令，用来远程传输文件。python上也能做到scp的功能，需要依赖以下库：
+
+pip install paramiko
+
+pip install scpclient
+
+实际实现也就几行代码：
+
+```
+#创建ssh访问
+ssh = paramiko.SSHClient()
+ssh.load_system_host_keys()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())#允许连接不在know_hosts文件中的主机
+sh.connect(hostname, port=22, username=zhangsan, password=password)#远程访问的服务器信息
+   
+#创建scp
+with closing(scpclient.Write(ssh.get_transport(), remote_path=remote_path)) as scp:
+    scp.send_file(local_filename, preserve_times=True, remote_filename=remote_filename)
+```
+
+其中，`ssh.connect()`中需要指定远程访问的服务器的ip端口，用户名以及密码；`scpclient.Write()`中指定
+远程服务器的路径remote_path；`scp.send_file()`中指定本地传输的文件名(全路径)，远程主机的文件
+名remote_filename。大概就是这些地方需要注意的。
+
+scpclient模块的主要函数：
+
+* Read：从远程服务器下载文件
+* ReadDir：从远程服务器下载文件夹
+* Write：将文件上传到远程服务器
+* WriteDir：将文件夹上传到远程服务器
+
+需要注意：scpclient中Read和ReadDir函数好像不能正常使用，但Write和WriteDir正常
+
+当需要从远程服务器下载文件或文件夹时，可以使用paramiko模块的SFTPClient.from_transport函数：
+
+```
+# FTP下载
+# sftp = paramiko.SFTPClient.from_transport(ssh.get_transport())
+def sftp_backdir(sftp, remote_dir, local_dir):                                                                                      
+    mkdir(local_dir)
+    for dfile in sftp.listdir_attr(remote_dir):
+        remote_dfile = os.path.join(remote_dir, dfile.filename)
+        local_dfile = os.path.join(local_dir, dfile.filename)
+        if dfile.filename[0] == ".":
+            continue
+        if dfile.longname[0] == "d":  # 判断远程服务器上该文件是否是文件夹
+            sftp_backdir(sftp, remote_dfile, local_dfile)
+        else:
+            sftp.get(remote_dfile, local_dfile)
+
 ```
 
 
@@ -2085,6 +2159,15 @@ u'\u6c49\u5b57'
 æ<8a>¥è¡¨ 
 >>> print a.encode("raw_unicode_escape")
 报表 
+
+# 将字符串转成二进制
+bytes(s, encoding = "utf8") # 法1
+str.encode(s)               # 法2
+
+#将二进制转成字符串  
+ str(b, encoding = "utf-8") # 法1
+ bytes.decode(b)            # 法2
+
 ```
 
 <font color="blue">**将字节码类字符串转化为正确的输出**</font>
