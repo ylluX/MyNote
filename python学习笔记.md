@@ -1249,6 +1249,29 @@ def sftp_backdir(sftp, remote_dir, local_dir):
 ```
 
 
+### 31. 获得本机IP
+
+```
+import socket
+
+def get_host_ip():
+    """
+    查询本机ip地址
+    :return: ip
+    """
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8', 80))
+        ip = s.getsockname()[0]
+    finally:
+        s.close()
+
+    return ip
+
+if __name__ == '__main__':
+    print(get_host_ip())
+```
+
 
 </br>
 
@@ -2735,7 +2758,7 @@ itertools模块可创建的迭代器一般分为三类:
 
 ```
 >>> from collections import namedtuple
->>> Point = namedtuple('Point', ['x', 'y'])
+>>> Point = namedtuple('Point', ['x', 'y'])  # 或者Point=namedtuple('Point', 'x y')
 >>> p = Point(1, 2)
 >>> p.x
 1
