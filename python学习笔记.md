@@ -39,6 +39,7 @@
          * [28. 按位运算](#28-按位运算)
          * [29. 进制](#29-进制)
          * [30. 模拟SSH登录和SCP传输](#30-模拟ssh登录和scp传输)
+         * [31. 获得本机IP](#31-获得本机ip)
       * [高级](#高级)
          * [1. 装饰器（Decorator）](#1-装饰器decorator)
          * [2. 回调函数](#2-回调函数)
@@ -71,11 +72,6 @@
       * [第三方模块](#第三方模块)
          * [1. scipy.stats](#1-scipystats)
          * [2. pandas](#2-pandas)
-            * [1. <strong>基本操作</strong>](#1-基本操作)
-               * [1.1. 小数位数 精度的处理round()](#11-小数位数-精度的处理round)
-               * [1.2. <a href="https://www.cnblogs.com/wuzhiblog/p/python_new_row_or_col.html" rel="nofollow">pandas.DataFrame对行和列求和及添加新行和列</a>](#12-pandasdataframe对行和列求和及添加新行和列)
-               * [1.3. <a href="https://blog.csdn.net/jinruoyanxu/article/details/79150896" rel="nofollow">在Pandas中更改列的数据类型</a>](#13-在pandas中更改列的数据类型)
-            * [1.4 其它](#14-其它)
          * [3. numpy](#3-numpy)
          * [4. click](#4-click)
          * [5. sqlite3](#5-sqlite3)
@@ -114,7 +110,7 @@
    * [8. 第三方包安装教程](#8-第三方包安装教程)
       * [8.1 pypcap](#81-pypcap)
 
-<!-- Added by: luyl, at: 2018-11-06T16:30+08:00 -->
+<!-- Added by: luyl, at: 2018-11-13T16:10+08:00 -->
 
 <!--te-->
 
@@ -4512,9 +4508,9 @@ scipy,stats.kendalltau(a, b, initial_lexsort=None, nan_policy='omit')
 
 ### 2. pandas
 
-#### 1. **基本操作**
+**1. 基本操作**
 
-##### 1.1. 小数位数 精度的处理round()
+***1.1. 小数位数 精度的处理round()***
 
 ```
 # 控制台打印时显示的2位小数
@@ -4545,21 +4541,21 @@ second  0.0  1  0.58
 third   0.9  0  0.49
 ```
 
-##### 1.2. [pandas.DataFrame对行和列求和及添加新行和列](https://www.cnblogs.com/wuzhiblog/p/python_new_row_or_col.html)
+***1.2. [pandas.DataFrame对行和列求和及添加新行和列](https://www.cnblogs.com/wuzhiblog/p/python_new_row_or_col.html)***
 
-**计算各列数据总和并作为新列添加到末尾**
+**<计算各列数据总和并作为新列添加到末尾>**
 
 ```
 df['Col_sum'] = df.apply(lambda x: x.sum(), axis=1)
 ```
 
-**计算各行数据总和并作为新行添加到末尾**
+**<计算各行数据总和并作为新行添加到末尾>**
 
 ```
 df.loc['Row_sum'] = df.apply(lambda x: x.sum())
 ```
 
-##### 1.3. [在Pandas中更改列的数据类型](https://blog.csdn.net/jinruoyanxu/article/details/79150896)
+***1.3. [在Pandas中更改列的数据类型](https://blog.csdn.net/jinruoyanxu/article/details/79150896)***
 
 如果想要将这个操作应用到多个列，依次处理每一列是非常繁琐的，所以可以使用`DataFrame.apply`处理每一列。
 
@@ -4592,7 +4588,11 @@ df.apply(pd.to_numeric, errors='ignore')
 另外pd.to_datetime和pd.to_timedelta可将数据转换为日期和时间戳。
 
 
-#### 1.4 其它
+***1.4. 分位函数***
+
+> DataFrame.quantile(q=0.5, axis=0, numeric_only=True, interpolation='linear')
+
+***1.5. 其它***
 
 * 将NaN和inf替换为0 ： `df[df.isin([np.nan, np.inf])] = 0`
 
@@ -4731,7 +4731,11 @@ array([1, 2, 3, 4])
 array([1, 3, 2, 4])
 ```
 
-
+**分位函数**
+```
+#求数组a的四分位数
+np.percentile(a, [25, 50, 75])
+```
 
 
 ### 4. click
