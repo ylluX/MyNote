@@ -1944,6 +1944,89 @@ Get C from queue.
 进程间通信是通过`Queue`、`Pipes`等实现的。
 
 
+**捕捉异常**
+
+可以使用get()方法，或者使用logger捕捉。下面我们先看简单方法get：
+
+```
+from multiprocessing import Pool
+
+def test(x):
+    a = 1. / x
+    return a
+
+p = Pool(2)
+result = []
+for i in [2,0,1]:
+    result.append(p.apply_async(test, args=(i,)))                                                                           
+p.close()
+p.join()
+
+for i in result:
+    try:
+        print(i.get())
+    except:
+        raise
+```
+
+结果为：
+```
+0.5
+Traceback (most recent call last):
+  File "test1.py", line 16, in <module>
+    print(i.get())
+  File "/share/public/software/python/2.7.14/lib/python2.7/multiprocessing/pool.py", line 572, in get
+    raise self._value
+ZeroDivisionError: integer division or modulo by zero
+```
+
+我们在开看看logger捕捉异常：
+
+```
+import sys
+import logging
+from multiprocessing import Pool
+
+logger = logging.getLogger("AppName")
+formatter = logging.Formatter('%(asctime)s %(levelname)-8s: %(message)s')
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.formatter = formatter
+logger.addHandler(console_handler)
+logger.setLevel(logging.INFO)
+
+def test(x):
+    logger.info("process-{}".format(x))
+    try:
+        a = 1. / x
+        return a
+    except:
+        logger.exception("process-{}".format(x))
+
+p = Pool(2)
+
+result = []
+for i in [2,0,1]:
+    result.append(p.apply_async(test, args=(i,)))
+p.close()
+p.join()
+```
+
+结果为：
+
+```
+2018-11-16 11:22:09,956 INFO    : process-2
+2018-11-16 11:22:09,957 INFO    : process-1
+2018-11-16 11:22:09,957 INFO    : process-0
+2018-11-16 11:22:09,957 ERROR   : process-0
+Traceback (most recent call last):
+  File "test2.py", line 15, in test
+    a = 1. / x
+ZeroDivisionError: float division by zero
+```
+
+
+
+
 ### 5. 多线程
 
 * [Python：使用threading模块实现多线程编程一[综述]](https://blog.csdn.net/bravezhe/article/details/8585437)
