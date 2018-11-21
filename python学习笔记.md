@@ -4696,7 +4696,8 @@ class MyDataFrame(pd.DataFrame):
     # 必须加这个属性, 不然使用self.copy()返回的是`pandas.core.frame.DataFrame`, 而不是`MyDataFram`
     @property
     def _constructor(self):
-        return MyDataFrame
+        # return MyDataFrame
+        return self.__class__
 
     @classmethod
     def read_csv(cls, *args, **kwargs):
@@ -4708,7 +4709,8 @@ class MyDataFrame(pd.DataFrame):
         return cls(df.values, index=df.index, columns=df.columns)
 
     def __init__(*args, **kwargs):
-        super(MyDataFrame, self).__init__(*args, **kwargs)
+        # super(MyDataFrame, self).__init__(*args, **kwargs)
+        super(self.__class__, self).__init__(*args, **kwargs)
         self = self.add_month()
 
     def add_month(self):
