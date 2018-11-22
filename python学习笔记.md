@@ -184,8 +184,7 @@
    * [cdatetime](#cdatetime)
    * [date](#date)
    * [p3](#p3)
-   * [(S'à
-'](#sx07xe0nx1b)
+   * [(S'?'](#sx07xe0nx1b)
    * [tRp4](#trp4)
    * [sS'oth'](#ssoth)
    * [p5](#p5)
