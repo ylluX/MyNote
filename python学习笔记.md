@@ -44,73 +44,161 @@
          * [1. 装饰器（Decorator）](#1-装饰器decorator)
          * [2. 回调函数](#2-回调函数)
          * [3. 魔法方法](#3-魔法方法)
-         * [4. 多进程（multiprocessing和subprocess）](#4-多进程multiprocessing和subprocess)
-         * [5. 多线程](#5-多线程)
-         * [6. 字符编码](#6-字符编码)
-         * [7. 内建函数](#7-内建函数)
-      * [python3新特性](#python3新特性)
-         * [1. pathlib](#1-pathlib)
-         * [2. f-string](#2-f-string)
-   * [2. 常用模块](#2-常用模块)
-      * [标准模块](#标准模块)
-         * [1. sys](#1-sys)
-         * [2. os](#2-os)
-         * [3. os.path](#3-ospath)
-         * [4. functools](#4-functools)
-         * [5. subprocess](#5-subprocess)
-         * [6. msvcrt](#6-msvcrt)
-         * [7.math](#7math)
-         * [8. itertools](#8-itertools)
-         * [9. str](#9-str)
-         * [10. collections](#10-collections)
-         * [11. logging](#11-logging)
-         * [12. time 和 <code>datetime</code>](#12-time-和-datetime)
-         * [13. inspect](#13-inspect)
-         * [14. operator](#14-operator)
-         * [15. contextlib](#15-contextlib)
-         * [16. PIL](#16-pil)
-      * [第三方模块](#第三方模块)
-         * [1. scipy.stats](#1-scipystats)
-         * [2. pandas](#2-pandas)
-         * [3. numpy](#3-numpy)
-         * [4. click](#4-click)
-         * [5. sqlite3](#5-sqlite3)
-         * [6. JSON 和 pickle](#6-json-和-pickle)
-         * [7. six](#7-six)
-         * [8. pathlib](#8-pathlib)
-         * [9. schedule](#9-schedule)
-      * [黑客模块](#黑客模块)
-         * [1. pywin32](#1-pywin32)
-         * [2. psutil](#2-psutil)
-         * [3. pypcap](#3-pypcap)
-         * [4. pyhook](#4-pyhook)
-         * [5. PyUserInput](#5-pyuserinput)
-         * [6. pydivert](#6-pydivert)
-         * [7. redsails](#7-redsails)
-   * [3. 模块比较](#3-模块比较)
-      * [3.1. xml解析模块](#31-xml解析模块)
-   * [4. 学习资料](#4-学习资料)
-      * [4.1 Python 资源大全中文版](#41-python-资源大全中文版)
-      * [4.2 &lt;&lt;Python Cookbook&gt;&gt;](#42-python-cookbook)
-      * [4.3 python各路大神](#43-python各路大神)
-      * [4.4 Python Code Examples](#44-python-code-examples)
-      * [4.5 openCV](#45-opencv)
-   * [5. 编写规范](#5-编写规范)
-      * [5.1 软件目录结构规范](#51-软件目录结构规范)
-      * [5.2 宏基因组项目框架](#52-宏基因组项目框架)
-   * [6. 常见问题](#6-常见问题)
-      * [6.1 mkl_serv_getenv: undefined symbol: mkl_serv_getenv](#61-mkl_serv_getenv-undefined-symbol-mkl_serv_getenv)
-   * [7. 优秀框架](#7-优秀框架)
-      * [爬虫](#爬虫)
-         * [pyspider](#pyspider)
-         * [scrapy](#scrapy)
-      * [web服务](#web服务)
-         * [Flask](#flask)
-         * [Django](#django)
-   * [8. 第三方包安装教程](#8-第三方包安装教程)
-      * [8.1 pypcap](#81-pypcap)
+   * [Only works on Unix/Linux/Mac:](#only-works-on-unixlinuxmac)
+   * [子进程要执行的代码](#子进程要执行的代码)
+   * [写数据进程执行的代码:](#写数据进程执行的代码)
+   * [读数据进程执行的代码:](#读数据进程执行的代码)
+   * [-<em>- coding:utf-8 -</em>-](#---codingutf-8---)
+   * [： su是一个utf-8格式的字节串](#-su是一个utf-8格式的字节串)
+   * [： s被解码为unicode对象，赋给u](#-s被解码为unicode对象赋给u)
+   * [： u被编码为gbk格式的字节串，赋给sg](#-u被编码为gbk格式的字节串赋给sg)
+   * [打印sg](#打印sg)
+   * [-<em>- coding: utf-8 -</em>-](#---coding-utf-8---)
+   * [-<em>- coding: utf-8 -</em>-](#---coding-utf-8----1)
+   * [使用codecs直接开unicode通道](#使用codecs直接开unicode通道)
+   * [将字符串转成二进制](#将字符串转成二进制)
+   * [namedtuple('名称', [属性list]):](#namedtuple名称-属性list)
+   * [-<em>- coding: utf-8 -</em>-](#---coding-utf-8----2)
+   * [获取logger实例，如果参数为空则返回root logger](#获取logger实例如果参数为空则返回root-logger)
+   * [指定logger输出格式](#指定logger输出格式)
+   * [文件日志](#文件日志)
+   * [控制台日志](#控制台日志)
+   * [为logger添加的日志处理器](#为logger添加的日志处理器)
+   * [指定日志的最低输出级别，默认为WARN级别](#指定日志的最低输出级别默认为warn级别)
+   * [输出不同级别的log](#输出不同级别的log)
+   * [2016-10-08 21:59:19,493 INFO    : this is information](#2016-10-08-215919493-info-----this-is-information)
+   * [2016-10-08 21:59:19,493 WARNING : this is warning message](#2016-10-08-215919493-warning--this-is-warning-message)
+   * [2016-10-08 21:59:19,493 ERROR   : this is error message](#2016-10-08-215919493-error----this-is-error-message)
+   * [2016-10-08 21:59:19,493 CRITICAL: this is fatal message, it is same as logger.critical](#2016-10-08-215919493-critical-this-is-fatal-message-it-is-same-as-loggercritical)
+   * [2016-10-08 21:59:19,493 CRITICAL: this is critical message](#2016-10-08-215919493-critical-this-is-critical-message)
+   * [移除一些日志处理器](#移除一些日志处理器)
+   * [格式化输出](#格式化输出)
+   * [2016-10-08 21:59:19,493 ERROR   : Booking service is down!](#2016-10-08-215919493-error----booking-service-is-down)
+   * [记录异常信息](#记录异常信息)
+   * [2016-10-08 21:59:19,493 ERROR   : this is an exception message](#2016-10-08-215919493-error----this-is-an-exception-message)
+   * [Traceback (most recent call last):](#traceback-most-recent-call-last)
+   * [File "D:/Git/py_labs/demo/use_logging.py", line 45, in](#file-dgitpy_labsdemouse_loggingpy-line-45-in)
+   * [1 / 0](#1--0)
+   * [ZeroDivisionError: integer division or modulo by zero](#zerodivisionerror-integer-division-or-modulo-by-zero)
+   * [logging.conf](#loggingconf)
+   * [获得时间截](#获得时间截)
+   * [获得结构化时间](#获得结构化时间)
+   * [结构化时间转字符串](#结构化时间转字符串)
+   * [strftime(format[, tuple]) -&gt; string](#strftimeformat-tuple---string)
+   * [asctime([tuple]) -&gt; string    # 只能转成标准时间, 不能自定义时间格式](#asctimetuple---string-----只能转成标准时间-不能自定义时间格式)
+   * [字符串转结构化时间](#字符串转结构化时间)
+   * [strptime(string, format) -&gt; struct_time](#strptimestring-format---struct_time)
+   * [时间截转结构化时间](#时间截转结构化时间)
+   * [localtime([seconds]) -&gt; (tm_year,tm_mon,tm_mday,tm_hour,tm_min, tm_sec,tm_wday,tm_yday,tm_isdst)](#localtimeseconds---tm_yeartm_montm_mdaytm_hourtm_min-tm_sectm_wdaytm_ydaytm_isdst)
+   * [gmtime([seconds]) -&gt; (tm_year, tm_mon, tm_mday, tm_hour, tm_min, tm_sec, tm_wday, tm_yday, tm_isdst)](#gmtimeseconds---tm_year-tm_mon-tm_mday-tm_hour-tm_min-tm_sec-tm_wday-tm_yday-tm_isdst)
+   * [结构化转时间截](#结构化转时间截)
+   * [mktime(tuple) -&gt; floating point number](#mktimetuple---floating-point-number)
+   * [时间截只能转成标准字符串时间.](#时间截只能转成标准字符串时间)
+   * [不能直接转为自定义字符串时间, 可以先转成结构化时间, 再转成自定义字符串时间](#不能直接转为自定义字符串时间-可以先转成结构化时间-再转成自定义字符串时间)
+   * [ctime(seconds) -&gt; string](#ctimeseconds---string)
+   * [今天在这周是星期几](#今天在这周是星期几)
+   * [今天是今年的第几天](#今天是今年的第几天)
+   * [这周是今年的第几周](#这周是今年的第几周)
+   * [获得datetime.date类型](#获得datetimedate类型)
+   * [将字符串时间格式化转化为时间](#将字符串时间格式化转化为时间)
+   * [提取10个小时](#提取10个小时)
+   * [使用inspect.signature](#使用inspectsignature)
+   * [POSITIONAL_ONLY ： 位置参数 (0)](#positional_only--位置参数-0)
+   * [POSITIONAL_OR_KEYWORD ： 位置或关键字参数 (1)](#positional_or_keyword--位置或关键字参数-1)
+   * [VAR_POSITIONAL ： 可变位置参数 (2)](#var_positional--可变位置参数-2)
+   * [KEYWORD_ONLY ： 关键字参数 (3)](#keyword_only--关键字参数-3)
+   * [VAR_KEYWORD ： 可变关键字参数 (4)](#var_keyword--可变关键字参数-4)
+   * [裁剪图片](#裁剪图片)
+   * [粘贴图片](#粘贴图片)
+   * [添加字体](#添加字体)
+   * [缩小图片](#缩小图片)
+   * [显示图片](#显示图片)
+   * [保存图片](#保存图片)
+   * [设置正态分布参数，其中loc是期望值参数，scale是标准差参数](#设置正态分布参数其中loc是期望值参数scale是标准差参数)
+   * [计算随机变量的期望值和方差](#计算随机变量的期望值和方差)
+   * [数组x保存骰子的所有可能值，数组p保存每个值出现的概率](#数组x保存骰子的所有可能值数组p保存每个值出现的概率)
+   * [创建表示这个骰子的随机变量dice，调用其rvs()方法投掷此骰子20次，获得符合概率p的随机数](#创建表示这个骰子的随机变量dice调用其rvs方法投掷此骰子20次获得符合概率p的随机数)
+   * [设置几何分布的参数](#设置几何分布的参数)
+   * [设置样本区间](#设置样本区间)
+   * [得到几何分布的 PMF 和CDF](#得到几何分布的-pmf-和cdf)
+   * [生成500个随机数](#生成500个随机数)
+   * [生成包括100个服从正态分布的随机数样本](#生成包括100个服从正态分布的随机数样本)
+   * [用normaltest检验原假设](#用normaltest检验原假设)
+   * [kstest 是检验拟合度的Kolmogorov-Smirnov检验，这里针对正态分布进行检验](#kstest-是检验拟合度的kolmogorov-smirnov检验这里针对正态分布进行检验)
+   * [D是KS统计量的值，越接近0越好](#d是ks统计量的值越接近0越好)
+   * [类似地可以针对其他分布进行检验，例如Wald分布](#类似地可以针对其他分布进行检验例如wald分布)
+   * [生成包括100个服从正态分布的随机数样本](#生成包括100个服从正态分布的随机数样本-1)
+   * [调和平均数，样本值须大于0](#调和平均数样本值须大于0)
+   * [计算-1到1之间样本的均值](#计算-1到1之间样本的均值)
+   * [计算样本偏度](#计算样本偏度)
+   * [函数describe可以一次给出样本的多种描述统计结果](#函数describe可以一次给出样本的多种描述统计结果)
+   * [独立两样本t检验](#独立两样本t检验)
+   * [成对两样本t检验](#成对两样本t检验)
+   * [通过基本统计量来做独立两样本检验](#通过基本统计量来做独立两样本检验)
+   * [wilcox秩序和检验，n &lt; 20时独立样本效果比较好](#wilcox秩序和检验n--20时独立样本效果比较好)
+   * [Mann-Whitney U检验, n &gt; 20时独立样本，比wilcox秩序和检验更稳健](#mann-whitney-u检验-n--20时独立样本比wilcox秩序和检验更稳健)
+   * [Wilcox检验，成对数据](#wilcox检验成对数据)
+   * [控制台打印时显示的2位小数](#控制台打印时显示的2位小数)
+   * [实际修改数据精度](#实际修改数据精度)
+   * [Here is how they can be used with a sample array:](#here-is-how-they-can-be-used-with-a-sample-array)
+   * [Both for indexing:](#both-for-indexing)
+   * [And for assigning values:](#and-for-assigning-values)
+   * [These cover only a small part of the whole array (two diagonals right of the main one):](#these-cover-only-a-small-part-of-the-whole-array-two-diagonals-right-of-the-main-one)
+   * [导入SQLite驱动:](#导入sqlite驱动)
+   * [连接到SQLite数据库](#连接到sqlite数据库)
+   * [数据库文件是test.db](#数据库文件是testdb)
+   * [如果文件不存在，会自动在当前目录创建:](#如果文件不存在会自动在当前目录创建)
+   * [创建一个Cursor:](#创建一个cursor)
+   * [执行一条SQL语句，创建user表:](#执行一条sql语句创建user表)
+   * [继续执行一条SQL语句，插入一条记录:](#继续执行一条sql语句插入一条记录)
+   * [通过rowcount获得插入的行数:](#通过rowcount获得插入的行数)
+   * [关闭Cursor:](#关闭cursor)
+   * [提交事务:](#提交事务)
+   * [关闭Connection:](#关闭connection)
+   * [执行查询语句:](#执行查询语句)
+   * [获得查询结果集:](#获得查询结果集)
+   * [简单编码===========================================](#简单编码)
+   * [["foo", {"bar": ["baz", null, 1.0, 2]}]](#foo-bar-baz-null-10-2)
+   * [{"a": 0, "b": 0, "c": 0}](#a-0-b-0-c-0)
+   * [[1,2,3,{"4":5,"6":7}]](#1234567)
+   * [[1/2/3/{"4"-5/"6"-7}]](#1234-56-7)
+   * ["4": 5,](#4-5)
+   * ["6": 7](#6-7)
+   * [}](#-1)
+   * [另一个比较有用的dumps参数是skipkeys，默认为False。](#另一个比较有用的dumps参数是skipkeys默认为false)
+   * [dumps方法存储dict对象时，key必须是str类型，如果出现了其他类型的话，那么会产生TypeError异常，如果开启该参数，设为True的话，会忽略这个key。](#dumps方法存储dict对象时key必须是str类型如果出现了其他类型的话那么会产生typeerror异常如果开启该参数设为true的话会忽略这个key)
+   * [输出中文，设置ensure_ascii=False](#输出中文设置ensure_asciifalse)
+   * [[u'foo', {u'bar': [u'baz', None, 1.0, 2]}]](#ufoo-ubar-ubaz-none-10-2)
+   * [-<em>- coding:utf-8 -</em>-](#---codingutf-8----1)
+   * [<strong>author</strong> = "TKQ"](#author--tkq)
+   * [{"datetime": "2016-10-27 17:38:31"}](#datetime-2016-10-27-173831)
+   * [2016-10-27 17:38:31](#2016-10-27-173831)
+   * [-<em>- coding:utf-8 -</em>-](#---codingutf-8----2)
+   * [<strong>author</strong> = "TKQ"](#author--tkq-1)
+   * [a = json.dumps(dt,default=time2str)](#a--jsondumpsdtdefaulttime2str)
+   * [[{"datetime": "2016-10-27 18:14:54"}, [1, 2, 3]]](#datetime-2016-10-27-181454-1-2-3)
+   * [[datetime.datetime(2016, 10, 27, 18, 14, 54), [1, 2, 3]]](#datetimedatetime2016-10-27-18-14-54-1-2-3)
+   * [(dp1](#dp1)
+   * [S'date'](#sdate)
+   * [p2](#p2)
+   * [cdatetime](#cdatetime)
+   * [date](#date)
+   * [p3](#p3)
+   * [(S'�
+'](#sx07xe0nx1b)
+   * [tRp4](#trp4)
+   * [sS'oth'](#ssoth)
+   * [p5](#p5)
+   * [((lp6](#lp6)
+   * [I1](#i1)
+   * [aS'a'](#asa)
+   * [aNI01](#ani01)
+   * [I00](#i00)
+   * [tp7](#tp7)
+   * [s.](#s)
+   * [{'date': datetime.date(2016, 10, 27), 'oth': ([1, 'a'], None, True, False)}](#date-datetimedate2016-10-27-oth-1-a-none-true-false)
 
-<!-- Added by: luyl, at: 2018-11-13T16:10+08:00 -->
+<!-- Added by: luyl, at: 2018-11-22T17:31+08:00 -->
 
 <!--te-->
 
@@ -1539,7 +1627,7 @@ print em['username']
 
 通过实现“_ getitem_”回调接口，现在Employee可以支持“[]”运算符。
 
-***避免语法错误错误***
+***避免语法错误***
 
 在对象属性的调用中，如果没有调用了不存在的属性，则Python解释器会报错，如下：
 ```
@@ -1681,7 +1769,87 @@ __str__
 <class 'test2.A'>
 ```
 
-### 4. 多进程（multiprocessing和subprocess）
+**python 将对象设置为可迭代有两种实现方式**
+
+python 将对象设置为可迭代有两种实现方式：
+
+1. 实现  __getitem__(self)
+
+```
+class Library(object):
+    def __init__(self):
+        self.value=['a','b','c','d','e']
+
+    def __getitem__(self, i):
+        if i>=len(self.value):
+            raise IndexError("out of index")
+        value=self.value[i]
+        return value
+```
+
+调用的时候，系统默认从0 开始传入，并使得i=i+1
+
+2. 实现 __iter__(self),next(self)
+
+```
+class Library2(object):
+    def __init__(self):
+        self.value=['a','b','c','d','e']
+        self.i=-1
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        self.i += 1
+        if self.i>=len(self.value):
+            raise StopIteration
+        return self.value[self.i]
+        
+test=Library2()
+print test.next()
+print test.next()
+```  
+在这里可以像生成器一样使用
+
+
+### 4. 工厂函数
+
+今天在学习python时看到了一段代码甚是震惊. 大家都说python 是一门动态语言,刚开始我还没有很深刻的认识到什么叫
+动态语言,但是看到这段代码后终于明白了,废话不多说,上代码:
+
+```
+def maker(N):
+    def action(X):
+        return X ** N
+    return action
+```
+
+这是一段很简单的代码, 看看运行后的结果:
+
+```
+def maker(N):
+    def action(X):
+        return X ** N
+    return action
+ 
+f = maker(2)
+ 
+f(3) #结果是9
+ 
+g = maker(3)
+g(3) #结果是27
+```
+
+结果我写在后面了, 可以看到每次maker()后都产生了一个新的函数对象,这么简单的一段代码这实现了工厂函数的功能真
+是让我大开眼界.
+
+PS:到现在为此,我对python的理解是:它类似于String中控制反转的道理,原来许多的工作是由程序员来完成,但现在由编译
+器来完成.连对象的类型也是由编译器来识别,所以大大简化了程序员的工作.
+
+
+
+### 5. 多进程（multiprocessing和subprocess）
 
 [廖雪峰的官方网站-多进程](
 https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431927781401bb47ccf187b24c3b955157bb12c5882d000)
@@ -1967,6 +2135,8 @@ for i in result:
         print(i.get())
     except:
         raise
+
+print("END")
 ```
 
 结果为：
@@ -1980,7 +2150,7 @@ Traceback (most recent call last):
 ZeroDivisionError: integer division or modulo by zero
 ```
 
-我们在开看看logger捕捉异常：
+我们再看看logger捕捉异常：
 
 ```
 import sys
@@ -2009,6 +2179,8 @@ for i in [2,0,1]:
     result.append(p.apply_async(test, args=(i,)))
 p.close()
 p.join()
+
+print("END")
 ```
 
 结果为：
@@ -2022,17 +2194,72 @@ Traceback (most recent call last):
   File "test2.py", line 15, in test
     a = 1. / x
 ZeroDivisionError: float division by zero
+END
+```
+
+请注意最后的"END", 这说明logging捕获到异常时，并不会使程序中断。我们可以对上述代码进行优化：
+
+```
+import sys
+import logging
+from multiprocessing import Pool
+
+logger = logging.getLogger("AppName")
+formatter = logging.Formatter('%(asctime)s %(levelname)-8s: %(message)s')
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.formatter = formatter
+logger.addHandler(console_handler)
+logger.setLevel(logging.INFO)
+
+def test(x):
+    logger.info("process-{}".format(x))
+    try:
+        a = 1. / x
+        return a
+    except:
+        logger.exception("process-{}".format(x))
+        raise
+
+p = Pool(2)
+
+result = []
+for i in [2,0,1]:
+    result.append(p.apply_async(test, args=(i,)))
+p.close()
+p.join()
+
+for i in result:
+	try:
+		i.get()    #  主程序捕获不到logger.exception错误，但是能够捕获到下一句的raise
+	except:
+		exit(1)    #  虽然主程序捕获不到logger.exception错误，但logger已将错误打印输出，
+		           #  此时我们不需要再raise一边错误，只需exit(1)退出就好
+
+print("END")
+```
+
+结果为：
+
+```
+2018-11-16 11:22:09,956 INFO    : process-2
+2018-11-16 11:22:09,957 INFO    : process-1
+2018-11-16 11:22:09,957 INFO    : process-0
+2018-11-16 11:22:09,957 ERROR   : process-0
+Traceback (most recent call last):
+  File "test2.py", line 15, in test
+    a = 1. / x
+ZeroDivisionError: float division by zero
+END
 ```
 
 
 
-
-### 5. 多线程
+### 6. 多线程
 
 * [Python：使用threading模块实现多线程编程一[综述]](https://blog.csdn.net/bravezhe/article/details/8585437)
 * [Python-threading并发操作](http://blog.csdn.net/y2701310012/article/details/40863145)
 
-### 6. 字符编码
+### 7. 字符编码
 
 * [Python中文字符的理解：str()、repr()、print](https://www.cnblogs.com/omg24/p/5048319.html)
 * [python中文编码问题深入分析（二）：print打印中文异常及显示乱码问题分析与解决](https://www.cnblogs.com/litaozijin/p/6416133.html)
@@ -2290,7 +2517,7 @@ UnicodeDecodeError: 'utf8' codec can't decode byte 0xbe in position 0: invalid s
 评价线性模型
 ```
 
-### 7. 内建函数
+### 8. 内建函数
 
 * `abs(x)`: abs()函数返回数字（可为普通型、长整型或浮点型）的绝对值。如果给出复数，返回值就是该复数的模.
 * `apply(function,args[,keywords])`: apply()函数将args参数应用到function上。function参数必须是可调用对象（函数、方法或其他可调用对象）。args参数必须以序列形式给出。列表在应用之前被转换为元组。function对象在被调用时，将args列表的内容分别作为独立的参数看待。例如： apply(add,(1,3,4))等价于add(1,3,4). 在以列表或元组定义了一列参数，且需要将此列表参数分别作为个个独立参数使用的情况下，必须使用apply()函数。在要把变长参数列应用到已函数上时，apply()函数非常有用。可选项keywords参数应是个字典，字典的关键字是字符串。这些字符串在apply()函数的参数列末尾处给出，它们将被用作关键字参数。
