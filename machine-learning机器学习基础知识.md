@@ -127,8 +127,8 @@ one-hot编码就可以很合理的计算出距离，那么就没必要进行one-
 | 核函数 | 计算公式 |
 | ---- | ---- |
 | 线性核 | K(x<sub>i</sub>, x<sub>j</sub>) = x<sub>i</sub><sup>T</sup>x<sub>j</sub> |
-| 多项式核 | K(x<sub>i</sub>, x<sub>j</sub>) = (γx<sub>i</sub><sup>T</sup>x<sub>j</sub> + n)<sup>d</sup> |
-| 径向基函数(高斯)核 | K(x<sub>i</sub>, x<sub>j</sub>) = exp(-γ||x<sub>i</sub> - x<sub>j</sub>||<sup>2</sup>) |
+| 多项式核 | K(x<sub>i</sub>, x<sub>j</sub>) = (γx<sub>i</sub><sup>T</sup>x<sub>j</sub> + b)<sup>d</sup> |
+| 径向基函数(高斯)核 | K(x<sub>i</sub>, x<sub>j</sub>) = exp(-γ\|\|x<sub>i</sub> - x<sub>j</sub>\|\|<sup>2</sup>) |
 | sigmoid核 | K(x<sub>i</sub>, x<sub>j</sub>) = tanh(γx<sub>i</sub><sup>T</sup>x<sub>j</sub> + b) |
 
 
