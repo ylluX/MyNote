@@ -5955,6 +5955,16 @@ MKL( Intel Math Kernel Library)是`英特尔`的`数学核心函数库`。
 `numpy`, `scipy`, `pandas`, `scikit-learn` and `numexpr` 都会调用MKL来提高计算性能。
 
 
+## 6.2 `nicodeEncodeError: 'charmap' codec can't encode characters in position 7-8: character maps to <undefined>`
+
+[python(三)：Python3—UnicodeEncodeError 'ascii' codec can't encode characters in position 0-1](https://blog.csdn.net/AckClinkz/article/details/78538462)
+
+[python 3.2 UnicodeEncodeError: 'charmap' codec can't encode character '\u2013' in position 9629: character maps to <undefined>](https://stackoverflow.com/questions/16346914/python-3-2-unicodeencodeerror-charmap-codec-cant-encode-character-u2013-i)
+
+
+
+
+
 ----
 
 # 7. 优秀框架
