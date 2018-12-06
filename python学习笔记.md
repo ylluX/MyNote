@@ -101,6 +101,7 @@
       * [5.2 宏基因组项目框架](#52-宏基因组项目框架)
    * [6. 常见问题](#6-常见问题)
       * [6.1 mkl_serv_getenv: undefined symbol: mkl_serv_getenv](#61-mkl_serv_getenv-undefined-symbol-mkl_serv_getenv)
+      * [6.2 nicodeEncodeError: 'charmap' codec can't encode characters in position 7-8: character maps to &lt;undefined&gt;](#62-nicodeencodeerror-charmap-codec-cant-encode-characters-in-position-7-8-character-maps-to-undefined)
    * [7. 优秀框架](#7-优秀框架)
       * [爬虫](#爬虫)
          * [pyspider](#pyspider)
@@ -111,7 +112,7 @@
    * [8. 第三方包安装教程](#8-第三方包安装教程)
       * [8.1 pypcap](#81-pypcap)
 
-<!-- Added by: luyl, at: 2018-11-22T18:06+08:00 -->
+<!-- Added by: luyl, at: 2018-12-06T15:18+08:00 -->
 
 <!--te-->
 
@@ -1123,7 +1124,8 @@ a >> 2            # 右移          6553725
 
 ### 29. 进制
 
-进制间的相互转化
+
+**进制间的相互转化**
 
 ```
 a10 = 100
@@ -1142,7 +1144,9 @@ a2 = int(a2, 2)
 | 10进制 | int(x, 2) | int(x, 8) | - | int(x, 16) |
 | 16进制 | hex(int(x, 2)) | hex(int(x, 8)) | hex(int(x, 10)) | - |
 
-字符串与二进制间的相互转换
+
+
+**字符串 - 字节 - 二进制 - 十六进制 间的相互转换**
 
 ```
 def encode(s):
@@ -1156,23 +1160,46 @@ def decode(s):
 >>>decode('1101000 1100101 1101100 1101100 1101111')
 'hello'
 
-# str to bytes  
+### 将字符串转换成字节 (str to bytes)
+# py2没有encoding参数，返回的是用字符表示的字节
+# py3必须使用encoding参数, 返回的是字节
 bytes(s, encoding = "utf8")
-
-# bytes to str  
-str(b, encoding = "utf-8")
-  
-# an alternative method
-# str to bytes
+# 或
 str.encode(s)
 
-# bytes to str  
-bytes.decode(b)  
-```
+# 以python3为例
+>>> bytes("abc",encoding="ASCII")
+b'abc'
+>>> bytes("中国", encoding="utf-8")
+b'\xe4\xb8\xad\xe5\x9b\xbd'
+>>> bytes("中国", encoding="gbk")
+b'\xd6\xd0\xb9\xfa'
+>>> str.encode("中国", encoding="gbk")
 
-字符串与十六进制间的相互转换
+### 将字节转成二进制
+>>> bt = bytes("中国", encoding="gbk") # b'\xd6\xd0\xb9\xfa'
+>>> [i for i in bt]
+[214, 208, 185, 250]
+>>> [bin(i) for i in bt]
+['0b11010110', '0b11010000', '0b10111001', '0b11111010']
 
-```
+### 将ints(0<=n<256)列表转成bytes
+>>> bt = bytes([214, 208, 185, 250])
+b'\xd6\xd0\xb9\xfa'
+
+
+# 将字节转成字符串(bytes to str)
+str(b, encoding = "utf-8")
+# 或
+bytes.decode(b)
+
+>>> str(bt, encoding="gbk")
+'中国'
+>>> bytes.decode(bt, encoding="gbk")
+
+
+### 字符串与十六进制间的相互转换
+
 def encode(s):
 	return (' '.join([hex(ord(c)).replace('0x', '') for c in s])).upper()
 
@@ -1184,6 +1211,12 @@ def decode(s):
 >>>decode('68 65 6C 6C 6F')
 'hello'
 ```
+
+**浮点数 - 二进制 间的转换**
+
+* [十进制浮点数转成二进制(IEEE 754 在线计算器)](https://blog.csdn.net/zhengyanan815/article/details/78550073?locationNum=2&fps=1)
+* [从Python的0.1输出0.1000000000000001说浮点数的二进制](https://blog.csdn.net/u012843100/article/details/60885763)
+
 
 
 ### 30. 模拟SSH登录和SCP传输
@@ -2175,6 +2208,7 @@ END
 
 ### 7. 字符编码
 
+* [浅析Python3中的bytes和str类型](https://www.cnblogs.com/chownjy/p/6625299.html)
 * [Python中文字符的理解：str()、repr()、print](https://www.cnblogs.com/omg24/p/5048319.html)
 * [python中文编码问题深入分析（二）：print打印中文异常及显示乱码问题分析与解决](https://www.cnblogs.com/litaozijin/p/6416133.html)
 * [廖雪峰的官方网站-字符串和编码](https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431664106267f12e9bef7ee14cf6a8776a479bdec9b9000)
