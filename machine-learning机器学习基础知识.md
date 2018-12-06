@@ -5,14 +5,19 @@
    * [目录](#目录)
    * [基本概念](#基本概念)
       * [灵敏度/特异度](#灵敏度特异度)
+      * [损失函数(Loss function)/代价函数(成本函数)(Cost function)](#损失函数loss-function代价函数成本函数cost-function)
+      * [分类/回归](#分类回归)
    * [模型](#模型)
+      * [scikit-learn算法选择](#scikit-learn算法选择)
       * [数据预处理(归一化)](#数据预处理归一化)
       * [不均衡数据集处理](#不均衡数据集处理)
+      * [PCA](#pca)
+      * [逻辑回归](#逻辑回归)
       * [SVM](#svm)
    * [学习资料](#学习资料)
       * [视频资料](#视频资料)
 
-<!-- Added by: luyl, at: 2018-12-03T17:14+08:00 -->
+<!-- Added by: luyl, at: 2018-12-06T09:47+08:00 -->
 
 <!--te-->
 
@@ -35,9 +40,35 @@
 
 特异度：实际有病的人正确判断为真阴性的比例
 
+
+## 损失函数(Loss function)/代价函数(成本函数)(Cost function)
+
+损失函数(Loss function)是定义在单个训练样本上的，也就是就算一个样本的误差，比如我们想要分类，就是预测的类别和实际类别的区别，
+是一个样本的哦，用**L**表示
+
+代价函数(Cost function)是定义在整个训练集上面的，是所有样本的误差的总和的平均，也就是损失函数的总和的平均，用**J**表示，有没
+有这个平均其实不会影响最后的参数的求解结果。
+
+
+## 分类/回归
+
+* [机器学习中的回归(regression)与分类(classification)问题](https://blog.csdn.net/wspba/article/details/61927105)
+* [回归(regression)与分类(classification)的区别](https://blog.csdn.net/u011630575/article/details/58676160)
+
+输入变量与输出变量均为连续变量的预测问题是回归问题。输出变量为有限个离散变量的预测问题成为分类问题。
+
+分类模型和回归模型本质一样，分类模型是将回归模型的输出离散化。
+
+如果从training角度来看，分类模型和回归模型的目标函数不同，分类常见的是 log loss(对数损失函数), hinge loss(铰链损失函数), 
+而回归是 square loss(平方损失函数)。
 ----
 
 # 模型
+
+## scikit-learn算法选择
+
+![原文](https://scikit-learn.org/stable/_static/ml_map.png)
+![中文](https://img-blog.csdn.net/20170624105439491?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZ3VhbmdfbWFuZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
 
 ## 数据预处理(归一化)
 
@@ -86,6 +117,8 @@ one-hot编码就可以很合理的计算出距离，那么就没必要进行one-
 ## 不均衡数据集处理
 
 * [不平衡数据集下的SVM算法研究](https://blog.csdn.net/u011414200/article/details/47310795)
+* [数据不均衡问题的解决](https://blog.csdn.net/sunflower_sara/article/details/81055033)
+* [SVM训练时候样本不均衡怎么设置惩罚项](https://blog.csdn.net/qq_22625309/article/details/76256381?locationNum=8&fps=1)
 
 从技术角度上说，任何在不同类之间展现出不等分布的样本集都应该被认为是不均衡的，并且应该展现出
 明显的不平衡特征。具体来说，这种不均衡形式被称为类间不均衡，常见的多数类与少数类比例是100:1，
@@ -101,15 +134,50 @@ one-hot编码就可以很合理的计算出距离，那么就没必要进行one-
 另外相对不平衡比例的增大也可能使分类性能进一步恶化 。其中样本集复杂度是广义的术语，它包括重叠、
 缺少代表性样本、类别间分离程度小等
 
+```
+在sklearn的SVC中，可用通过class_weight参数来处理不均衡数据集，该参数的值为字典类型或者
+'balanced'字符串，默认为None.
+
+每个类别分别设置不同的惩罚参数C，如果没有给，则会给所有类别都给C=1，即前面参数指出的参数C.
+如果给定参数'balanced'，则使用y的值自动调整与输入数据中的类频率成反比的权重。
+```
+
+
+## PCA
+
+* [sklearn_PCA实践](https://blog.csdn.net/Huangyi_906/article/details/76438885)
+* [Python scikit-learn 学习笔记—PCA+SVM人脸识别](https://blog.csdn.net/leo_is_ant/article/details/45766315)
+
+
+## 逻辑回归
+
+* [逻辑回归（Logistic Regression, LR）简介](https://blog.csdn.net/jk123vip/article/details/80591619)
+* [逻辑回归的理解](https://blog.csdn.net/t46414704152abc/article/details/79574003)
+* [logistic回归与判别分析](https://www.jianshu.com/p/8afbf60156d2)
+* [逻辑回归（Logistic Regression）](https://blog.csdn.net/liulina603/article/details/78676723)
+
+逻辑回归虽然名字叫做回归，但实际上却是一种分类学习方法。 
+
+线性回归完成的是回归拟合任务，而对于分类任务，我们同样需要一条线，但不是去拟合每个数据点，而是把不同类别的样本区分
+开来。
+
+对于二分类问题，y∈{0,1}，1表示正例，0表示负例。逻辑回归是在线性函数θTxθTx输出预测实际值的基础上，
+寻找一个假设函数hθ(x)=g(θ<sup>T</sup>x)，将实际值映射到到0，1之间，如果hθ(x)>=0.5h，则预测y=1，及y属于正例；
+如果hθ(x)<0.5，则预测y=0，即y属于负例。
+
+逻辑回归中选择对数几率函数（logistic function）作为激活函数，对数几率函数是Sigmoid函数（形状为S的函数）的重要代表
 
 
 ## SVM
 
 * [SVM支持向量机分类模型SVC理论+python sklean.svm实践](https://blog.csdn.net/SummerStoneS/article/details/78551757)
 * [SVM详解(包含它的参数C为什么影响着分类器行为)-scikit-learn拟合线性和非线性的SVM](https://blog.csdn.net/xlinsist/article/details/51311755)
-
+* [用实验理解SVM的核函数和参数](https://blog.csdn.net/sigai_csdn/article/details/80693951)
+* [sklearn-SVC实现与类参数](https://www.cnblogs.com/xiaotan-code/p/6700290.html)
 
 **核映射与核函数**
+
+* [核函数的由来](https://blog.csdn.net/huang1024rui/article/details/51510611)
 
 通过核函数，支持向量机可以将特征向量映射到更高维的空间中，使得原本线性不可分的数据在映射之后的
 空间中变得线性可分。假设原始向量为x，映射之后的向量为z，这个映射为：
@@ -126,9 +194,9 @@ one-hot编码就可以很合理的计算出距离，那么就没必要进行one-
 
 | 核函数 | 计算公式 |
 | ---- | ---- |
-| 线性核 | K(x<sub>i</sub>, x<sub>j</sub>) = x<sub>i</sub><sup>T</sup>x<sub>j</sub> |
-| 多项式核 | K(x<sub>i</sub>, x<sub>j</sub>) = (γx<sub>i</sub><sup>T</sup>x<sub>j</sub> + b)<sup>d</sup> |
-| 径向基函数(高斯)核 | K(x<sub>i</sub>, x<sub>j</sub>) = exp(-γ\|\|x<sub>i</sub> - x<sub>j</sub>\|\|<sup>2</sup>) |
+| 线性核(linear) | K(x<sub>i</sub>, x<sub>j</sub>) = x<sub>i</sub><sup>T</sup>x<sub>j</sub> |
+| 多项式核(poly) | K(x<sub>i</sub>, x<sub>j</sub>) = (γx<sub>i</sub><sup>T</sup>x<sub>j</sub> + b)<sup>d</sup> |
+| 径向基函数(高斯)核(RBF) | K(x<sub>i</sub>, x<sub>j</sub>) = exp(-γ\|\|x<sub>i</sub> - x<sub>j</sub>\|\|<sup>2</sup>) |
 | sigmoid核 | K(x<sub>i</sub>, x<sub>j</sub>) = tanh(γx<sub>i</sub><sup>T</sup>x<sub>j</sub> + b) |
 
 
@@ -146,6 +214,12 @@ C 的线性核函数相同的效果，反之当然不成立
 关的参数 b、c 需要确定。
 
 4. 多项式核函数需要计算内积，而这有可能产生溢出之类的计算问题。
+
+
+**罚分因子**
+
+C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每一个点，反之，C越小，模型的泛化能力越强。
+
 
 
 
