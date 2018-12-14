@@ -1875,6 +1875,9 @@ Process end.
 
 **Pool**
 
+* [multiprocessing Pool的异常处理问题](https://blog.csdn.net/hedongho/article/details/79139606)
+* [multiprocessing解析(二):Pool解析](https://blog.csdn.net/liuxingen/article/details/72605343)
+
 如果要启动大量的子进程，可以用进程池的方式批量创建子进程：
 
 ```
@@ -2198,6 +2201,38 @@ Traceback (most recent call last):
 ZeroDivisionError: float division by zero
 END
 ```
+
+
+**小心exit**
+
+```
+1  from multiprocessing import Pool
+2
+3  def test(i):
+4     if i == 0:
+5         exit(1)
+6
+7  p = Pool(3)
+8  process = []
+9
+10 for i in range(4):
+11    process.append(p.apply_async(test, args=(i,)))
+12
+13 p.close()
+14 p.join()
+15 print("multiprocess end!")
+16
+17 print("END")
+```
+
+请注意第5行的exit, 在第一个子进程中(i=0), 会执行exit，使主进程退出，导致其他子线程无法回收，而
+成为僵尸进程。
+
+针对这种情况，有两种解决方案：
+
+1. 将exit改为raise，并在主进程中捕捉异常。
+2. 通过消息，通知主进程关闭所有子进程后再退出。[multiprocessing.Process 产生的子进程如何正常退出？](http://bbs.chinaunix.net/thread-4133313-1-1.html)
+
 
 
 
@@ -5510,6 +5545,181 @@ while True:
     schedule.run_pending()
     time.sleep(1)
 ```
+
+### 10. PyPDF2 和 Reportlab
+
+* [pyhton之Reportlab模块](http://www.cnblogs.com/hujq1029/p/7767980.html)
+
+**对PDF页面进行截取**
+
+下边代码是对pdf文件中的所有图片进行截取
+
+```
+from PyPDF2 import PdfFileReader, PdfFileWriter
+
+pr = PdfFileReader(open("15PK1175-127_L1_I517.cnv.pdf", "rb"))
+
+pw = PdfFileWriter()
+
+for i in range(24):
+    po = pr.getPage(i)
+    #po.trimBox.lowerLeft = (0, 216)
+    #po.trimBox.upperRight = (864, 432)
+    #po.cropBox.lowerLeft = (0, 216)
+    #po.cropBox.upperRight = (864, 432)
+    po.mediaBox.lowerLeft = (0, 216)
+    po.mediaBox.upperRight = (864, 432)
+    po.compressContentStreams()                                                                                                     
+    pw.addPage(po)
+
+with open("e.pdf","wb") as f:
+    pw.write(f)
+
+```
+
+截取成功，但奇怪的是，截取前后pdf的大小没有发生改变，使用identify查看发现：
+
+原pdf信息
+
+```
+15PK1175-127_L1_I517.cnv.pdf[0] PDF 864x648 864x648+0+0 16-bit Bilevel DirectClass 70KB 0.040u 0:00.030
+15PK1175-127_L1_I517.cnv.pdf[1] PDF 864x648 864x648+0+0 16-bit Bilevel DirectClass 70KB 0.040u 0:00.030
+15PK1175-127_L1_I517.cnv.pdf[2] PDF 864x648 864x648+0+0 16-bit Bilevel DirectClass 70KB 0.040u 0:00.030
+15PK1175-127_L1_I517.cnv.pdf[3] PDF 864x648 864x648+0+0 16-bit Bilevel DirectClass 70KB 0.030u 0:00.030
+```
+
+截取后pdf信息
+
+```
+e.pdf[0] PDF 864x216 864x216+0+0 16-bit Bilevel DirectClass 23.4KB 0.010u 0:00.010
+e.pdf[1] PDF 864x216 864x216+0+0 16-bit Bilevel DirectClass 23.4KB 0.000u 0:00.010
+e.pdf[2] PDF 864x216 864x216+0+0 16-bit Bilevel DirectClass 23.4KB 0.000u 0:00.010
+e.pdf[3] PDF 864x216 864x216+0+0 16-bit Bilevel DirectClass 23.4KB 0.000u 0:00.010
+```
+
+每页图片大小确实变小了，但看整个pdf大小竟然没有变小。遇到这种情况，看来只能会用gs压缩了：
+
+```
+gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -dNOPAUSE -dQUIET -dBATCH -sOutputFile=e.pdf f.pdf
+```
+
+**为PDF页面添加文本**
+
+* [Python添加pdf水印](http://blog.51cto.com/walkerqt/1378142)
+* [使用Python将文本添加到现有PDF](http://landcareweb.com/questions/5051/shi-yong-pythonjiang-wen-ben-tian-jia-dao-xian-you-pdf)
+* [用PDFlib给PDF添加水印（Python）](http://www.voidcn.com/article/p-pensbcbe-dh.html)
+
+用到两个扩展模块：ReportLab、PyPDF2。
+
+**创建水印PDF**
+
+1 创建文字水印pdf文件
+
+```
+#encoding=utf-8
+#author: walker
+#date: 2014-03-17
+#function: 创建文字水印pdf
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import cm
+def create_watermark(content):
+    #默认大小为21cm*29.7cm
+    c = canvas.Canvas("mark.pdf", pagesize = (30*cm, 30*cm))
+    #移动坐标原点(坐标系左下为(0,0))
+    c.translate(10*cm, 5*cm)
+                                                                                                                               
+    #设置字体
+    c.setFont("Helvetica", 80)
+    #指定描边的颜色
+    c.setStrokeColorRGB(0, 1, 0)
+    #指定填充颜色
+    c.setFillColorRGB(0, 1, 0)
+    #画一个矩形
+    c.rect(cm, cm, 7*cm, 17*cm, fill=1)
+                                                                                                                               
+    #旋转45度，坐标系被旋转
+    c.rotate(45)
+    #指定填充颜色
+    c.setFillColorRGB(0.6, 0, 0)
+    #设置透明度，1为不透明
+    c.setFillAlpha(0.3)
+    #画几个文本，注意坐标系旋转的影响
+    c.drawString(3*cm, 0*cm, content)
+    c.setFillAlpha(0.6)
+    c.drawString(6*cm, 3*cm, content)
+    c.setFillAlpha(1)
+    c.drawString(9*cm, 6*cm, content)
+                                                                                                                               
+    #关闭并保存pdf文件
+    c.save()
+create_watermark('walker')
+```
+
+2. 创建图片水印pdf
+
+```
+#encoding=utf-8
+#author: walker
+#date: 2014-03-17
+#function: 创建图片水印pdf
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import cm
+def create_watermark(f_jpg):
+    f_pdf = 'mark.pdf'
+    w_pdf = 20*cm
+    h_pdf = 20*cm
+                                                                                          
+    c = canvas.Canvas(f_pdf, pagesize = (w_pdf, h_pdf))
+    c.setFillAlpha(0.3) #设置透明度
+    print c.drawImage(f_jpg, 7*cm, 7*cm, 6*cm, 6*cm)    #这里的单位是物理尺寸
+    c.save()
+create_watermark('eg.png')
+```
+
+**添加水印**
+
+```
+#encoding=utf-8
+#author: walker
+#date: 2014-03-18
+#function:给pdf添加水印
+from PyPDF2 import PdfFileWriter, PdfFileReader
+from reportlab.pdfgen import canvas
+#所有路径为绝对路径
+def add_watermark(pdf_file_in, pdf_file_mark, pdf_file_out):
+    pdf_output = PdfFileWriter()
+    input_stream = file(pdf_file_in, 'rb')
+    pdf_input = PdfFileReader(input_stream)
+                                                                               
+    # PDF文件被加密了
+    if pdf_input.getIsEncrypted():
+        print '该PDF文件被加密了.'
+        # 尝试用空密码解密
+        try:
+            pdf_input.decrypt('')
+        except Exception, e:
+            print '尝试用空密码解密失败.'
+            return False
+        else:
+            print '用空密码解密成功.'
+    # 获取PDF文件的页数
+    pageNum = pdf_input.getNumPages()
+    #读入水印pdf文件
+    pdf_watermark = PdfFileReader(file(pdf_file_mark, 'rb'))
+    # 给每一页打水印
+    for i in range(pageNum):
+        page = pdf_input.getPage(i)
+        page.mergePage(pdf_watermark.getPage(0))
+        page.compressContentStreams()   #压缩内容
+        pdf_output.addPage(page)
+```
+
+这种方式唯一的缺点就是效率极低，不适合大批量文件处理。主要限速步骤是page.mergePage()和
+page.compressContentStreams()。要想加速，可以换一种思维：添加空白页，在空白页上添加文本，
+再将该页添加到pdf中，即可避免使用这两个函数。
+
+用PDFlib处理效率会比这种方式高几十倍。
+
 
 
 ## 黑客模块

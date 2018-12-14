@@ -12,7 +12,7 @@
 
 ----
 
-# 基本知识
+# Windows编程-基本知识
 
 ## TCHAR
 
@@ -58,3 +58,11 @@ TCHAR ptszArray[10];
 在Unicode字符集下，长度为20个字节
 在Multi-Byte字符集下，长度为10个字节
 ```
+
+----
+
+# Office
+
+## Excel
+
+### 基本函数

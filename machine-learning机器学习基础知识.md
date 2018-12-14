@@ -172,6 +172,12 @@ one-hot编码就可以很合理的计算出距离，那么就没必要进行one-
 逻辑回归中选择对数几率函数（logistic function）作为激活函数，对数几率函数是Sigmoid函数（形状为S的函数）的重要代表
 
 
+## 梯度下降
+
+* [深入浅出--梯度下降法及其实现](https://www.jianshu.com/p/c7e642877b0e)
+* [一文看懂常用的梯度下降算法](https://blog.csdn.net/u013709270/article/details/78667531/)
+* [最清晰的讲解各种梯度下降法原理与Dropout](https://baijiahao.baidu.com/s?id=1613121229156499765&wfr=spider&for=pc)
+
 ## SVM
 
 * [SVM支持向量机分类模型SVC理论+python sklean.svm实践](https://blog.csdn.net/SummerStoneS/article/details/78551757)
@@ -225,6 +231,43 @@ C 的线性核函数相同的效果，反之当然不成立
 C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每一个点，反之，C越小，模型的泛化能力越强。
 
 
+## HMM
+
+* [一文搞懂HMM（隐马尔可夫模型）](https://www.cnblogs.com/skyme/p/4651331.html)
+* [隐马尔可夫模型（一）](https://www.cnblogs.com/bigmonkey/p/7230668.html)
+* [隐马尔可夫模型](https://blog.csdn.net/u011630575/article/details/79140106)
+* [隐马尔可夫模型攻略](http://www.leexiang.com/hidden-markov-model)
+
+**隐马尔可夫模型作了两个基本假设**
+
+1. 齐次马尔可夫性假设，即假设隐藏的马尔可夫链在任意时刻t的状态只依赖于其前一时刻的状态，与其他时刻的状态及观测无关。
+2. 观测独立性假设，即假设任意时刻的观测只依赖于该时刻的马尔可夫链的状态，与其他观测及状态无关。
+
+**隐马尔可夫模型5元组**
+
+一个 HMM 可用一个5元组 { N, M, π，A，B } 表示，其中：
+
+* N 表示隐藏状态的数量，我们要么知道确切的值，要么猜测该值；
+* M 表示可观测状态的数量，可以通过训练集获得；
+* π={πi} 为初始状态概率；代表的是刚开始的时候各个隐藏状态的发生概率；
+* A={aij}为隐藏状态的转移矩阵；N*N维矩阵，代表的是第一个状态到第二个状态发生的概率；
+* B={bij}为混淆矩阵，N*M矩阵，代表的是处于某个隐状态的条件下，某个观测发生的概率。
+
+**隐马尔可夫模型的3个基本问題**
+
+1. 概率计算问题。给定模型和观测序列,计算在模型下观测序列出现的概率。 [遍历法、向前算法、向后算法]
+2. 学习问题。己知观测序列,估计模型参数，使得在该模型下观测序列概率最大。 [鲍姆-韦尔奇算法(EM算法)]
+即用极大似然估计的方法估计参数。
+3. 预测问题，也称为解码（decoding)问题。已知模型和观测序列，求对给定观测序列条件概率最大的状态序列。
+即给定观测序列，求最有可能的对应的状态序列。[近似算法、维特比算法(Viterbi)]
+
+----
+
+# 深度学习
+
+## TensorFlow
+
+* [Simple and ready-to-use tutorials for TensorFlow](https://github.com/osforscience/TensorFlow-Course#why-use-tensorflow)
 
 
 ----

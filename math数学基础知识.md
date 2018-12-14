@@ -232,6 +232,10 @@
 * [多项式ppt](https://wenku.baidu.com/view/720b07a0d4bbfd0a79563c1ec5da50e2534dd160.html)
 
 
+## 2.7 内积和外积
+
+* [向量内积（点乘）和外积（叉乘）概念及几何意义](https://www.cnblogs.com/gxcdream/p/7597865.html)
+
 ----
 
 # 3 常见问题
