@@ -17,8 +17,9 @@
          * [FISH](#fish)
          * [Array-CGH](#array-cgh)
    * [数据库](#数据库)
-      * [CNV](#cnv)
-         * [CNV Syndromes](#cnv-syndromes)
+      * [肿瘤数据库](#肿瘤数据库)
+      * [遗传疾病公共数据库](#遗传疾病公共数据库)
+      * [其它](#其它)
    * [软件](#软件)
       * [生物信息软件参数解析](#生物信息软件参数解析)
          * [samtools](#samtools)
@@ -31,7 +32,7 @@
    * [文件格式](#文件格式)
       * [.fai (索引文件)](#fai-索引文件)
 
-<!-- Added by: luyl, at: 2018-10-08T13:49+08:00 -->
+<!-- Added by: luyl, at: 2018-12-25T17:37+08:00 -->
 
 <!--te-->
 
@@ -393,11 +394,109 @@ Sick  Chidren医院针对在人群中发现的家族CNVs建立了“基因变异
 
 # 数据库
 
-## CNV
+* [12个医学公共数据库](http://www.dxy.cn/bbs/topic/39055159?from=recommend)
 
-### CNV Syndromes
 
-* [DECIPHER](https://decipher.sanger.ac.uk/disorders#syndromes/overview)
+## 肿瘤数据库
+
+**NCDB**
+
+美国国家癌症数据库(National Cancer Database, NCDB)是经国家认证的，由美国外科医师学会和美国癌症学会联合组建的，
+它是一个基于医院登记数据的临床肿瘤学数据库，来源于超过1500多个癌症委员会认证的机构。NCDB数据库可用于分析和跟
+踪恶性肿瘤患者的治疗过程和结局。数据库代表了全美超过70%的新诊断癌症病例和超过三千四百万个历史记录。
+
+**SEER**
+
+SEER(Surveillance, Epidemiology, and EndResults Program)是美国癌症统计的权威来源。SEER数据库可提供癌症统计信息，
+以减轻美国人口中的癌症负担。SEER数据库由美国国家癌症研究所(National Cancer Institute,NCI)癌症控制和人口科学
+部(Division of Cancer Control andPopulation Sciences, DCCPS)的监视研究项目(SurveillanceResearch Program, SRP)
+提供支持。
+
+**TCGA**
+
+美国癌症基因组图谱(The Cancer Genome Atlas, TCGA)是由美国国家癌症研究所(National Cancer Institute, NCI)和
+国家人类基因组研究所(NationalHuman Genome Research Institute, NHGRI)合作开发的，目前它包含了33种癌症的数据，
+每种癌症都涉及关键基因组变化的全面、多维的图谱。TCGA数据库储存有2.5PB的数据，对超过1.1万多名患者的肿瘤组织
+及配对正常组织进行描述，目前已被广泛应用于研究领域。这些数据已为独立研究人员进行的癌症研究或者TCGA研究网络
+出版物做出了超过1千多项的贡献。
+
+在TCGA中直接下载数据的方法较为繁琐，但是有多个网站提供TCGA数据(包括表达和临床等)完善的整理，以下是其中整理
+最为完整和可靠的：
+
+GDAC: http://gdac.broadinstitute.org/
+
+Cancer Browser: https://genome-cancer.ucsc.edu/
+
+cBioportal: http://www.cbioportal.org/index.do
+
+
+**METABRIC**
+
+国际乳腺癌协会的分子分类数据库(Molecular Taxonomy of Breast Cancer International Consortium, METABRIC) 
+是一个加拿大-英国联合项目，旨在根据有助于确定最佳治疗过程的分子特征将乳腺肿瘤进一步分类。我们迄今为止已经
+根据肿瘤的基因指纹将乳腺癌重新分类为10个全新的类别。这些基因可以对乳腺癌生物学提供迫切需要的洞察力，使医生
+能够预测肿瘤是否会对某种特定的治疗产生反应。肿瘤是否有可能扩散到身体的其他部位，或者治疗后是否有可能复发。
+
+**Kaplan Meier Plotter**
+
+Kaplan MeierPlotter是一个包含5种癌症(乳腺癌、卵巢癌、肺癌、胃癌、肝癌)的mRNA表达谱芯片公共数据库，
+从中能够获得基因表达与疾病预后的信息。
+
+
+## 遗传疾病公共数据库
+
+**DECIPHER**
+
+[DECIPHER](https://decipher.sanger.ac.uk/disorders#syndromes/overview) 为“Database of Chromosomal Imbalance and Phenotype 
+in Humans using Ensembl Resources”的简称，也是目前分子遗传学中最重要的生物信息学数据库之一。用户可以通过检索数据库，
+发现一系列相关的遗传疾病信息，包括变异位点、临床表型等，提高临床诊断效能。DECIPHER数据库包含了超过200家研究中心上传的超过
+10,000例的案例信息。
+
+**OMIM**
+
+* [OMIM简明使用说明](http://www.biotrainee.com/thread-1107-1-1.html)
+
+[OMIM](http://www.omim.org/) 为“0nline Mendelian Inheritance in Man”的简称，意即“在线人类孟德尔遗传数据库”，是目前分子遗传
+学中最重要的生物信息学数据库之一。数据库持续更新，主要着眼于可遗传的或遗传性的基因疾病，包括文本信息和相关参考信息、序列纪
+录、图谱和相关其他数据库。
+
+**DGV**
+
+[DGV](http://dgv.tcag.ca/dgv/app/home) 为“Database of Genomic Variants”的简称，目的是提供人类染色体结构变异的概况信息，数据
+库记录了一系列基因变异与表型相关的信息，数据库信息持续更新中。
+
+**Orphanet**
+
+[Orphanet](http://www.orpha.net/consor/cgi-bin/index.php?lng=EN) 数据库是为所有用户提供罕见病和罕见病药物信息的开放门户，
+目的在于提高罕见病的诊断、护理和治疗效果。
+
+**CNVD**
+
+[CNVD](http://202.97.205.78/CNVD/) 为“Copy Number Variation in Disease”的简称，是哈尔滨医科大建立的数据库。
+
+**ISCA**
+
+[ISCA](http://dbsearch.clinicalgenome.org/search/)
+
+## 其它
+
+**Comparative Toxicogenomics Database**
+
+比较基因组数据库(Comparative ToxicogenomicsDatabase, CTD)是一个强大的、公开可用的数据库，旨在提高人们对环境暴
+露如何影响人类健康的了解。它提供了关于化学基因/蛋白质相互作用、化学疾病和基因疾病关系的相关信息。这些数据与功
+能和路径数据相结合，以帮助验证关于环境影响疾病的机制假设。
+
+**GEO**
+
+基因表达库(Gene Expression Omnibus,GEO) 是一个支持微阵列实验的最小信息(MinimumInformation About a Microarray 
+Experiment, MIAME)兼容数据提交的公共功能基因组数据存储库。可接受基于数组或序列的数据。提供相关工具帮助用户查
+询和下载实验和管理基因表达谱
+
+**WHO Mortality Database**
+
+世界卫生组织死亡数据库(WHO Mortality Database)是对各个成员国的居民登记系统按照年龄、性别和死因汇编的每年死亡
+数据。
+
 
 
 ----

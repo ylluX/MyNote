@@ -11,13 +11,20 @@
       * [scikit-learn算法选择](#scikit-learn算法选择)
       * [数据预处理(归一化)](#数据预处理归一化)
       * [不均衡数据集处理](#不均衡数据集处理)
+      * [核密度函数](#核密度函数)
       * [PCA](#pca)
       * [逻辑回归](#逻辑回归)
+      * [梯度下降](#梯度下降)
       * [SVM](#svm)
+      * [HMM](#hmm)
+   * [深度学习](#深度学习)
+      * [TensorFlow](#tensorflow)
+   * [分布](#分布)
+      * [泊松分布](#泊松分布)
    * [学习资料](#学习资料)
       * [视频资料](#视频资料)
 
-<!-- Added by: luyl, at: 2018-12-06T15:18+08:00 -->
+<!-- Added by: luyl, at: 2018-12-25T17:38+08:00 -->
 
 <!--te-->
 
@@ -35,6 +42,9 @@
 * 假阴性率(false negative rate, FNR)，又称为"漏诊率"   FNR = FN/(TP+FN) = 1 - TPR
 * 阳性预测值(positive predictive value, PPV), 即诊断为阳性中有病的概率    PPV = TP/(TP+FP)
 * 隐性预测值(negative predictive value, NPV), 即诊断为阴性中无病的概率    NPV = TN/(TN+FN)
+* 准确率(accuracy)  = (TP+TN) / (TP+TN+FP+FN)
+* 精确率(precision): P = TP / (TP+FP)
+* 召回率(recall): R = TP / (TP+FN)
 
 灵敏度：实际实际无病的人正确判断为真阳性的比例
 
@@ -146,6 +156,12 @@ one-hot编码就可以很合理的计算出距离，那么就没必要进行one-
 如果给定参数'balanced'，则使用y的值自动调整与输入数据中的类频率成反比的权重。
 ```
 
+
+## 核密度函数
+
+* [核密度估计 Kernel Density Estimation(KDE)](https://blog.csdn.net/unixtch/article/details/78556499)
+
+![核函数的图形](https://img-blog.csdn.net/20171116222009645?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdW5peHRjaA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
 ## PCA
 
@@ -269,6 +285,14 @@ C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每�
 
 * [Simple and ready-to-use tutorials for TensorFlow](https://github.com/osforscience/TensorFlow-Course#why-use-tensorflow)
 
+
+----
+
+# 分布
+
+## 泊松分布
+
+* [如何通俗理解泊松分布？](https://blog.csdn.net/ccnt_2012/article/details/81114920)
 
 ----
 

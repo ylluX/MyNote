@@ -40,6 +40,7 @@
          * [29. 进制](#29-进制)
          * [30. 模拟SSH登录和SCP传输](#30-模拟ssh登录和scp传输)
          * [31. 获得本机IP](#31-获得本机ip)
+         * [32. 获得两个概率密度函数交集区域内的概率](#32-获得两个概率密度函数交集区域内的概率)
       * [高级](#高级)
          * [1. 装饰器（Decorator）](#1-装饰器decorator)
          * [2. 回调函数](#2-回调函数)
@@ -72,6 +73,7 @@
          * [16. PIL](#16-pil)
       * [第三方模块](#第三方模块)
          * [1. scipy.stats](#1-scipystats)
+         * [scipy](#scipy)
          * [2. pandas](#2-pandas)
          * [3. numpy](#3-numpy)
          * [4. click](#4-click)
@@ -80,6 +82,7 @@
          * [7. six](#7-six)
          * [8. pathlib](#8-pathlib)
          * [9. schedule](#9-schedule)
+         * [10. PyPDF2 和 Reportlab](#10-pypdf2-和-reportlab)
       * [黑客模块](#黑客模块)
          * [1. pywin32](#1-pywin32)
          * [2. psutil](#2-psutil)
@@ -112,7 +115,7 @@
    * [8. 第三方包安装教程](#8-第三方包安装教程)
       * [8.1 pypcap](#81-pypcap)
 
-<!-- Added by: luyl, at: 2018-12-06T15:18+08:00 -->
+<!-- Added by: luyl, at: 2018-12-25T17:38+08:00 -->
 
 <!--te-->
 
@@ -1302,6 +1305,83 @@ if __name__ == '__main__':
     print(get_host_ip())
 ```
 
+### 32. 获得两个概率密度函数交集区域内的概率
+
+* [非参数估计：核密度估计KDE](https://blog.csdn.net/pipisorry/article/details/53635895)
+* [scipy.stats.gaussian_kde](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.gaussian_kde.html)
+* [statsmodels.nonparametric.kde.KDEUnivariate](http://www.statsmodels.org/devel/generated/statsmodels.nonparametric.kde.KDEUnivariate.html)
+* [Source code for statsmodels.nonparametric.kde](http://www.statsmodels.org/stable/_modules/statsmodels/nonparametric/kde.html#KDEUnivariate.cdf)
+* [Kernel Density Estimation in Python(python各模块中密度核函数比较)](https://jakevdp.github.io/blog/2013/12/01/kernel-density-estimation/)
+
+虽然采用不同的核函数都可以获得一致性的结论（整体趋势和密度分布规律性基本一致），
+但核密度函数也不是完美的。除了核算法的选择外，带宽（bandwidth）也会影响密度估计，
+过大或过小的带宽值都会影响估计结果。
+
+```
+import seaborn as sns
+import matplotlib.pyplot as plt
+import statsmodels
+import scipy
+import numpy as np
+
+data = np.random.sample(1000)
+data1 = data + 0.3
+
+fig,ax = plt.subplots()
+# 绘制核密度图(高斯密度核函数，带宽(bw))
+# 如果安装了statsmodels模块，使用statsmodels.nonparametric.kde.KDEUnivariate(),
+# 否则使用scipy.stats.gaussian_kde()来估计核密度
+# 这两组数据的密度图完全一致，data1只是向右平移了0.3
+sns.kdeplot(data, ax=ax, kernel='gau', bw='scott', gridsize=100, cut=3, clip=None)
+sns.kdeplot(data1, ax=ax, kernel='gau', bw='scott', gridsize=100, cut=3, clip=None)
+
+# sns.kdeplot返回的ax，没有密度函数，为了计算这两个密度图交集的面积，我们需要重新
+# 计算kde
+kde = statsmodels.nonparametric.kde.KDEUnivariate(data)
+kde.fit(kernel="gau", bw="scott", fft="gau", gridsize=100, cut=3)
+# 为了计算两个密度函数交集区域的面积，需要先获得焦点的x值。
+# 为了偷懒，将两峰间x轴分为n=30份，如果xi点在图1上的密度值大于图2上的密度值,
+# x(i+1)点在图1上的密度值小于图2上的密度值，则焦点的x值肯定大于等于xi,小于等于
+# x(i+1)，我们姑且让其等于平均值
+# 注意：如果想要准确求得该交点x值，需要使用符号运算
+peak_x = kde.support[kde.density.argmax()] # 获得峰值对应的x的值
+peak_interval = 0.3 # 两图峰值对应x值的间距
+seek_bin = 0.01 # 将x分为30份，每份长度0.01
+points = np.arange(peak_x, peak_x+peak_interval, seek_bin) # 获得所有xi
+# 粗略求得交点的x值(pp)
+for i in range(len(points)-1):
+    if i == 0:
+        r0 = kde.evaluate(points[i])[0]
+        l0 = kde.evaluate(points[i]-peak_interval)[0]
+        continue
+    r1 = kde.evaluate(points[i]+seek_bin)[0]
+    l1 = kde.evaluate(points[i]+seek_bin-peak_interval)[0]
+    if r0 == l0:
+        pp = points[i]
+        break
+    elif r1 == l0:
+        pp = points[i] + seek_bin
+        break
+    elif r0 > l0 and r1 < l1:
+        pp = points[i] + seek_bin/2.0
+        break
+    else:
+
+        r0, l0 = r1, l1
+# 准确求交点的x值
+def f(x):  # 计算误差函数
+    if x<2 or x>2+peak_interval:
+        return np.inf
+    else:
+        return kde.evaluate(x) - kde.evaluate(x-peak_interval)
+pp=scipy.optimize.leastsq(f,2) # 传递误差函数和待确定参数的初始值
+
+# 计算各累积分布值
+func = lambda x,s: kde.kernel.density(s,x)
+cdf1 = scipy.integrate.quad(func, -np.inf, pp, args=kde.endog)[0]
+cdf2 = scipy.integrate.quad(func, -np.inf, pp-peak_interval, args=kde.endog)[0]
+cdf_inter = 1 - cdf1 + cdf2 # 交集的面积，及概率
+```
 
 </br>
 
@@ -4798,6 +4878,23 @@ scipy.stats.pointbiserialr(a, b)
 scipy,stats.kendalltau(a, b, initial_lexsort=None, nan_policy='omit')
 ```
 
+### scipy
+
+**基本函数**
+
+利用积分来求面积
+
+```
+from scipy.integrate import quad
+#    所需要的常用参数: func, a, b。
+#        func:传入的函数，
+#        a:积分下限,
+#        b:积分上限。
+area,error = quad(func, a, b)
+```
+
+
+
 
 ### 2. pandas
 
@@ -5024,12 +5121,33 @@ array([[ -1,  -1, -10, -10],
 array([1, 2, 3, 4])
 >>> a.flatten('F')
 array([1, 3, 2, 4])
+
+#使用np.r_()
+>>> np.r_[np.array([1,2,3]), 0, 0, np.array([4,5,6])]
+>>> array([1, 2, 3, 0, 0, 4, 5, 6])
+>>> np.r_[-1:1:6j, [0]*3, 5, 6]
+array([-1. , -0.6, -0.2,  0.2,  0.6,  1. ,  0. ,  0. ,  0. ,  5. ,  6. ])
 ```
 
 **分位函数**
+
 ```
 #求数组a的四分位数
 np.percentile(a, [25, 50, 75])
+```
+
+**获得数组值从小到大的索引值**
+
+```
+>>> x = np.array([3, 1, 2])
+>>> np.argsort(x) #按升序排列
+array([1, 2, 0])
+>>> np.argsort(-x) #按降序排列
+array([0, 2, 1])
+>>> x[np.argsort(x)] #通过索引值排序后的数组
+array([1, 2, 3])
+>>> x[np.argsort(-x)]
+array([3, 2, 1])
 ```
 
 
