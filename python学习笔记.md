@@ -115,7 +115,7 @@
    * [8. 第三方包安装教程](#8-第三方包安装教程)
       * [8.1 pypcap](#81-pypcap)
 
-<!-- Added by: luyl, at: 2018-12-25T17:38+08:00 -->
+<!-- Added by: luyl, at: 2018-12-27T14:58+08:00 -->
 
 <!--te-->
 
@@ -5149,6 +5149,25 @@ array([1, 2, 3])
 >>> x[np.argsort(-x)]
 array([3, 2, 1])
 ```
+
+**求以n为底的对数值**
+
+* [numpy.log(math.log)](https://blog.csdn.net/Mr_Cat123/article/details/78806827)
+
+```
+np.log()   # 以e为底
+np.log2()  # 以2为底
+np.log10()
+
+# 除了以e,2,10为底以外，没有以其它值为底的函数，需要用到换底公式：
+#   logaB = logcB / logcA
+# 如以3为底4的对数
+np.log(4) / np.log(3)
+
+# math.log可以以任意数为底
+math.log(4,3)
+```
+
 
 
 ### 4. click
