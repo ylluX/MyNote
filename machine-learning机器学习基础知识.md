@@ -25,7 +25,7 @@
    * [学习资料](#学习资料)
       * [视频资料](#视频资料)
 
-<!-- Added by: luyl, at: 2018-12-27T14:58+08:00 -->
+<!-- Added by: luyl, at: 2018-12-28T09:05+08:00 -->
 
 <!--te-->
 
@@ -825,6 +825,7 @@ one-hot编码就可以很合理的计算出距离，那么就没必要进行one-
 
 ## 非线性回归
 
+* [python指数、幂数拟合curve_fit](https://blog.csdn.net/yefengzhichen/article/details/52767733)
 * [Python机器学习之非线性回归-多项式回归](https://carrylaw.github.io/bml/2017/10/13/ml02/) 代码很清晰
 
 非线性回归相较于线性回归而言，总带有一丢丢复杂的神秘感。关于线性回归模型相信各位已耳熟能详，
