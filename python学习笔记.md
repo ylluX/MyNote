@@ -41,6 +41,7 @@
          * [30. 模拟SSH登录和SCP传输](#30-模拟ssh登录和scp传输)
          * [31. 获得本机IP](#31-获得本机ip)
          * [32. 获得两个概率密度函数交集区域内的概率](#32-获得两个概率密度函数交集区域内的概率)
+         * [33. 将pandas数据和matplotlib绘图嵌入html文件](#33-将pandas数据和matplotlib绘图嵌入html文件)
       * [高级](#高级)
          * [1. 装饰器（Decorator）](#1-装饰器decorator)
          * [2. 回调函数](#2-回调函数)
@@ -83,6 +84,7 @@
          * [8. pathlib](#8-pathlib)
          * [9. schedule](#9-schedule)
          * [10. PyPDF2 和 Reportlab](#10-pypdf2-和-reportlab)
+         * [11. matplotlib](#11-matplotlib)
       * [黑客模块](#黑客模块)
          * [1. pywin32](#1-pywin32)
          * [2. psutil](#2-psutil)
@@ -115,7 +117,7 @@
    * [8. 第三方包安装教程](#8-第三方包安装教程)
       * [8.1 pypcap](#81-pypcap)
 
-<!-- Added by: luyl, at: 2018-12-27T14:58+08:00 -->
+<!-- Added by: luyl, at: 2019-01-29T10:21+08:00 -->
 
 <!--te-->
 
@@ -1382,6 +1384,90 @@ cdf1 = scipy.integrate.quad(func, -np.inf, pp, args=kde.endog)[0]
 cdf2 = scipy.integrate.quad(func, -np.inf, pp-peak_interval, args=kde.endog)[0]
 cdf_inter = 1 - cdf1 + cdf2 # 交集的面积，及概率
 ```
+
+
+### 33. 将pandas数据和matplotlib绘图嵌入html文件
+
+* [python 实现将 pandas 数据和 matplotlib 绘图嵌入 html 文件](https://blog.csdn.net/XnCSD/article/details/79231205)
+
+**实现原理**
+
+python 的 lxml 库的 etree 模块可以实现解析 HTML 代码并写入 html 文件。如下所示：
+
+```
+from lxml import etree
+root = """
+<title>lxml example</title>
+<h1>Hello lxml!</h1>
+"""
+html = etree.HTML(root)
+tree = etree.ElementTree(html)
+tree.write('hellolxml.html')
+```
+
+pandas 的 DataFrame 数据，可直接调用 df.to_html() 函数将 DataFrame 数据转为 HTML 代码字符串。
+
+从 HTML 文件中可以发现，内嵌的图片是以 base64 代码的形式嵌入的。具体形式为 
+`<img src="data:image/png;base64,iVBORw...>`。后面的 iVBORw…即为图像的 Base64 编码信息。
+故而只需将图像转为 base64 代码即可将图像嵌入 HTML 代码字符串中。python 的 base64 模块可
+以实现将二进制文件转为 base64 编码，而 matplotlib 的 pyplot.savefig() 函数可以将绘图窗口
+保存为二进制文件格式。
+
+**python 代码实现**
+
+最终便可使用 python 实现将将 pandas 的 DataFrame 数据以及 matplotlib 绘图的图像保存为 HTML
+ 文件，代码如下。（以下代码基于 python 3.6 实现的。）
+
+```
+# 导入所需模块
+import pandas as pd
+import matplotlib.pyplot as plt
+from io import BytesIO
+from lxml import etree
+import base64
+import urllib
+
+
+# 获取数据集，用 urllib 库下载 iris 数据集作为示例
+url = "http://aima.cs.berkeley.edu/data/iris.csv"
+setl = urllib.request.Request(url)
+iris_p = urllib.request.urlopen(setl)
+iris = pd.read_csv(iris_p, sep=',',decimal='.',header=None, names=['Sepal_Length','Sepal_Width','Petal_Length','Petal_Width','Species'])
+
+# pandas 的 DataFrame 数据直接装换为 html 代码字符串
+iris_des = """<h1>Iris Describe Stastic</h1>"""+iris.describe().T.to_html()
+
+# matplotlib 任意绘制一张图
+fig,axes = plt.subplots(1,4,sharey = True)
+for n in range(4):
+    axes[n].hist( iris.iloc[:,n],bins = 15,color = 'b',alpha = 0.5,rwidth= 0.8 )
+    axes[n].set_xlabel(iris.columns[n])
+plt.subplots_adjust(wspace = 0)
+# figure 保存为二进制文件
+buffer = BytesIO()
+plt.savefig(buffer)  
+plot_data = buffer.getvalue()
+
+# 图像数据转化为 HTML 格式
+imb = base64.b64encode(plot_data)  
+#imb = plot_data.encode('base64')   # 对于 Python 2.7可用 
+ims = imb.decode()
+imd = "data:image/png;base64,"+ims
+iris_im = """<h1>Iris Figure</h1>  """ + """<img src="%s">""" % imd   
+
+root = "<title>Iris Dataset</title>"
+root = root + iris_des + iris_im  #将多个 html 格式的字符串连接起来
+
+# lxml 库的 etree 解析字符串为 html 代码，并写入文件
+html = etree.HTML(root)
+tree = etree.ElementTree(html)
+tree.write('iris.html')
+
+# 最后使用默认浏览器打开 html 文件
+import webbrowser
+webbrowser.open('iris.html',new = 1)
+```
+
 
 </br>
 
@@ -5859,6 +5945,12 @@ page.compressContentStreams()。要想加速，可以换一种思维：添加空
 
 
 
+### 11. matplotlib
+
+* [matplotlib核心剖析](http://www.cnblogs.com/vamei/archive/2013/01/30/2879700.html)
+
+
+
 ## 黑客模块
 
 ### 1. pywin32
@@ -6409,6 +6501,36 @@ class MySpider(CrawlSpider):
 
 
 ### Django
+
+文档：
+
+* [Django 1.8.2 文档](https://yiyibooks.cn/xx/django_182/ref/forms/widgets.html)
+* [Django 文档](https://docs.djangoproject.com/zh-hans/2.1/)
+* [The Django Book](http://djangobook.py3k.cn/2.0/)
+
+* [Form中字段及插件](https://www.jianshu.com/p/c4f1c25feb1c)
+* [python 中单独调用 django 的数据库模块](https://cloud.tencent.com/developer/article/1005565)
+* [Django 定时任务实现（django-crontab+command）](https://www.cnblogs.com/perfe/p/6198213.html)
+* [django定时任务实现](https://blog.csdn.net/kong2030/article/details/82315251)
+* [Django核心基础(5)：表单(Forms)的使用与验证](https://zhuanlan.zhihu.com/p/37558298)
+* [python django 数据库查询方法总结](http://127.0.0.1:8000/pgs/search/)
+* [django的登录注册系统](https://www.jianshu.com/p/0a1145167a8d)
+* [[Django]几种重定向的方式](https://blog.csdn.net/orangleliu/article/details/38347863)
+
+分页功能:
+
+* [django 1.11通用视图自带分页功能](https://blog.csdn.net/l475378094/article/details/76850725)
+* [Django之分页功能](https://www.cnblogs.com/kongzhagen/p/6640975.html)
+
+Bootstrap美化：
+
+* [有关Bootstrap你想要知道的都在这里](https://zhuanlan.zhihu.com/p/21472801)
+* [Bootstrap 4 Tutorial](https://www.quackit.com/bootstrap/bootstrap_4/tutorial/)
+* [Bootstrap4 教程](http://www.runoob.com/bootstrap4/bootstrap4-flex.html)
+* [Bootstrap spacing间隔规范](http://code.z01.com/v4/utilities/spacing.html)
+
+绘图：
+* [echarts](http://echarts.baidu.com/examples/)
 
 ----
 

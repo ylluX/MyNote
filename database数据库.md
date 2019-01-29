@@ -6,7 +6,7 @@
    * [mysql](#mysql)
    * [sqlite](#sqlite)
 
-<!-- Added by: luyl, at: 2018-12-28T09:05+08:00 -->
+<!-- Added by: luyl, at: 2019-01-29T10:20+08:00 -->
 
 <!--te-->
 
@@ -25,7 +25,7 @@
     2) mysql中：status;
     3) 使用mysql的函数 select version();
 
-1. 选择
+1.选择
     1) 查看所有数据库：show databases；
     2) 选择数据库：use <dataname>；
     3) 显示数据库中所有表：show tables；
@@ -35,7 +35,7 @@
 2.创建数据库
     create database <database_name>；
 
-3. 添加，修改
+3.添加，修改
     1) 添加一个字段   
         ALTER TABLE jw_user_role ADD zk_env VARCHAR(16);  
     2) 修改字段为not null，还要把原来的类型也写出来
@@ -50,9 +50,24 @@
         ALTER TABLE student CHANGE physics physisc CHAR(10) NOT NULL; 
 
 4.删除
-    1)删除表：drop table <tablename>；
-    2)删除数据库：drop database <databsename>;
+    1) 删除表：drop table <tablename>；
+    2) 删除数据库：drop database <databsename>;
+    3) 清空表中数据：delete from <tablename>; 或者 truncate table <tablename>; 
+    效率上truncate比delete快，但truncate删除后不记录mysql日志，不可以恢复数据。
+    delete的效果有点像将mysql表中所有记录一条一条删除到删完，
+    而truncate相当于保留mysql表的结构，重新创建了这个表，所有的状态都相当于新表。
 ```
+
+5.常见错误
+	1) ERROR 1701 (42000): Cannot truncate a table referenced in a foreign key constraint 
+
+	执行以下语句可以执行成功:
+
+	SET FOREIGN_KEY_CHECKS=0;
+
+	TRUNCATE TABLE tableName;
+
+	SET FOREIGN_KEY_CHECKS=1;
 
 ----
 

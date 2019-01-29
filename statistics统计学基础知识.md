@@ -9,8 +9,10 @@
       * [1. <a href="https://mp.weixin.qq.com/s/9UQ-dXbP9wuOZ5B_TjDstg" rel="nofollow">说人话的统计学-协和八</a>](#1-说人话的统计学-协和八)
    * [3. 各种分布](#3-各种分布)
       * [1. 泊松分布](#1-泊松分布)
+   * [4. 统计检验](#4-统计检验)
+      * [1. 卡方检验](#1-卡方检验)
 
-<!-- Added by: luyl, at: 2018-12-25T17:38+08:00 -->
+<!-- Added by: luyl, at: 2019-01-29T10:21+08:00 -->
 
 <!--te-->
 
@@ -171,3 +173,12 @@ n的样本。当n充分大时，样本均值X近似服从N(μ,σ<sup>2</sup>/n)
 * [概念](https://blog.csdn.net/hhtnan/article/details/62045872)
 * [泊松分布的期望和方差](https://baike.baidu.com/item/%E6%B3%8A%E6%9D%BE%E5%88%86%E5%B8%83/1442110?fr=aladdin)
 * [近似高斯分布](https://www.ppkao.com/tiku/shiti/5520985.html)
+
+
+# 4. 统计检验
+
+## 1. 卡方检验
+
+* [MBAlib智库百科](https://wiki.mbalib.com/wiki/%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C)
+* [Wikipedia](https://zh.wikipedia.org/wiki/%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C)
+* [Python 卡方检验](https://blog.csdn.net/kk185800961/article/details/79054968)

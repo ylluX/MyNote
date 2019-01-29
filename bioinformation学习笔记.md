@@ -3,10 +3,15 @@
 <!--自动插入TOC：https://github.com/ekalinin/github-markdown-toc-->
 <!--ts-->
    * [目录](#目录)
+   * [常见问题](#常见问题)
+      * [GC偏好](#gc偏好)
    * [概念](#概念)
       * [易位](#易位)
       * [显(隐)性遗传病](#显隐性遗传病)
       * [染色体带型](#染色体带型)
+      * [UPD](#upd)
+      * [LOH](#loh)
+      * [XO核型](#xo核型)
       * [基因组变异检测](#基因组变异检测)
          * [基本概念](#基本概念)
          * [检测流程](#检测流程)
@@ -32,11 +37,44 @@
    * [文件格式](#文件格式)
       * [.fai (索引文件)](#fai-索引文件)
 
-<!-- Added by: luyl, at: 2018-12-25T17:37+08:00 -->
+<!-- Added by: luyl, at: 2019-01-29T10:20+08:00 -->
 
 <!--te-->
 
 ----
+
+# 常见问题
+
+## GC偏好
+
+GC rich的区域不易测序的原因，主要发生于以下两个阶段:
+
+1. PCR 阶段
+
+由于GC rich的区域，其氢键数较多，稳定性较强，因此在PCR时，GC rich的区域较不易分开，因此不容易被扩增。
+
+此外，即便GC rich的区域在PCR时被分开了，单股的GC rich区域亦容易因为氢键，而自行黏合形成二级结构，亦不易被扩增。
+
+若采用PCR free的样本备制方式，则可能改善此PCR所造成的问题。
+
+2. Fragmentation 阶段
+
+在测序前需将DNA 打断成适当大小的片段才能上机测序，由于GC rich的区域不易被打断，使得存在GC rich区域的片段过大，
+不适合上机测序，而在长度筛选(size selection)时被舍弃。
+
+目前，若要解决此问题，透过增加测序量，才能提高获取这些序列的机会。
+
+
+> Uneven coverage of reads resulted from GC bias can be introduced at several processes of Illumina sequencing, e.g., 
+PCR amplification of library, cluster amplification, and the sequencing step. 
+Among these factors, library amplification by PCR plays a major role in generating GC bias. 
+[Aird D, Ross MG, Chen WS, Danielsson M, Fennell T, et al. (2011) Analyzing and minimizing PCR amplification bias in 
+Illumina sequencing libraries.]
+
+
+----
+
+
 # 概念
 
 ## 易位
@@ -76,6 +114,23 @@
 亚带编号后再加数字,不需再加标点,例如10q23.31。请注意这些数字并非十进位的字,只是带型符号。
 
 **t(1;3)(q25;q12)**：t 表示易位，translocation的缩写；t(1;3)(q25;q12)表示 1号染色体 长臂 2区5带 与 3号染色体 长臂 1区2带 发生了易位
+
+
+## UPD
+
+uniparental disomy, UPD: 单亲二体
+
+## LOH
+
+loss of heterozygosity, LOH: 杂合性缺失
+
+杂合性缺失，位于一对同源染色体上的相同基因座位的两个等位基因中的一个（或其中部分核苷酸片段）发生缺失，与之配对的染色体上仍然存在。
+
+
+## XO核型
+
+女胎缺少一条X性染色体
+
 
 
 ## 基因组变异检测
