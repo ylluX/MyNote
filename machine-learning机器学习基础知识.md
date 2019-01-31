@@ -25,7 +25,7 @@
    * [学习资料](#学习资料)
       * [视频资料](#视频资料)
 
-<!-- Added by: luyl, at: 2018-12-28T09:05+08:00 -->
+<!-- Added by: luyl, at: 2019-01-31T11:06+08:00 -->
 
 <!--te-->
 
@@ -956,6 +956,8 @@ C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每�
 * [隐马尔可夫模型（一）](https://www.cnblogs.com/bigmonkey/p/7230668.html)
 * [隐马尔可夫模型](https://blog.csdn.net/u011630575/article/details/79140106)
 * [隐马尔可夫模型攻略](http://www.leexiang.com/hidden-markov-model)
+
+* [每日一生信--用隐马尔可夫模型建立预测模型](http://blog.sina.com.cn/s/blog_670445240101iqrp.html)
 
 **隐马尔可夫模型作了两个基本假设**
 

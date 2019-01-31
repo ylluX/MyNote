@@ -5068,7 +5068,17 @@ df.apply(pd.to_numeric, errors='ignore')
 
 > DataFrame.quantile(q=0.5, axis=0, numeric_only=True, interpolation='linear')
 
-***1.5. 其它***
+
+***1.5. 对时间进行分组***
+
+[Python Pandas Group by date using datetime data](https://stackoverflow.com/questions/39400115/python-pandas-group-by-date-using-datetime-data)
+
+```
+# 先按照测序方法(Array, NGS)将数据分为两类，在根据扩增时间将数据细分到每月，最后统计胚胎的数目
+dx = dx.groupby("test_method").resample("M", on="amplify_date").count()["embryo_id"]
+```
+
+***1.6. 其它***
 
 * 将NaN和inf替换为0 ： `df[df.isin([np.nan, np.inf])] = 0`
 
