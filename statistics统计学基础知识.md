@@ -182,3 +182,10 @@ n的样本。当n充分大时，样本均值X近似服从N(μ,σ<sup>2</sup>/n)
 * [MBAlib智库百科](https://wiki.mbalib.com/wiki/%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C)
 * [Wikipedia](https://zh.wikipedia.org/wiki/%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C)
 * [Python 卡方检验](https://blog.csdn.net/kk185800961/article/details/79054968)
+* [几种常见的滥（乱）用卡方检验的情况](http://paper.dxy.cn/article/78383)
+* [三维卡方检验](http://www.dxy.cn/bbs/thread/28440824#28440824) [三维卡方检验](http://www.dxy.cn/bbs/topic/25248045)
+
+* `scipy.stats.chi2_contingency`: 列联表中变量间的独立性卡方检验，如统计收入是否与性别有关。
+* `scipy.stats.chisquare`: 单变量卡方检验(适合度卡方检验，卡方适度检验) (零假设：分类数据有相同频率)。
+实际执行多项式试验而得到的观察次数，与虚无假设的期望次数相比较，称为卡方适度检验，即在于检验二者接近的程度，
+利用样本数据以检验总体分布是否为某一特定分布的统计方法。

@@ -956,6 +956,7 @@ C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每�
 * [隐马尔可夫模型（一）](https://www.cnblogs.com/bigmonkey/p/7230668.html)
 * [隐马尔可夫模型](https://blog.csdn.net/u011630575/article/details/79140106)
 * [隐马尔可夫模型攻略](http://www.leexiang.com/hidden-markov-model)
+* [HMM模型和Viterbi算法](https://www.cnblogs.com/Denise-hzf/p/6612212.html)
 
 * [每日一生信--用隐马尔可夫模型建立预测模型](http://blog.sina.com.cn/s/blog_670445240101iqrp.html)
 
@@ -963,6 +964,10 @@ C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每�
 
 1. 齐次马尔可夫性假设，即假设隐藏的马尔可夫链在任意时刻t的状态只依赖于其前一时刻的状态，与其他时刻的状态及观测无关。
 2. 观测独立性假设，即假设任意时刻的观测只依赖于该时刻的马尔可夫链的状态，与其他观测及状态无关。
+
+**隐马尔可夫模型的5个要素**
+
+`隐含状态`，`可见状态`，隐含状态间的`转移概率`，隐含态到可见态的`发射概率`(输出概率)，以及隐含状态的`初始概率`
 
 **隐马尔可夫模型5元组**
 
@@ -981,6 +986,21 @@ C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每�
 即用极大似然估计的方法估计参数。
 3. 预测问题，也称为解码（decoding)问题。已知模型和观测序列，求对给定观测序列条件概率最大的状态序列。
 即给定观测序列，求最有可能的对应的状态序列。[近似算法、维特比算法(Viterbi)]
+
+**维特比算法**
+
+* [HMM模型和Viterbi算法](https://www.cnblogs.com/Denise-hzf/p/6612212.html)
+* [每日一生信--用隐马尔可夫模型建立预测模型](http://blog.sina.com.cn/s/blog_670445240101iqrp.html)
+* [小白给小白详解维特比算法(一)](https://blog.csdn.net/athemeroy/article/details/79339546)
+* [小白给小白详解维特比算法(二)](https://blog.csdn.net/athemeroy/article/details/79342048)
+
+
+## 贝叶斯
+
+* [贝叶斯公式由浅入深大讲解—AI基础算法入门](https://www.cnblogs.com/zhoulujun/p/8893393.html)
+* [怎么简单理解贝叶斯公式？](https://www.zhihu.com/question/51448623/answer/175907274)
+
+
 
 ----
 

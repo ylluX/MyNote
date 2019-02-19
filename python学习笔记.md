@@ -72,6 +72,7 @@
          * [14. operator](#14-operator)
          * [15. contextlib](#15-contextlib)
          * [16. PIL](#16-pil)
+         * [17. re](#17-re)
       * [第三方模块](#第三方模块)
          * [1. scipy.stats](#1-scipystats)
          * [scipy](#scipy)
@@ -117,7 +118,7 @@
    * [8. 第三方包安装教程](#8-第三方包安装教程)
       * [8.1 pypcap](#81-pypcap)
 
-<!-- Added by: luyl, at: 2019-01-29T10:21+08:00 -->
+<!-- Added by: luyl, at: 2019-02-19T17:07+08:00 -->
 
 <!--te-->
 
@@ -4359,6 +4360,25 @@ i1.save("merge.png")
 ```
 
 
+### 17. re
+
+[python3正则表达式的几个高级用法](https://blog.csdn.net/isscollege/article/details/80138158)
+
+
+**1. 数组分组**
+
+每一段正则用一个加圆括起来时，便自动构成一个组，包括(?Ppattern)自定义命名组，也加入到分组序号中 
+如果后面有前面圆括中相同部分，则用数字序号表示匹配相同部分 
+`r'(正则1)…(正则2)…(正则3) ... \1….\2….\3…'`, 
+这里出现`\1`，表示匹配前面第1个圆括号正则内容， 
+这里出现`\2`，表示匹配前面第2个圆括号正则内容
+
+```
+re.sub(r"(\d+) *(\d+)", r"\1,\2", "[34 22]")
+#结果为："[34,22]"
+```
+
+
 </br>
 
 ## 第三方模块
@@ -5958,6 +5978,38 @@ page.compressContentStreams()。要想加速，可以换一种思维：添加空
 ### 11. matplotlib
 
 * [matplotlib核心剖析](http://www.cnblogs.com/vamei/archive/2013/01/30/2879700.html)
+
+* [箱线图boxplot](https://www.cnblogs.com/wyy1480/p/9526264.html)
+
+
+**1.python matplotlib 画的多张图，如何合并写入同一pdf？**
+
+官方文档提供了一个解决方案: [pylab_examples example code: multipage_pdf.py](https://link.zhihu.com/?target=https%3A//matplotlib.org/examples/pylab_examples/multipage_pdf.html)
+
+```
+import datetime
+import numpy as np
+from matplotlib.backends.backend_pdf import PdfPages
+import matplotlib.pyplot as plt
+
+with PdfPages('multipage_pdf.pdf') as pdf:
+    plt.figure(figsize=(3, 3))
+    #对figure进行操作
+    pdf.savefig()  # 将当前图存为pdf中的一页
+    plt.close()
+
+    # 创建更多的图并存为pdf
+
+    # 为pdf文件添加辅助信息
+    d = pdf.infodict()
+    d['Title'] = 'Multipage PDF Example'
+    d['Author'] = u'Jouni K. Sepp\xe4nen'
+    d['Subject'] = 'How to create a multipage pdf file and set its metadata'
+    d['Keywords'] = 'PdfPages multipage keywords author title subject'
+    d['CreationDate'] = datetime.datetime(2009, 11, 13)
+    d['ModDate'] = datetime.datetime.today()
+```
+
 
 
 
