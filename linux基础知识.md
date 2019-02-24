@@ -16,6 +16,24 @@
 
 ----
 
+# 常见问题
+
+## .bashrc和.bash_profile的关系和区别
+
+.bash_profile是最重要的一个配置文件，它在用户每次登录系统时被读取，里面的所有命令都会被bash执行。
+所以如果你有对/etc/profile有修改的话必须得重启你的修改才会生效，此修改对每个用户都生效。
+
+.bashrc文件会在bash shell调用另一个bash shell时读取，也就是在shell中再键入bash命令启动一个新shell时就
+会去读该文件。所以如果你有对/etc/profile有修改的话必须得重启你的修改才会生效，此修改对每个用户都生效。
+这样可有效分离登录和子shell所需的环境。但一般 来说都会在.bash_profile里调用.bashrc脚本以便统一配置用
+户环境。
+
+
+.bash_logout在退出shell时被读取。所以我们可把一些清理工作的命令放到这文件中
+
+
+----
+
 # 基础命令
 
 ## 查看图片信息`identify`
@@ -49,3 +67,12 @@
 * 删除`^M`：`:%s/\r//g` 或 `:%s/^M//g`
 * 搜索`^@`：`/<Ctrl-V>000`
 * 替换`^@`：`:%s/\%x00/ /g`
+
+
+----
+
+# zsh
+
+* [小试shell中的神器zsh](http://www.zxzyl.com/archives/1001)
+* [http://www.zxzyl.com/archives/1001](https://www.zhihu.com/question/21418449)
+
