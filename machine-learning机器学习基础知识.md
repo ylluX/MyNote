@@ -38,7 +38,7 @@
 [Sensitivity and specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity)
 
 * 真阳性率(true positive rate, TPR)，又称为灵敏度(sensitivity)，即有病诊断阳性的概率   TPR = TP/(TP+FN)
-* 真阴性率(true negative rate)，又称为特异度(specificity, SPC), 即有病诊断阳性的概率   SPC = TN/(TN+FP)
+* 真阴性率(true negative rate)，又称为特异度(specificity, SPC), 即无病诊断阴性的概率   SPC = TN/(TN+FP)
 * 假阳性率(false positive rate, FPR)，又称为"误诊率"   FPR = FP/(FP+TN) = 1 - SPC
 * 假阴性率(false negative rate, FNR)，又称为"漏诊率"   FNR = FN/(TP+FN) = 1 - TPR
 * 阳性预测值(positive predictive value, PPV), 即诊断为阳性中有病的概率    PPV = TP/(TP+FP)
@@ -47,9 +47,9 @@
 * 精确率(precision): P = TP / (TP+FP)
 * 召回率(recall): R = TP / (TP+FN)
 
-灵敏度：实际实际无病的人正确判断为真阳性的比例
+灵敏度：实际有病的人正确判断为真阳性的比例
 
-特异度：实际有病的人正确判断为真阴性的比例
+特异度：实际无病的人正确判断为真阴性的比例
 
 
 ## 损失函数(Loss function)/代价函数(成本函数)(Cost function)
@@ -957,6 +957,7 @@ C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每�
 * [隐马尔可夫模型](https://blog.csdn.net/u011630575/article/details/79140106)
 * [隐马尔可夫模型攻略](http://www.leexiang.com/hidden-markov-model)
 * [HMM模型和Viterbi算法](https://www.cnblogs.com/Denise-hzf/p/6612212.html)
+* [Python实现HMM的前向-后向算法和维特比算法](https://blog.csdn.net/vincent1y/article/details/84768598)
 
 * [每日一生信--用隐马尔可夫模型建立预测模型](http://blog.sina.com.cn/s/blog_670445240101iqrp.html)
 

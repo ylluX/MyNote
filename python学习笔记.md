@@ -129,11 +129,11 @@
 
 >Explicit is better than implicit.
 
-\# 明了胜于晦涩（优美的代码应当是明了的，命名规范，风格相似）
+\# 明了胜于晦涩（优美的代码应当是明了的，命名规范，风格相似） 
 
 >Simple is better than complex.
 
-\# 简洁胜于复杂（优美的代码应当是简洁的，不要有复杂的内部实现）
+\# 简洁胜于复杂（优美的代码应当是简洁的，不要有复杂的内部实现） 
 
 >Complex is better than complicated.
 
@@ -141,33 +141,33 @@
 
 >Flat is better than nested.
 
-\# 扁平胜于嵌套（优美的代码应当是扁平的，不能有太多的嵌套）
+\# 扁平胜于嵌套（优美的代码应当是扁平的，不能有太多的嵌套） 
 
 >Sparse is better than dense.
 
-\# 间隔胜于紧凑（优美的代码有适当的间隔，不要奢望一行代码解决问题）
+\# 间隔胜于紧凑（优美的代码有适当的间隔，不要奢望一行代码解决问题） 
 
 >Readability counts.
 
-\# 可读性很重要（优美的代码是可读的）
+\# 可读性很重要（优美的代码是可读的） 
 
->Special cases aren't special enough to break the rules.
+>Special cases aren't special enough to break the rules. 
 <br>Although practicality beats purity.
 
-\# 即便假借特例的实用性之名，也不可违背这些规则（这些规则至高无上）
+\# 即便假借特例的实用性之名，也不可违背这些规则（这些规则至高无上） 
 
->Errors should never pass silently.
+>Errors should never pass silently. 
 <br>Unless explicitly silenced.
 
-\# 不要包容所有错误，除非你确定需要这样做（精准地捕获异常，不写except:pass风格的代码）
+\# 不要包容所有错误，除非你确定需要这样做（精准地捕获异常，不写except:pass风格的代码） 
 
 >In the face of ambiguity, refuse the temptation to guess.
 
-\# 当存在多种可能，不要尝试去猜测
+\# 当存在多种可能，不要尝试去猜测 
 
 >There should be one-- and preferably only one --obvious way to do it.
 
-\# 而是尽量找一种，最好是唯一一种明显的解决方案（如果不确定，就用穷举法）
+\# 而是尽量找一种，最好是唯一一种明显的解决方案（如果不确定，就用穷举法） 
 
 >Although that way may not be obvious at first unless you're Dutch.
 
@@ -181,7 +181,7 @@
 >If the implementation is hard to explain, it's a bad idea.
 <br>If the implementation is easy to explain, it may be a good idea.
 
-\# 如果你无法向人描述你的方案，那肯定不是一个好方案；反之亦然（方案测评标准）
+\# 如果你无法向人描述你的方案，那肯定不是一个好方案；反之亦然（方案测评标准） 
 
 >Namespaces are one honking great idea -- let's do more of those!
 
@@ -286,8 +286,8 @@ for line in lines: print(line, end="")
 import sys
 lines = []
 while True:
-lines.append(sys.stdin.readline())
-if not line: break
+    lines.append(sys.stdin.readline())
+    if not line: break
 lines.sort()
 for line in lines: print(line, end="")
 ```
@@ -297,12 +297,12 @@ for line in lines: print(line, end="")
 ```
 sum = 0
 while True:
-try:
-line = input()
-except EOFError:
-break
-else:
-sum += int(line)
+    try:
+        line = input()
+    except EOFError:
+        break
+    else:
+        sum += int(line)
 print(sum)
 ```
 
@@ -356,9 +356,9 @@ print(sum(int(line) for line in sys.stdin))
 import re
 
 def strnum(s):
-p = re.split(r'(\d+)',s)
-p[1::2] = map(int, p[1::2])
-return p
+    p = re.split(r'(\d+)',s)
+    p[1::2] = map(int, p[1::2])
+    return p
 
 x = ['M1','M10','M11','M2','M3']
 print sorted(x, key=strnum) # ['M1','M2','M3','M10','M11']
@@ -420,9 +420,9 @@ $$A_2^3=6,  \binom{3}{2}=3$$
 
 ```
 >>> import 'os'
-File "<stdin>", line 1
-import 'os'
-^
+ File "<stdin>", line 1
+ import 'os'
+ ^
 SyntaxError: invalid syntax
 ```
 
@@ -484,32 +484,32 @@ import traceback
 
 
 def import_class(import_str):
-"""Returns a class from a string including module and class.
-.. versionadded:: 0.3
-"""
-mod_str, _sep, class_str = import_str.rpartition('.')
-__import__(mod_str)
-try:
-return getattr(sys.modules[mod_str], class_str)
-except AttributeError:
-raise ImportError('Class %s cannot be found (%s)' %
-(class_str,
-traceback.format_exception(*sys.exc_info())))
+    """Returns a class from a string including module and class.
+    .. versionadded:: 0.3
+    """
+    mod_str, _sep, class_str = import_str.rpartition('.')
+    __import__(mod_str)
+    try:
+        return getattr(sys.modules[mod_str], class_str)
+    except AttributeError:
+        raise ImportError('Class %s cannot be found (%s)' %
+                          (class_str,
+                           traceback.format_exception(*sys.exc_info())))
 
 
 def import_object(import_str, *args, **kwargs):
-"""Import a class and return an instance of it.
-.. versionadded:: 0.3
-"""
-return import_class(import_str)(*args, **kwargs)
+    """Import a class and return an instance of it.
+    .. versionadded:: 0.3
+    """
+    return import_class(import_str)(*args, **kwargs)
 
 
 def import_module(import_str):
-"""Import a module.
-.. versionadded:: 0.3
-"""
-__import__(import_str)
-return sys.modules[import_str]
+    """Import a module.
+    .. versionadded:: 0.3
+    """
+    __import__(import_str)
+    return sys.modules[import_str]
 ```
 
 ### 12. print带汉字的字典或列表
@@ -586,31 +586,31 @@ bingo! 但接下来又有一个问题，怎么阻止转义呢？可以使用<fon
 
 ```
 class global_var:
-'''需要定义全局变量的放在这里，最好定义一个初始值'''
-name = 'my_name'
-# 对于每个全局变量，都需要定义get_value和set_value接口
+    '''需要定义全局变量的放在这里，最好定义一个初始值'''
+    name = 'my_name'
+# 对于每个全局变量，都需要定义get_value和set_value接口 
 def set_name(name):
-global_var.name = name
+    global_var.name = name 
 def get_name():
-return global_var.name
+    return global_var.name
 ```
 
 然后在其他模块引用：
 test.py
 
 ```
-import config
-# 引用全局变量
-name = config.get_name()
-# 修改全局变量
-config.set_name('new_name')
-# 查看修改后的全局变量
+import config 
+# 引用全局变量 
+name = config.get_name() 
+# 修改全局变量 
+config.set_name('new_name') 
+# 查看修改后的全局变量 
 print(config.get_name())
 ```
 
-注意：
-1. import配置文件时，不要from xxx import *, 而要import config.py
-2. 在config.py文件中，用set_xxxValue()和get_xxxValue来提供外部访问接口，这个好处是，可以让全局变量在每次调用的时候都能得到刷新
+注意： 
+1. import配置文件时，不要from xxx import *, 而要import config.py 
+2. 在config.py文件中，用set_xxxValue()和get_xxxValue来提供外部访问接口，这个好处是，可以让全局变量在每次调用的时候都能得到刷新 
 3. 其他文件使用get_xxxValue()获取到全局变量的最新值
 另外，对于global这个声明，他只是在同一个文件中有效，并不能跨文件，就是夸module.所以不要妄想通过global来控制不同文件间的共享变量。
 
@@ -647,7 +647,7 @@ print(config.get_name())
 * 阿里云：http://mirrors.aliyun.com/pypi/simple/
 * 中国科技大学 https://pypi.mirrors.ustc.edu.cn/simple/
 * 华中理工大学：http://pypi.hustunique.com/
-* 山东理工大学：http://pypi.sdutlinux.org/
+* 山东理工大学：http://pypi.sdutlinux.org/ 
 * 豆瓣：http://pypi.douban.com/simple/
 
 **临时使用：**
@@ -661,9 +661,9 @@ Linux下，修改 ~/.pip/pip.conf (没有就创建一个文件夹及文件。文
 内容如下：
 
 ```
-[global]
+[global] 
 index-url = https://pypi.tuna.tsinghua.edu.cn/simple
-[install]
+[install] 
 trusted-host=mirrors.aliyun.com
 ```
 
@@ -703,7 +703,7 @@ dill.load_session(filename)
 
 ```
 In [3]: who
-In Out abund abund1 abund2 abund3 abund_file dill filename
+In Out abund abund1 abund2 abund3 abund_file dill filename  
 groups i mpl np pd x y z
 ```
 
@@ -745,16 +745,16 @@ export LD_LIBRARY_PATH=/share/public/software/python/2.7.14/lib:$LD_LIBRARY_PATH
 ...               [ 2.,  0.,  0.],
 ...               [ 0.,  1., -1.]])
 >>> X_scaled = preprocessing.scale(X)
-
->>> X_scaled
+ 
+>>> X_scaled                                          
 array([[ 0.  ..., -1.22...,  1.33...],
-[ 1.22...,  0.  ..., -0.26...],
-[-1.22...,  1.22..., -1.06...]])
-
+       [ 1.22...,  0.  ..., -0.26...],
+       [-1.22...,  1.22..., -1.06...]])
+ 
 >>>#处理后数据的均值和方差
 >>> X_scaled.mean(axis=0)
 array([ 0.,  0.,  0.])
-
+ 
 >>> X_scaled.std(axis=0)
 array([ 1.,  1.,  1.])
 ```
@@ -765,21 +765,21 @@ array([ 1.,  1.,  1.])
 >>> scaler = preprocessing.StandardScaler().fit(X)
 >>> scaler
 StandardScaler(copy=True, with_mean=True, with_std=True)
-
->>> scaler.mean_
+ 
+>>> scaler.mean_                                      
 array([ 1. ...,  0. ...,  0.33...])
-
->>> scaler.std_
+ 
+>>> scaler.std_                                       
 array([ 0.81...,  0.81...,  1.24...])
-
->>> scaler.transform(X)
+ 
+>>> scaler.transform(X)                               
 array([[ 0.  ..., -1.22...,  1.33...],
-[ 1.22...,  0.  ..., -0.26...],
-[-1.22...,  1.22..., -1.06...]])
-
-
+       [ 1.22...,  0.  ..., -0.26...],
+       [-1.22...,  1.22..., -1.06...]])
+ 
+ 
 >>>#可以直接使用训练集对测试集数据进行转换
->>> scaler.transform([[-1.,  1., 0.]])
+>>> scaler.transform([[-1.,  1., 0.]])                
 array([[-2.44...,  1.22..., -0.26...]])
 ```
 
@@ -799,21 +799,21 @@ array([[-2.44...,  1.22..., -0.26...]])
 >>> X_train_minmax = min_max_scaler.fit_transform(X_train)
 >>> X_train_minmax
 array([[ 0.5       ,  0.        ,  1.        ],
-[ 1.        ,  0.5       ,  0.33333333],
-[ 0.        ,  1.        ,  0.        ]])
-
+       [ 1.        ,  0.5       ,  0.33333333],
+       [ 0.        ,  1.        ,  0.        ]])
+ 
 >>> #将相同的缩放应用到测试集数据中
 >>> X_test = np.array([[ -3., -1.,  4.]])
 >>> X_test_minmax = min_max_scaler.transform(X_test)
 >>> X_test_minmax
 array([[-1.5       ,  0.        ,  1.66666667]])
-
-
+ 
+ 
 >>> #缩放因子等属性
->>> min_max_scaler.scale_
+>>> min_max_scaler.scale_                             
 array([ 0.5       ,  0.5       ,  0.33...])
-
->>> min_max_scaler.min_
+ 
+>>> min_max_scaler.min_                               
 array([ 0.        ,  0.5       ,  0.33...])
 ```
 
@@ -828,7 +828,7 @@ X_scaled=X_std/(max-min)+min
 
 正则化的过程是将每个样本缩放到单位范数（每个样本的范数为1），如果后面要使用如二次型（点积）或者其它核方法计算两个样本之间的相似性这个方法会很有用。
 Normalization主要思想是对每个样本计算其p-范数，然后对该样本中每个元素除以该范数，这样处理的结果是使得每个处理后样本的p-范数（l1-norm,l2-norm）等于1。
-p-范数的计算公式：||X||p=(|x1|^p+|x2|^p+...+|xn|^p)^1/p
+             p-范数的计算公式：||X||p=(|x1|^p+|x2|^p+...+|xn|^p)^1/p
 该方法主要应用于文本分类和聚类中。例如，对于两个TF-IDF向量的l2-norm进行点积，就可以得到这两个向量的余弦相似性。
 
 1. 可以使用preprocessing.normalize()函数对指定数据进行转换：
@@ -838,11 +838,11 @@ p-范数的计算公式：||X||p=(|x1|^p+|x2|^p+...+|xn|^p)^1/p
 ...      [ 2.,  0.,  0.],
 ...      [ 0.,  1., -1.]]
 >>> X_normalized = preprocessing.normalize(X, norm='l2')
-
->>> X_normalized
+ 
+>>> X_normalized                                      
 array([[ 0.40..., -0.40...,  0.81...],
-[ 1.  ...,  0.  ...,  0.  ...],
-[ 0.  ...,  0.70..., -0.70...]])
+       [ 1.  ...,  0.  ...,  0.  ...],
+       [ 0.  ...,  0.70..., -0.70...]])
 ```
 
 2. 可以使用processing.Normalizer()类实现对训练集和测试集的拟合和转换：
@@ -851,14 +851,14 @@ array([[ 0.40..., -0.40...,  0.81...],
 >>> normalizer = preprocessing.Normalizer().fit(X)  # fit does nothing
 >>> normalizer
 Normalizer(copy=True, norm='l2')
-
+ 
 >>>
->>> normalizer.transform(X)
+>>> normalizer.transform(X)                            
 array([[ 0.40..., -0.40...,  0.81...],
-[ 1.  ...,  0.  ...,  0.  ...],
-[ 0.  ...,  0.70..., -0.70...]])
-
->>> normalizer.transform([[-1.,  1., 0.]])
+       [ 1.  ...,  0.  ...,  0.  ...],
+       [ 0.  ...,  0.70..., -0.70...]])
+ 
+>>> normalizer.transform([[-1.,  1., 0.]])             
 array([[-0.70...,  0.70...,  0.  ...]])
 ```
 
@@ -871,12 +871,12 @@ array([[-0.70...,  0.70...,  0.  ...]])
 #coding:utf-8
 
 def findn(n):
-for i in range(5):
-if i == n:
-print "find {}".format(n)
-break
-else:
-print "not find {}".format(n)
+    for i in range(5):
+        if i == n:
+            print "find {}".format(n)
+            break
+    else:
+        print "not find {}".format(n)
 
 findn(5)
 findn(3)
@@ -894,8 +894,8 @@ findn(3)
 
 分解操作步骤
 
-* step1：找到所有给定的png图片
-* step2：使用glob将所有png图片放入一个list
+* step1：找到所有给定的png图片 
+* step2：使用glob将所有png图片放入一个list 
 * step3：Save them as frames into a gif
 
 demo
@@ -907,27 +907,27 @@ import imageio
 import glob
 import re
 
-def create_gif(image_list, gif_name):
+def create_gif(image_list, gif_name):  
 
-frames = []
-for image_name in image_list:
-frames.append(imageio.imread(image_name))
-# Save them as frames into a gif
-imageio.mimsave(gif_name, frames, 'GIF', duration = 0.8)
+    frames = []  
+    for image_name in image_list:  
+        frames.append(imageio.imread(image_name))  
+    # Save them as frames into a gif   
+    imageio.mimsave(gif_name, frames, 'GIF', duration = 0.8)  
 
-return
+    return 
 def find_all_png():
 
-png_filenames = glob.glob(r"/home/py_learning/createGIF/*.png")
-buf=[]
-for png_file in png_filenames:
-buf.append(png_file)
-return buf
+    png_filenames = glob.glob(r"/home/py_learning/createGIF/*.png") 
+    buf=[]
+    for png_file in png_filenames:
+        buf.append(png_file)
+    return buf
 
 if __name__ == '__main__':
 
-buff = find_all_png()
-create_gif(buff,'created_gif.gif' )
+    buff = find_all_png()
+    create_gif(buff,'created_gif.gif' )
 ```
 
 
@@ -936,13 +936,13 @@ create_gif(buff,'created_gif.gif' )
 [python捕获警告的方法](https://blog.csdn.net/YMD8005/article/details/77980718)
 
 ```
-import warnings
-warnings.filterwarnings('error')
+ import warnings
+ warnings.filterwarnings('error')
 
-try:
-...
+ try:
+    ...
 except Warning:
-print 'Warning was raised as an exception!'
+    print 'Warning was raised as an exception!'
 ```
 
 ### 23. 将PDF转成PNG
@@ -981,13 +981,13 @@ pip install six --target="/usr/lib/python2.7/dist-packages"
 
 最近有个需求就是页面上执行shell命令，第一想到的就是`os.system`，
 
-```
-os.system('cat /proc/cpuinfo')
-```
+ ```
+ os.system('cat /proc/cpuinfo')
+ ```
 
 但是发现页面上打印的命令执行结果 0或者1，当然不满足需求了。
 
-
+ 
 尝试第二种方案 `os.popen()`
 
 ```
@@ -997,7 +997,7 @@ print output.read()
 
 通过 `os.popen()` 返回的是 file read 的对象，对其进行读取 `read()` 的操作可以看到执行的输出。但是无法读取程序执行的返回值）
 
-
+ 
 
 尝试第三种方案 `commands.getstatusoutput()` 一个方法就可以获得到返回值和输出，非常好用。
 
@@ -1013,19 +1013,19 @@ Python Document 中给的一个例子，
 >>> commands.getstatusoutput('ls /bin/ls')
 (0, '/bin/ls')
 #【返回一个元组（status，output）】
->>> commands.getstatusoutput('cat /bin/junk')
+>>> commands.getstatusoutput('cat /bin/junk')    
 (256, 'cat: /bin/junk: No such file or directory')
 >>> commands.getstatusoutput('/bin/junk')
 (256, 'sh: /bin/junk: not found')
 #【判断Shell命令的输出内容】【会阻塞】
->>> commands.getoutput('ls /bin/ls')
+>>> commands.getoutput('ls /bin/ls') 
 '/bin/ls'
 #【返回Shell命令返回值的方法， 但是这个结果只能判读其成功执行与否】
 #【该函数已被python丢弃，不建议使用，它返回ls -ld file 的结果（String）】
->>> commands.getstatus('/bin/ls')
+>>> commands.getstatus('/bin/ls')  
 '-rwxr-xr-x 1 root 13352 Oct 14 1994 /bin/ls'
 ```
-
+ 
 
 第四种方法`subprocess.call`
 
@@ -1090,11 +1090,11 @@ win32api用SendMessage函数向窗口发送鼠标消息时，其中鼠标坐标�
 ```
 # Send a message to a window.
 LRESULT SendMessage(
-hwnd,        # PyHANDLE, 目标窗口的句柄
-idMessage,   # int, 要发送的消息, 鼠标左击消息为：WM_NCLBUTTONDOWN
-wParam,      # int/string, 其含义是指当鼠标按键被点击时，其他功能键是否被按下
-lParam       # int/string, 其含义是指鼠标单击的位置，其中X坐标为低字节，Y坐标为高字节，
-# 由于int型为32位，因此我们只需将Y坐标左移16位,然后再加上X坐标即可，即X + (Y << 16)
+	hwnd,        # PyHANDLE, 目标窗口的句柄
+	idMessage,   # int, 要发送的消息, 鼠标左击消息为：WM_NCLBUTTONDOWN
+	wParam,      # int/string, 其含义是指当鼠标按键被点击时，其他功能键是否被按下
+	lParam       # int/string, 其含义是指鼠标单击的位置，其中X坐标为低字节，Y坐标为高字节，
+	             # 由于int型为32位，因此我们只需将Y坐标左移16位,然后再加上X坐标即可，即X + (Y << 16)
 )
 ```
 
@@ -1153,10 +1153,10 @@ a2 = int(a2, 2)
 
 ```
 def encode(s):
-return ' '.join([bin(ord(c)).replace('0b', '') for c in s])
-
+    return ' '.join([bin(ord(c)).replace('0b', '') for c in s])
+ 
 def decode(s):
-return ''.join([chr(i) for i in [int(b, 2) for b in s.split(' ')]])
+    return ''.join([chr(i) for i in [int(b, 2) for b in s.split(' ')]])
 
 >>>encode('hello')
 '1101000 1100101 1101100 1101100 1101111'
@@ -1204,10 +1204,10 @@ bytes.decode(b)
 ### 字符串与十六进制间的相互转换
 
 def encode(s):
-return (' '.join([hex(ord(c)).replace('0x', '') for c in s])).upper()
+	return (' '.join([hex(ord(c)).replace('0x', '') for c in s])).upper()
 
 def decode(s):
-return ''.join([chr(i) for i in [int(b,16) for b in s.split(' ')]])
+	return ''.join([chr(i) for i in [int(b,16) for b in s.split(' ')]])
 
 >>>encode('hello')
 '68 65 6C 6C 6F'
@@ -1243,10 +1243,10 @@ ssh = paramiko.SSHClient()
 ssh.load_system_host_keys()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())#允许连接不在know_hosts文件中的主机
 sh.connect(hostname, port=22, username=zhangsan, password=password)#远程访问的服务器信息
-
+   
 #创建scp
 with closing(scpclient.Write(ssh.get_transport(), remote_path=remote_path)) as scp:
-scp.send_file(local_filename, preserve_times=True, remote_filename=remote_filename)
+    scp.send_file(local_filename, preserve_times=True, remote_filename=remote_filename)
 ```
 
 其中，`ssh.connect()`中需要指定远程访问的服务器的ip端口，用户名以及密码；`scpclient.Write()`中指定
@@ -1267,17 +1267,17 @@ scpclient模块的主要函数：
 ```
 # FTP下载
 # sftp = paramiko.SFTPClient.from_transport(ssh.get_transport())
-def sftp_backdir(sftp, remote_dir, local_dir):
-mkdir(local_dir)
-for dfile in sftp.listdir_attr(remote_dir):
-remote_dfile = os.path.join(remote_dir, dfile.filename)
-local_dfile = os.path.join(local_dir, dfile.filename)
-if dfile.filename[0] == ".":
-continue
-if dfile.longname[0] == "d":  # 判断远程服务器上该文件是否是文件夹
-sftp_backdir(sftp, remote_dfile, local_dfile)
-else:
-sftp.get(remote_dfile, local_dfile)
+def sftp_backdir(sftp, remote_dir, local_dir):                                                                                      
+    mkdir(local_dir)
+    for dfile in sftp.listdir_attr(remote_dir):
+        remote_dfile = os.path.join(remote_dir, dfile.filename)
+        local_dfile = os.path.join(local_dir, dfile.filename)
+        if dfile.filename[0] == ".":
+            continue
+        if dfile.longname[0] == "d":  # 判断远程服务器上该文件是否是文件夹
+            sftp_backdir(sftp, remote_dfile, local_dfile)
+        else:
+            sftp.get(remote_dfile, local_dfile)
 
 ```
 
@@ -1288,21 +1288,21 @@ sftp.get(remote_dfile, local_dfile)
 import socket
 
 def get_host_ip():
-"""
-查询本机ip地址
-:return: ip
-"""
-try:
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.connect(('8.8.8.8', 80))
-ip = s.getsockname()[0]
-finally:
-s.close()
+    """
+    查询本机ip地址
+    :return: ip
+    """
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8', 80))
+        ip = s.getsockname()[0]
+    finally:
+        s.close()
 
-return ip
+    return ip
 
 if __name__ == '__main__':
-print(get_host_ip())
+    print(get_host_ip())
 ```
 
 ### 32. 获得两个概率密度函数交集区域内的概率
@@ -1350,30 +1350,30 @@ seek_bin = 0.01 # 将x分为30份，每份长度0.01
 points = np.arange(peak_x, peak_x+peak_interval, seek_bin) # 获得所有xi
 # 粗略求得交点的x值(pp)
 for i in range(len(points)-1):
-if i == 0:
-r0 = kde.evaluate(points[i])[0]
-l0 = kde.evaluate(points[i]-peak_interval)[0]
-continue
-r1 = kde.evaluate(points[i]+seek_bin)[0]
-l1 = kde.evaluate(points[i]+seek_bin-peak_interval)[0]
-if r0 == l0:
-pp = points[i]
-break
-elif r1 == l0:
-pp = points[i] + seek_bin
-break
-elif r0 > l0 and r1 < l1:
-pp = points[i] + seek_bin/2.0
-break
-else:
+    if i == 0:
+        r0 = kde.evaluate(points[i])[0]
+        l0 = kde.evaluate(points[i]-peak_interval)[0]
+        continue
+    r1 = kde.evaluate(points[i]+seek_bin)[0]
+    l1 = kde.evaluate(points[i]+seek_bin-peak_interval)[0]
+    if r0 == l0:
+        pp = points[i]
+        break
+    elif r1 == l0:
+        pp = points[i] + seek_bin
+        break
+    elif r0 > l0 and r1 < l1:
+        pp = points[i] + seek_bin/2.0
+        break
+    else:
 
-r0, l0 = r1, l1
+        r0, l0 = r1, l1
 # 准确求交点的x值
 def f(x):  # 计算误差函数
-if x<2 or x>2+peak_interval:
-return np.inf
-else:
-return kde.evaluate(x) - kde.evaluate(x-peak_interval)
+    if x<2 or x>2+peak_interval:
+        return np.inf
+    else:
+        return kde.evaluate(x) - kde.evaluate(x-peak_interval)
 pp=scipy.optimize.leastsq(f,2) # 传递误差函数和待确定参数的初始值
 
 # 计算各累积分布值
@@ -1405,7 +1405,7 @@ tree.write('hellolxml.html')
 
 pandas 的 DataFrame 数据，可直接调用 df.to_html() 函数将 DataFrame 数据转为 HTML 代码字符串。
 
-从 HTML 文件中可以发现，内嵌的图片是以 base64 代码的形式嵌入的。具体形式为
+从 HTML 文件中可以发现，内嵌的图片是以 base64 代码的形式嵌入的。具体形式为 
 `<img src="data:image/png;base64,iVBORw...>`。后面的 iVBORw…即为图像的 Base64 编码信息。
 故而只需将图像转为 base64 代码即可将图像嵌入 HTML 代码字符串中。python 的 base64 模块可
 以实现将二进制文件转为 base64 编码，而 matplotlib 的 pyplot.savefig() 函数可以将绘图窗口
@@ -1414,7 +1414,7 @@ pandas 的 DataFrame 数据，可直接调用 df.to_html() 函数将 DataFrame �
 **python 代码实现**
 
 最终便可使用 python 实现将将 pandas 的 DataFrame 数据以及 matplotlib 绘图的图像保存为 HTML
-文件，代码如下。（以下代码基于 python 3.6 实现的。）
+ 文件，代码如下。（以下代码基于 python 3.6 实现的。）
 
 ```
 # 导入所需模块
@@ -1438,20 +1438,20 @@ iris_des = """<h1>Iris Describe Stastic</h1>"""+iris.describe().T.to_html()
 # matplotlib 任意绘制一张图
 fig,axes = plt.subplots(1,4,sharey = True)
 for n in range(4):
-axes[n].hist( iris.iloc[:,n],bins = 15,color = 'b',alpha = 0.5,rwidth= 0.8 )
-axes[n].set_xlabel(iris.columns[n])
+    axes[n].hist( iris.iloc[:,n],bins = 15,color = 'b',alpha = 0.5,rwidth= 0.8 )
+    axes[n].set_xlabel(iris.columns[n])
 plt.subplots_adjust(wspace = 0)
 # figure 保存为二进制文件
 buffer = BytesIO()
-plt.savefig(buffer)
+plt.savefig(buffer)  
 plot_data = buffer.getvalue()
 
 # 图像数据转化为 HTML 格式
-imb = base64.b64encode(plot_data)
-#imb = plot_data.encode('base64')   # 对于 Python 2.7可用
+imb = base64.b64encode(plot_data)  
+#imb = plot_data.encode('base64')   # 对于 Python 2.7可用 
 ims = imb.decode()
 imd = "data:image/png;base64,"+ims
-iris_im = """<h1>Iris Figure</h1>  """ + """<img src="%s">""" % imd
+iris_im = """<h1>Iris Figure</h1>  """ + """<img src="%s">""" % imd   
 
 root = "<title>Iris Dataset</title>"
 root = root + iris_des + iris_im  #将多个 html 格式的字符串连接起来
@@ -1481,18 +1481,18 @@ webbrowser.open('iris.html',new = 1)
 
 ```
 def logger(func):
-def inner(*args, **kwargs): #1
-print "Arguments were: %s, %s" % (args, kwargs)
-return func(*args, **kwargs) #2
-return inner
+      def inner(*args, **kwargs): #1
+            print "Arguments were: %s, %s" % (args, kwargs)
+            return func(*args, **kwargs) #2
+     return inner
 
 @logger
 def foo1(x, y=1):
-return x * y
+      return x * y
 
 @logger
 def foo2():
-return 2
+       return 2
 
 foo1(5, 4)
 foo1(1)
@@ -1522,25 +1522,25 @@ Arguments were: (), {}
 
 ```
 class qsub(object):
-def __init__(self, shfile, **kwargs):
-self.shfile = shfile
-self.kwargs = kwargs
+    def __init__(self, shfile, **kwargs):
+        self.shfile = shfile
+        self.kwargs = kwargs
 
-def __call__(self, func):
-def wrapper(*args, **kwargs):
-cmd = func(*args, **kwargs)
-with open(self.shfile, "w") as f:
-f.write(cmd)
-self.qsubOrDie(self.shfile, **self.kwargs)
-return wrapper
+    def __call__(self, func):
+        def wrapper(*args, **kwargs):
+            cmd = func(*args, **kwargs)
+            with open(self.shfile, "w") as f:
+                f.write(cmd)
+            self.qsubOrDie(self.shfile, **self.kwargs)
+        return wrapper
 
-def qsubOrDie(self, shfile, **kwargs):
-print "I will use the parameter {} to qsub the {}.".format(kwargs, shfile)
+    def qsubOrDie(self, shfile, **kwargs):
+        print "I will use the parameter {} to qsub the {}.".format(kwargs, shfile)
 
 @qsub(shfile="temp.sh", queue="general.q", maxproc=50, reqsub=True)
 def sleep(time=10):
-cmd = "I will sleep {} s.\n".format(time)
-return cmd
+    cmd = "I will sleep {} s.\n".format(time)
+    return cmd
 
 sleep(10)
 ```
@@ -1553,22 +1553,22 @@ I will use the parameter {'reqsub': True, 'maxproc': 50, 'queue': 'general.q'} t
 
 ```
 def qsubOrDie(shfile, **kwargs):
-print "I will use the parameter {} to qsub the {}.".format(kwargs, shfile)
+    print "I will use the parameter {} to qsub the {}.".format(kwargs, shfile)
 
 def qsub(shfile, **qsub_kwargs):
-def wrap(func):
-def wrapper(*args, **kwargs):
-cmd = func(*args, **kwargs)
-with open(shfile, "w") as f:
-f.write(cmd)
-qsubOrDie(shfile, **qsub_kwargs)
-return wrapper
-return wrap
+    def wrap(func):
+        def wrapper(*args, **kwargs):
+            cmd = func(*args, **kwargs)
+            with open(shfile, "w") as f:
+                f.write(cmd)
+            qsubOrDie(shfile, **qsub_kwargs)
+        return wrapper
+    return wrap
 
 @qsub(shfile="temp.sh", queue="general.q", maxproc=50, reqsub=True)
 def sleep(time=10):
-cmd = "I will sleep {} s.\n".format(time)
-return cmd
+    cmd = "I will sleep {} s.\n".format(time)
+    return cmd 
 
 sleep(10)
 ```
@@ -1581,15 +1581,15 @@ sleep(10)
 能否写出一个`@log`的decorator，使它既支持
 
 ```
-@log
+@log 
 def f():
-pass
+    pass
 ```
 又支持：
 ```
-@log('execute')
+@log('execute') 
 def f():
-pass
+    pass
 ```
 
 可以这样写：
@@ -1598,23 +1598,23 @@ pass
 import functools
 from types import FunctionType
 def log(*params, **kwparams):
-if params and callable(params[0]):
-# 或者
-# if params and type(params[0]) == FunctionType:
-func = params[0]
-@functools.wraps(func)
-def wrapper(*args, **kwargs):
-call_result = func(*args, **kwargs)
-return call_result
-return wrapper
-else:
-def decorator(func):
-@functools.wraps(func)
-def wrapper(*args, **kwargs):
-call_result = func(*args, **kwargs)
-return call_result
-return wrapper
-return decorator
+    if params and callable(params[0]):
+    # 或者
+    # if params and type(params[0]) == FunctionType:
+        func = params[0]
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            call_result = func(*args, **kwargs)
+            return call_result
+        return wrapper
+    else:
+        def decorator(func):
+            @functools.wraps(func)
+            def wrapper(*args, **kwargs):
+                call_result = func(*args, **kwargs)
+                return call_result
+            return wrapper
+        return decorator
 ```
 
 这样就可以调用：
@@ -1632,27 +1632,27 @@ return decorator
 
 ```
 def before(func):
-print "callback before"
-def decorator(*args, **kwargs):
-print "add <before>"
-f = func(*args, **kwargs)
-print "<before>"+f
-return "<before>"+f
-return decorator
+    print "callback before"
+    def decorator(*args, **kwargs):
+        print "add <before>"
+        f = func(*args, **kwargs)
+        print "<before>"+f
+        return "<before>"+f
+    return decorator
 
 def after(func):
-print "callback after"
-def decorator(*args, **kwargs):
-print "add </after>"
-f = func(*args, **kwargs)
-print f+"</after>"
-return f+"</after>"
-return decorator
+    print "callback after"
+    def decorator(*args, **kwargs):
+        print "add </after>"
+        f = func(*args, **kwargs)
+        print f+"</after>"
+        return f+"</after>"
+    return decorator
 
 @argument
 @after
 def hello():
-return "hello world!"
+    return "hello world!"
 ```
 
 返回的结果是什么？？？
@@ -1701,17 +1701,17 @@ python的一切数据都是对象，包括函数、基本数据类型、自定�
 如果以前有过Javascript的编程经验，初上Python肯定会对“.”运算符与“[]”之间的差异难以理解，它们不仅不能替换，而且完全不相关，如下：
 
 ```
-mem = {'username': 'yiifaa'}
-# 无法通过.运算符进行计算
-mem.username
-# 声明String
-name = str('yiifaa')
-# 无法使用“[]”运算符
+mem = {'username': 'yiifaa'} 
+# 无法通过.运算符进行计算 
+mem.username 
+# 声明String 
+name = str('yiifaa') 
+# 无法使用“[]”运算符 
 name['upper']
 ```
 ***为实例添加“[]”运算符支持***
 
-这也是“_ getattribute_”与“_ getitem_”的最大差异，示例如下：
+这也是“_ getattribute_”与“_ getitem_”的最大差异，示例如下： 
 
 1. <font color="red">“_ getattribute_”只适用于所有的“.”运算符； </font>
 2. <font color="red"> “_ getitem_”只适用于所有的“[]”运算符；</font>
@@ -1719,19 +1719,19 @@ name['upper']
 ```
 class Employee(object):
 
-def __init__(self, username, age):
-self.username = username
-self.age = age
+    def __init__(self, username, age):
+        self.username = username
+        self.age = age
 
-def __getattribute__(self, attr):
-return super(Employee, self).__getattribute__(attr)
+    def __getattribute__(self, attr):
+        return super(Employee, self).__getattribute__(attr)
 
-def __getitem__(self, attr):
-return super(Employee, self).__getattribute__(attr)
+    def __getitem__(self, attr):
+        return super(Employee, self).__getattribute__(attr)
 
-em = Employee('yiifaa', 32)
-print em.username
-#   现在支持“[]”运算符
+em = Employee('yiifaa', 32) 
+print em.username 
+#   现在支持“[]”运算符 
 print em['username']
 ```
 
@@ -1742,21 +1742,21 @@ print em['username']
 在对象属性的调用中，如果没有调用了不存在的属性，则Python解释器会报错，如下：
 ```
 Traceback (most recent call last):
-File "<stdin>", line 1, in <module>
+  File "<stdin>", line 1, in <module> 
 AttributeError: 'str' object has no attribute 'length'
 ```
 
 通过覆盖实现“_ getattr_”回调接口可以解决此问题，如下：
 
 ```
-#   直接返回空对象，将此方法添加到类Employee的声明中
+#   直接返回空对象，将此方法添加到类Employee的声明中 
 def __getattr__(self, attr):
-return None
-# 现在调用不存在的属性也不会报错
+    return None 
+ # 现在调用不存在的属性也不会报错 
 print em.company
 ```
 
-那“_ getattribute_”与“_ getattr_”的最大差异在于：
+那“_ getattribute_”与“_ getattr_”的最大差异在于： 
 
 1. <font color="red">无论调用对象的什么属性，包括不存在的属性，都会首先调用“_ getattribute_”方法； </font>
 2. <font color="red">只有找不到对象的属性时，才会调用“_ getattr_”方法；</font>
@@ -1768,21 +1768,21 @@ print em.company
 ```
 class Dept(object):
 
-def __init__(self, name):
-self.name = name
+      def __init__(self, name):
+          self.name = name
 
-# target是拥有此属性的对象
-def __get__(self, target, type=None):
-# 默认返回self与obj都可以
-return 'Dept'
+      # target是拥有此属性的对象
+      def __get__(self, target, type=None):
+        # 默认返回self与obj都可以
+        return 'Dept' 
 
-class Company(object):
-#   一定要作为类属性，作为实例属性无效
-dept = Dept('organ')
+ class Company(object):
+    #   一定要作为类属性，作为实例属性无效
+    dept = Dept('organ') 
 
-# 现在的测试结果
-x = Company()
-#   返回True
+ # 现在的测试结果 
+x = Company() 
+#   返回True 
 print type(x.dept) == str
 ```
 
@@ -1791,8 +1791,8 @@ print type(x.dept) == str
 对象的所有属性都存储在“_ dict_”中（启用了“_ slots_”除外），所以访问对象的属性数据有如下三种方法：
 
 ```
-print yiifaa.name
-print yiifaa.__dict__['name']
+print yiifaa.name 
+print yiifaa.__dict__['name'] 
 print getattr(yiifaa, 'name')
 ```
 
@@ -1804,17 +1804,17 @@ print getattr(yiifaa, 'name')
 
 ```
 class ObjectDict(dict):
-"""
-Object like dict, every dict[key] can visite by dict.key
+    """ 
+    Object like dict, every dict[key] can visite by dict.key
 
-If dict[key] is `Get`, calculate it's value.
-"""
+    If dict[key] is `Get`, calculate it's value.
+    """
 
-def __getattr__(self, name):
-ret = self.__getitem__(name)
-if hasattr(ret, '__get__'):
-return ret.__get__(self, ObjectDict)
-return ret
+    def __getattr__(self, name):
+        ret = self.__getitem__(name)
+        if hasattr(ret, '__get__'):
+            return ret.__get__(self, ObjectDict)
+        return ret 
 ```
 
 </br>
@@ -1832,50 +1832,50 @@ return ret
 
 其次，需要弄清楚str与repr之间的区别。
 
-【str】:
+【str】: 
 
-返回一个可以用来表示对象的可打印的友好的字符串
+    返回一个可以用来表示对象的可打印的友好的字符串
 
-对字符串，返回本身。
+    对字符串，返回本身。 
 
-没有参数，则返回空字符串
+    没有参数，则返回空字符串 
 
-对类，可通过__str__() 成员控制其行为。该成员不存在，则使用其 __repr__() 成员。
+    对类，可通过__str__() 成员控制其行为。该成员不存在，则使用其 __repr__() 成员。
 
-与 repr 区别：不总是尝试生成一个传给 eval 的字符串，其目标是可打印字符串。
+    与 repr 区别：不总是尝试生成一个传给 eval 的字符串，其目标是可打印字符串。
 
 【repr】：
 
-返回一个可以用来表示对象的可打印字符串
+    返回一个可以用来表示对象的可打印字符串
 
-首先，尝试生成这样一个字符串，将其传给 eval()可重新生成同样的对象
+    首先，尝试生成这样一个字符串，将其传给 eval()可重新生成同样的对象 
 
-否则，生成用尖括号包住的字符串，包含类型名和额外的信息(比如地址)
+    否则，生成用尖括号包住的字符串，包含类型名和额外的信息(比如地址) 
 
-一个类(class)可以通过 __repr__() 成员来控制repr()函数作用在其实例上时的行为。
+    一个类(class)可以通过 __repr__() 成员来控制repr()函数作用在其实例上时的行为。
 
 示例：
 
 ```
-#test2.py
+#test2.py 
 class A(object):
-def __str__(self):
-return "__str__"
-def __repr__(self):
-return "__repr__"
+    def __str__(self):
+        return "__str__"
+    def __repr__(self):
+        return "__repr__" 
 
-a = A()
+ a = A() 
 b = A
 ```
 ```
->>> import test2
->>> test2.a
-__repr__
->>> print(test2.a)
-__str__
->>> test2.b
-<class 'test2.A'>
->>> print(test2.b)
+>>> import test2 
+>>> test2.a 
+__repr__ 
+>>> print(test2.a) 
+__str__ 
+>>> test2.b 
+<class 'test2.A'> 
+>>> print(test2.b) 
 <class 'test2.A'>
 ```
 
@@ -1887,14 +1887,14 @@ python 将对象设置为可迭代有两种实现方式：
 
 ```
 class Library(object):
-def __init__(self):
-self.value=['a','b','c','d','e']
+    def __init__(self):
+        self.value=['a','b','c','d','e']
 
-def __getitem__(self, i):
-if i>=len(self.value):
-raise IndexError("out of index")
-value=self.value[i]
-return value
+    def __getitem__(self, i):
+        if i>=len(self.value):
+            raise IndexError("out of index")
+        value=self.value[i]
+        return value
 ```
 
 调用的时候，系统默认从0 开始传入，并使得i=i+1
@@ -1903,19 +1903,19 @@ return value
 
 ```
 class Library2(object):
-def __init__(self):
-self.value=['a','b','c','d','e']
-self.i=-1
+    def __init__(self):
+        self.value=['a','b','c','d','e']
+        self.i=-1
 
-def __iter__(self):
-return self
+    def __iter__(self):
+        return self
 
-def next(self):
-self.i += 1
-if self.i>=len(self.value):
-raise StopIteration
-return self.value[self.i]
-
+    def next(self):
+        self.i += 1
+        if self.i>=len(self.value):
+            raise StopIteration
+        return self.value[self.i]
+        
 test=Library2()
 print test.next()
 print test.next()
@@ -1931,23 +1931,23 @@ print test.next()
 
 ```
 def maker(N):
-def action(X):
-return X ** N
-return action
+    def action(X):
+        return X ** N
+    return action
 ```
 
 这是一段很简单的代码, 看看运行后的结果:
 
 ```
 def maker(N):
-def action(X):
-return X ** N
-return action
-
+    def action(X):
+        return X ** N
+    return action
+ 
 f = maker(2)
-
+ 
 f(3) #结果是9
-
+ 
 g = maker(3)
 g(3) #结果是27
 ```
@@ -1977,21 +1977,21 @@ Unix/Linux操作系统提供了一个`fork()`系统调用，它非常特殊。�
 Python的os模块封装了常见的系统调用，其中就包括`fork`，可以在Python程序中轻松创建子进程：
 
 ```
-import os
-print('Process (%s) start...' % os.getpid())
-# Only works on Unix/Linux/Mac:
-pid = os.fork()
+import os 
+print('Process (%s) start...' % os.getpid()) 
+# Only works on Unix/Linux/Mac: 
+pid = os.fork() 
 if pid == 0:
-print('I am child process (%s) and my parent is %s.' % (os.getpid(), os.getppid()))
+    print('I am child process (%s) and my parent is %s.' % (os.getpid(), os.getppid())) 
 else:
-print('I (%s) just created a child process (%s).' % (os.getpid(), pid))
+    print('I (%s) just created a child process (%s).' % (os.getpid(), pid))
 ```
 
 运行结果如下：
 
 ```
-Process (876) start...
-I (876) just created a child process (877).
+Process (876) start... 
+I (876) just created a child process (877). 
 I am child process (877) and my parent is 876.
 ```
 
@@ -2013,15 +2013,15 @@ import os
 
 # 子进程要执行的代码
 def run_proc(name):
-print('Run child process %s (%s)...' % (name, os.getpid()))
+    print('Run child process %s (%s)...' % (name, os.getpid()))
 
 if __name__=='__main__':
-print('Parent process %s.' % os.getpid())
-p = Process(target=run_proc, args=('test',))
-print('Child process will start.')
-p.start()
-p.join()
-print('Child process end.')
+    print('Parent process %s.' % os.getpid())
+    p = Process(target=run_proc, args=('test',))
+    print('Child process will start.')
+    p.start()
+    p.join()
+    print('Child process end.')
 ```
 
 执行结果如下：
@@ -2049,21 +2049,21 @@ from multiprocessing import Pool
 import os, time, random
 
 def long_time_task(name):
-print('Run task %s (%s)...' % (name, os.getpid()))
-start = time.time()
-time.sleep(random.random() * 3)
-end = time.time()
-print('Task %s runs %0.2f seconds.' % (name, (end - start)))
+    print('Run task %s (%s)...' % (name, os.getpid()))
+    start = time.time()
+    time.sleep(random.random() * 3)
+    end = time.time()
+    print('Task %s runs %0.2f seconds.' % (name, (end - start)))
 
 if __name__=='__main__':
-print('Parent process %s.' % os.getpid())
-p = Pool(4)
-for i in range(5):
-p.apply_async(long_time_task, args=(i,))
-print('Waiting for all subprocesses done...')
-p.close()
-p.join()
-print('All subprocesses done.')
+    print('Parent process %s.' % os.getpid())
+    p = Pool(4)
+    for i in range(5):
+        p.apply_async(long_time_task, args=(i,))
+    print('Waiting for all subprocesses done...')
+    p.close()
+    p.join()
+    print('All subprocesses done.')
 ```
 
 执行结果如下：
@@ -2077,7 +2077,7 @@ Run task 2 (673)...
 Run task 3 (674)...
 Task 2 runs 0.14 seconds.
 Run task 4 (673)...
-Task 1 runs 0.27 seconds.
+Task 1 runs 0.27 seconds. 
 Task 3 runs 0.86 seconds.
 Task 0 runs 1.41 seconds.
 Task 4 runs 1.91 seconds.
@@ -2090,7 +2090,7 @@ All subprocesses done.
 
 请注意输出的结果，task 0，1，2，3是立刻执行的，而task 4要等待前面某个task完成后才执行，这是因为Pool的默认大小在我的电脑上是4，因此，最多同时执行4个进程。这是Pool有意设计的限制，并不是操作系统的限制。如果改成：
 
-p = Pool(5)
+p = Pool(5) 
 就可以同时跑5个进程。
 
 由于Pool的默认大小是CPU的核数，如果你不幸拥有8核CPU，你要提交至少9个子进程才能看到上面的等待效果。
@@ -2104,7 +2104,7 @@ p = Pool(5)
 下面的例子演示了如何在Python代码中运行命令nslookup www.python.org，这和命令行直接运行的效果是一样的：
 
 ```
-import subprocess
+import subprocess 
 
 print('$ nslookup www.python.org')
 r = subprocess.call(['nslookup', 'www.python.org'])
@@ -2175,32 +2175,32 @@ import os, time, random
 
 # 写数据进程执行的代码:
 def write(q):
-print('Process to write: %s' % os.getpid())
-for value in ['A', 'B', 'C']:
-print('Put %s to queue...' % value)
-q.put(value)
-time.sleep(random.random())
+    print('Process to write: %s' % os.getpid())
+    for value in ['A', 'B', 'C']:
+        print('Put %s to queue...' % value)
+        q.put(value)
+        time.sleep(random.random())
 
 # 读数据进程执行的代码:
 def read(q):
-print('Process to read: %s' % os.getpid())
-while True:
-value = q.get(True)
-print('Get %s from queue.' % value)
+    print('Process to read: %s' % os.getpid())
+    while True:
+        value = q.get(True)
+        print('Get %s from queue.' % value)
 
 if __name__=='__main__':
-# 父进程创建Queue，并传给各个子进程：
-q = Queue()
-pw = Process(target=write, args=(q,))
-pr = Process(target=read, args=(q,))
-# 启动子进程pw，写入:
-pw.start()
-# 启动子进程pr，读取:
-pr.start()
-# 等待pw结束:
-pw.join()
-# pr进程里是死循环，无法等待其结束，只能强行终止:
-pr.terminate()
+    # 父进程创建Queue，并传给各个子进程：
+    q = Queue()
+    pw = Process(target=write, args=(q,))
+    pr = Process(target=read, args=(q,))
+    # 启动子进程pw，写入:
+    pw.start()
+    # 启动子进程pr，读取:
+    pr.start()
+    # 等待pw结束:
+    pw.join()
+    # pr进程里是死循环，无法等待其结束，只能强行终止:
+    pr.terminate()
 ```
 
 运行结果如下：
@@ -2234,21 +2234,21 @@ Get C from queue.
 from multiprocessing import Pool
 
 def test(x):
-a = 1. / x
-return a
+    a = 1. / x
+    return a
 
 p = Pool(2)
 result = []
 for i in [2,0,1]:
-result.append(p.apply_async(test, args=(i,)))
+    result.append(p.apply_async(test, args=(i,)))                                                                           
 p.close()
 p.join()
 
 for i in result:
-try:
-print(i.get())
-except:
-raise
+    try:
+        print(i.get())
+    except:
+        raise
 
 print("END")
 ```
@@ -2257,10 +2257,10 @@ print("END")
 ```
 0.5
 Traceback (most recent call last):
-File "test1.py", line 16, in <module>
-print(i.get())
-File "/share/public/software/python/2.7.14/lib/python2.7/multiprocessing/pool.py", line 572, in get
-raise self._value
+  File "test1.py", line 16, in <module>
+    print(i.get())
+  File "/share/public/software/python/2.7.14/lib/python2.7/multiprocessing/pool.py", line 572, in get
+    raise self._value
 ZeroDivisionError: integer division or modulo by zero
 ```
 
@@ -2279,18 +2279,18 @@ logger.addHandler(console_handler)
 logger.setLevel(logging.INFO)
 
 def test(x):
-logger.info("process-{}".format(x))
-try:
-a = 1. / x
-return a
-except:
-logger.exception("process-{}".format(x))
+    logger.info("process-{}".format(x))
+    try:
+        a = 1. / x
+        return a
+    except:
+        logger.exception("process-{}".format(x))
 
 p = Pool(2)
 
 result = []
 for i in [2,0,1]:
-result.append(p.apply_async(test, args=(i,)))
+    result.append(p.apply_async(test, args=(i,)))
 p.close()
 p.join()
 
@@ -2305,8 +2305,8 @@ print("END")
 2018-11-16 11:22:09,957 INFO    : process-0
 2018-11-16 11:22:09,957 ERROR   : process-0
 Traceback (most recent call last):
-File "test2.py", line 15, in test
-a = 1. / x
+  File "test2.py", line 15, in test
+    a = 1. / x
 ZeroDivisionError: float division by zero
 END
 ```
@@ -2326,28 +2326,28 @@ logger.addHandler(console_handler)
 logger.setLevel(logging.INFO)
 
 def test(x):
-logger.info("process-{}".format(x))
-try:
-a = 1. / x
-return a
-except:
-logger.exception("process-{}".format(x))
-raise
+    logger.info("process-{}".format(x))
+    try:
+        a = 1. / x
+        return a
+    except:
+        logger.exception("process-{}".format(x))
+        raise
 
 p = Pool(2)
 
 result = []
 for i in [2,0,1]:
-result.append(p.apply_async(test, args=(i,)))
+    result.append(p.apply_async(test, args=(i,)))
 p.close()
 p.join()
 
 for i in result:
-try:
-i.get()    #  主程序捕获不到logger.exception错误，但是能够捕获到下一句的raise
-except:
-exit(1)    #  虽然主程序捕获不到logger.exception错误，但logger已将错误打印输出，
-#  此时我们不需要再raise一边错误，只需exit(1)退出就好
+	try:
+		i.get()    #  主程序捕获不到logger.exception错误，但是能够捕获到下一句的raise
+	except:
+		exit(1)    #  虽然主程序捕获不到logger.exception错误，但logger已将错误打印输出，
+		           #  此时我们不需要再raise一边错误，只需exit(1)退出就好
 
 print("END")
 ```
@@ -2360,8 +2360,8 @@ print("END")
 2018-11-16 11:22:09,957 INFO    : process-0
 2018-11-16 11:22:09,957 ERROR   : process-0
 Traceback (most recent call last):
-File "test2.py", line 15, in test
-a = 1. / x
+  File "test2.py", line 15, in test
+    a = 1. / x
 ZeroDivisionError: float division by zero
 END
 ```
@@ -2412,7 +2412,7 @@ END
 * [python中文编码问题深入分析（二）：print打印中文异常及显示乱码问题分析与解决](https://www.cnblogs.com/litaozijin/p/6416133.html)
 * [廖雪峰的官方网站-字符串和编码](https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431664106267f12e9bef7ee14cf6a8776a479bdec9b9000)
 * [Python中的str与unicode处理方法](http://python.jobbole.com/81244/)
-* [从原理上搞定编码-- Base64编码](http://www.cnblogs.com/chengxiaohui/articles/3951129.html)
+* [从原理上搞定编码-- Base64编码](http://www.cnblogs.com/chengxiaohui/articles/3951129.html) 
 
 
 <font color="red">
@@ -2562,7 +2562,7 @@ import requests
 url = "http://xxx.xxx.xxx"
 response = requests.get(url)
 response.encoding = 'gbk'
-
+ 
 print response.text
 ```
 
@@ -2587,10 +2587,10 @@ print response.text
 
 ```
 with open("test") as f:
-for i in f:
-# 将读入的utf-8字节流进行解码
-u = i.decode('utf-8')
-....
+    for i in f:
+        # 将读入的utf-8字节流进行解码
+        u = i.decode('utf-8')
+        ....
 ```
 
 如果把连接程序内外的这段数据流比喻成通道的的话，那么与其将通道开为字节流，读入后进行解码，不如直接将通道开为unicode的。
@@ -2599,8 +2599,8 @@ u = i.decode('utf-8')
 # 使用codecs直接开unicode通道
 file = codecs.open("test", "r", "utf-8")
 for i in file:
-print type(i)
-# i的类型是unicode的
+    print type(i)
+    # i的类型是unicode的
 ```
 
 所以python处理中文编码问题的关键是你要清晰的明白，自己在干什么，打算读入什么格式的编码，声明的的这些字节是什么格式的，str到unicode是如何转换的，str的一种编码到另一种编码又是如何进行的。 还有，你不能把问题变得混乱，要自己主动去维护一种统一。
@@ -2632,17 +2632,17 @@ str
 u'\u6c49\u5b57'
 >>> a = u'\xe6\x8a\xa5\xe8\xa1\xa8'
 >>> print a
-æ<8a>¥è¡¨
+æ<8a>¥è¡¨ 
 >>> print a.encode("raw_unicode_escape")
-报表
+报表 
 
 # 将字符串转成二进制
 bytes(s, encoding = "utf8") # 法1
 str.encode(s)               # 法2
 
-#将二进制转成字符串
-str(b, encoding = "utf-8") # 法1
-bytes.decode(b)            # 法2
+#将二进制转成字符串  
+ str(b, encoding = "utf-8") # 法1
+ bytes.decode(b)            # 法2
 
 ```
 
@@ -2690,18 +2690,18 @@ chr()函数是ord()函数的反函数，其中ord()函数将字符串转换回AS
 >>>coerce(a,b)
 ((1+2j),(43000000000+0j))
 ```
-* `compile(string,filename,kind)`: compile()函数将string编译为代码对象，编译生成的代码对象接下来被exec语句执行，接着能利用eval()函数对其进行求值。filename参数应是代码从其中读出的文件名。如果内部生成文件名，filename参数值应是相应的标识符。kind参数指定string参数中所含代码的类别，有关kind可能取值的详细信息，请参见表8-1,举例如下：
+* `compile(string,filename,kind)`: compile()函数将string编译为代码对象，编译生成的代码对象接下来被exec语句执行，接着能利用eval()函数对其进行求值。filename参数应是代码从其中读出的文件名。如果内部生成文件名，filename参数值应是相应的标识符。kind参数指定string参数中所含代码的类别，有关kind可能取值的详细信息，请参见表8-1,举例如下： 
 ```
 >>>a=compile(‘print “Hello World”’,’’,’single’)
 >>>exec(a)
 Hello World
 >>>eval(a)
 Hello World
-```
+``` 
 由compile()函数编译的代码的类别
-```
+``` 
 Kind取值 编译生成的代码
-exec 语句序列
+exec 语句序列 
 eval 简单表达式
 Single 简单交互语句
 ```
@@ -2711,13 +2711,13 @@ Single 简单交互语句
 ```
 >>>import sys
 >>>dir(sys)
-```
+``` 
 * `divmod(a,b)`: devmod()函数返回一个元组，该元组包含a除以b的商和余数，如下例所示：
 ```
 >>>divmod(7,4)
 (1,3)
-```
-对整数而言，返回值与a/b和a%b相同。如果给出的参数值是浮点数，则结果就是（q,a%b），其中：q通常是math.floor(a/b)，但是也可能比这小1，不管在什么情况下，q*b+a%b都非常逼近a；如果a%b是个非零值，则其正负号与b相同，并且有0<=abs(a%b)
+``` 
+对整数而言，返回值与a/b和a%b相同。如果给出的参数值是浮点数，则结果就是（q,a%b），其中：q通常是math.floor(a/b)，但是也可能比这小1，不管在什么情况下，q*b+a%b都非常逼近a；如果a%b是个非零值，则其正负号与b相同，并且有0<=abs(a%b) 
 ```
 >>>divmod(3.75,1.125)
 (3.0,0.375)
@@ -2726,7 +2726,7 @@ Single 简单交互语句
 >>>divmod(-3.5,1.1)
 (-4.0,0.90000000000000036)
 ```
-* `eval(expression[,global[,locals]])`: eval()函数将expression字符串作为python标准表达式进行分析并求值，返回expression字符串的值，当不可调用其他可选参数时，expression访问调用该函数的程序段的全局和局部对象。另一个选择是：以字典形式给出全局和局部符号表（参见后面部分对global()和local()函数的论述）。Eval()函数的返回值是被求职表达式的值，如下例所示：
+* `eval(expression[,global[,locals]])`: eval()函数将expression字符串作为python标准表达式进行分析并求值，返回expression字符串的值，当不可调用其他可选参数时，expression访问调用该函数的程序段的全局和局部对象。另一个选择是：以字典形式给出全局和局部符号表（参见后面部分对global()和local()函数的论述）。Eval()函数的返回值是被求职表达式的值，如下例所示： 
 ```
 >>>a=99
 >>>eval(‘divmod(a,7)’)
@@ -2765,20 +2765,20 @@ print b
 [1,4,9,16]
 ```
 若提供附加的列表，则它们就被并行地提供给function。在后续无元素的列表增加None，直到所有参数列表达到相同的长度为止。如果function参数值为None，则假定为identify函数，将使map()函数返回删除所有为假的参数的list。如果function参数值为None，且给定多个列表参数，返回的列表由一个个元组组成，这些元组由函数中的每一个参数列表内相同对应位置上的参数组成，如下例所示：
-```
+``` 
 >>>map(None,[1,2,3,4],[4,5,6,7])
 [(1,4),(2,5),(3,6),(4,7)]
-```
+``` 
 上例的结果与zip()函数产生的结果等价
 * `max(s,[,args…])`: 当仅给定一个参数时，max()函数返回序列s的最大值。当给定一列参数时，max()函数返回给定参数的最大参数
 * `min(s[,args…])`: 当仅给定一个参数时，min()函数返回序列s的最小值。当给定一列参数时，min()函数返回给定参数中的最小值。记住：多参数调用的序列不被遍历，每个列表参数作为一个整体进行比较，如：
-```
+``` 
 min([1,2,3],[4,5,6])
 返回
 [1,2,3]
 ```
 而不是通常所想的结果为1，要得到一个或多个列表中元素的最小值，可将所有列表连成一串，如下所示：
-```
+``` 
 min([1,2,3]+[4,5,6])
 ```
 * `oct(x)`: 该函数将整数转换为八进制字符串。其结果是个有效的python表达式，如下例所示：`>>>oct(2001)`:`'03721'`. 请注意，返回值通常是无符号数。这样致使oct(-1)在32位机器上产生’037777777777’的结果
@@ -2798,7 +2798,7 @@ open()函数的bufsize选项参数决定从文件中读取数据时所使用的�
 行缓存
 >1 使用大小近似为bufsize字符长度的缓存
 <0 使用系统默认
-```
+``` 
 * `ord(c)`: 该函数返回由一个字符c组成的字符串的ASCII码值或Unicode数字码。ord()函数是chr()函数和nuichr()函数的反函数
 * `pow(x,y[,z])`: 该函数返回以x为底数以y为指数的幂值。如果给出z，该函数就计算x的y次幂值被z取模的值，这样的计算比利用：`pow(x,y)%z`
 的效率更高. 提供给pow()函数的参数应是数值型，并且给定的类型决定返回值的类型。如果计算得出的数值不能用给定参数值的类型表示，则引发异常，比如，以下对pow()的调用将失败： `pow(2,-1)`, 但是`pow(2.0,-1)`是有效的
@@ -2825,7 +2825,7 @@ open()函数的bufsize选项参数决定从文件中读取数据时所使用的�
 ```
 * `setattr(object,name,value)`: 该函数将object参数的name属性设置为value参数值。setattr()函数是getattr()函数的反函数，后者仅获得信息，以下语句：`setattr(myattr’,’new value’)`等价于`myobj.myattr=’new value’`. setattr()函数能用在这样的情况下：属性是通过name参数以编程方式命名，而不是显式地命名属性
 * `slice([start,]stop,[,step])`: 该函数返回已序列切片(slice)对象，该对象表示由range(start,stop,step)指定的索引集。如果给出一个参数，此参数就作为stop参数值；如果给出两个参数，它们就作为start和stop的参数值；任何未给出参数值的参数默认取值为None。序列切片对象有3个属性(start,stop,和step)，这3个属性仅仅返回要提供给slice()函数的参数
-* `str(object)`: 返回对象的一个字符串表示。这与repr()函数相似，唯一不同之处在于：此函数返回值设计为可打印字符串而不是与eval()函数相兼容的字符串
+* `str(object)`: 返回对象的一个字符串表示。这与repr()函数相似，唯一不同之处在于：此函数返回值设计为可打印字符串而不是与eval()函数相兼容的字符串 
 * `tuple(object)`: tuple()函数返回一个元组，该元组的项及项的顺序与sequence参数完全一样，以下就是tuple()函数的举例：
 * `type(object)`: 该函数返回object参数的类型。返回值是个如类型模块所描述一样的类型对象，举例如下：
 * `unichr(i)`: 该函数返回代码是一个整型参数i的Unicode字符的Unicode字符串。此函数等价于前面论述的chr()函数。请注意，要将Unicode字符转换回其整数格式，可使用ord()函数；没有uniord()函数、如果给出的整数超出0~65535这个范围，则引发ValueError异常
@@ -2920,12 +2920,12 @@ functools，用于高阶函数：指那些作用于函数或者返回其它函�
 比较函数是可调用的，接受两个参数，比较这两个参数并根据他们的大小关系返回负值、零或者正值中的一个。关键字函数也是可调用的，接受一个参数，同时返回一个可以用作排序关键字的值。
 
 ```
-from functools import cmp_to_key
-def compare(ele1,ele2):
+from functools import cmp_to_key 
+ def compare(ele1,ele2):
 
-
-return ele2 - ele1
-a = [2,3,1]
+   
+        return ele2 - ele1 
+ a = [2,3,1] 
 print sorted(a, key = cmp_to_key(compare))
 ```
 输出：`[3, 2, 1]`
@@ -2937,15 +2937,15 @@ functools.partial(func, *args, **keywords)，函数装饰器，返回一个新�
 partial对象的调用如下，
 
 ```
-import functools
-def add(a,b):
+import functools 
+ def add(a,b):
 
-
-return a + b
-add3 = functools.partial(add,3)
-add5 = functools.partial(add,5)
-print add3(4)
-print add5(10)
+   
+        return a + b 
+ add3 = functools.partial(add,3) 
+add5 = functools.partial(add,5) 
+ print add3(4) 
+ print add5(10)
 ```
 
 输出：
@@ -2960,8 +2960,8 @@ print add5(10)
 与Python内置的reduce函数一样，为了向Python3过渡；
 
 ```
-import functools
-a = range(1,6)
+import functools 
+ a = range(1,6) 
 print functools.reduce(lambda x,y:x+y,a)
 ```
 
@@ -2974,38 +2974,38 @@ print functools.reduce(lambda x,y:x+y,a)
 被修饰的类必须至少定义 `__lt__()`， `__le__()`，`__gt__()`，`__ge__()`中的一个，同时，被修饰的类还应该提供 `__eq__()`方法。
 
 ```
-from functools import total_ordering
-class Person:
+from functools import total_ordering 
+ class Person:
 
+   
+        # 定义相等的比较函数
 
-# 定义相等的比较函数
-
-
-def __eq__(self,other):
-return ((self.lastname.lower(),self.firstname.lower()) ==
-(other.lastname.lower(),other.firstname.lower()))
-# 定义小于的比较函数
-def __lt__(self,other):
-return ((self.lastname.lower(),self.firstname.lower()) <
-(other.lastname.lower(),other.firstname.lower()))
-p1 = Person()
-p2 = Person()
-p1.lastname = "123"
-p1.firstname = "000"
-p2.lastname = "1231"
-p2.firstname = "000"
-print p1 < p2
-print p1 <= p2
-print p1 == p2
-print p1 > p2
+   
+        def __eq__(self,other):
+                return ((self.lastname.lower(),self.firstname.lower()) ==
+                            (other.lastname.lower(),other.firstname.lower()))
+        # 定义小于的比较函数
+        def __lt__(self,other):
+                return ((self.lastname.lower(),self.firstname.lower()) <
+                            (other.lastname.lower(),other.firstname.lower())) 
+p1 = Person() 
+p2 = Person() 
+p1.lastname = "123" 
+p1.firstname = "000" 
+p2.lastname = "1231" 
+p2.firstname = "000" 
+print p1 < p2 
+print p1 <= p2 
+print p1 == p2 
+print p1 > p2 
 print p1 >= p2
 ```
 控制台输出:
 ```
-True
-True
-False
-False
+True 
+True 
+False 
+False 
 False
 ```
 
@@ -3020,32 +3020,32 @@ False
 这个函数可用作一个装饰器，简化调用update_wrapper的过程，调用这个函数等价于调用`partial(update_wrapper, wrapped = wrapped, assigned = assigned,updated = updated)`。
 
 ```
-from functools import wraps
-def my_decorator(f):
+from functools import wraps 
+ def my_decorator(f):
 
-
-@wraps(f)
-def wrapper(*args,**kwds):
-print "Calling decorated function"
-return f(*args,**kwds)
-return wrapper
-@my_decorator
+   
+        @wraps(f)
+        def wrapper(*args,**kwds):
+                print "Calling decorated function"
+                return f(*args,**kwds)
+                return wrapper 
+@my_decorator 
 def example():
 
-
-"""DocString"""
-print "Called example function"
-example()
-print example.__name__
+   
+        """DocString"""
+        print "Called example function" 
+ example() 
+print example.__name__ 
 print example.__doc__
 ```
 
 控制台输出:
 
 ```
-Calling decorated function
-Called example function
-example
+Calling decorated function 
+Called example function 
+example 
 DocString
 ```
 
@@ -3056,21 +3056,21 @@ DocString
 将 @wraps(f)注释掉，然后运行程序，控制台输出，
 
 ```
-Calling decorated function
-Called example function
-wrapper
+Calling decorated function 
+Called example function 
+wrapper 
 None
 ```
 
 ### 5. `subprocess`
 
 * `subprocess.call` : 类似os.system(), 注意参数shell=True，在windows下，需要shell=True的参数传给call等shuprocess工具和popen工具，才能运行shell内建命令， 在类unix平台，shell=False时，程序命令直接有os.execvp运行，shell=True时，程序转而由shell运行，而且用其他参数指定shell。
-* `subprocess.Popen` 类似os.popen,
+* `subprocess.Popen` 类似os.popen, 
 
 ### 6. `msvcrt`
 
-* `msvcrt.putch()` :
-* `msvcrt.getche()` :
+* `msvcrt.putch()` : 
+* `msvcrt.getche()` : 
 
 ### 7.`math`
 
@@ -3306,21 +3306,21 @@ from collections import OrderedDict
 
 class LastUpdatedOrderedDict(OrderedDict):
 
-def __init__(self, capacity):
-super(LastUpdatedOrderedDict, self).__init__()
-self._capacity = capacity
+    def __init__(self, capacity):
+        super(LastUpdatedOrderedDict, self).__init__()
+        self._capacity = capacity
 
-def __setitem__(self, key, value):
-containsKey = 1 if key in self else 0
-if len(self) - containsKey >= self._capacity:
-last = self.popitem(last=False)
-print 'remove:', last
-if containsKey:
-del self[key]
-print 'set:', (key, value)
-else:
-print 'add:', (key, value)
-OrderedDict.__setitem__(self, key, value)
+    def __setitem__(self, key, value):
+        containsKey = 1 if key in self else 0
+        if len(self) - containsKey >= self._capacity:
+            last = self.popitem(last=False)
+            print 'remove:', last
+        if containsKey:
+            del self[key]
+            print 'set:', (key, value)
+        else:
+            print 'add:', (key, value)
+        OrderedDict.__setitem__(self, key, value)
 ```
 
 **Counter**
@@ -3431,14 +3431,14 @@ logger.error('{} service is {}'.format(service_name, 'down')) # 使用format函�
 # 记录异常信息
 
 try:
-1 / 0
+    1 / 0
 except:
-# 等同于error级别，但是会额外记录当前抛出的异常堆栈信息
-logger.exception('this is an exception message')
+    # 等同于error级别，但是会额外记录当前抛出的异常堆栈信息
+    logger.exception('this is an exception message')
 
 # 2016-10-08 21:59:19,493 ERROR   : this is an exception message
 # Traceback (most recent call last):
-#   File "D:/Git/py_labs/demo/use_logging.py", line 45, in
+#   File "D:/Git/py_labs/demo/use_logging.py", line 45, in 
 #     1 / 0
 # ZeroDivisionError: integer division or modulo by zero
 ```
@@ -3489,47 +3489,47 @@ Logging有如下级别: `DEBUG`，`INFO`，`WARNING`，`ERROR`，`CRITICAL` .默
 
 ```
 def complex_algorithm(items):
-for i, item in enumerate(items):
-# do some complex algorithm computation
+    for i, item in enumerate(items):
+        # do some complex algorithm computation
 
-logger.debug('%s iteration, item=%s', i, item)
+        logger.debug('%s iteration, item=%s', i, item)
 ```
 
 在处理请求或者服务器状态变化等日常事务中，我会使用 `INFO` 等级。
 
 ```
 def handle_request(request):
-logger.info('Handling request %s', request)
-# handle request here
+    logger.info('Handling request %s', request)
+    # handle request here
 
-result = 'result'
-logger.info('Return result: %s', result)
+    result = 'result'
+    logger.info('Return result: %s', result)
 
 def start_service():
-logger.info('Starting service at port %s ...', port)
-service.start()
-logger.info('Service is started')
+    logger.info('Starting service at port %s ...', port)
+    service.start()
+    logger.info('Service is started')
 ```
 
 当发生很重要的事件，但是并不是错误时，我会使用 `WARNING` 。比如，当用户登录密码错误时，或者连接变慢时。
 
 ```
 def authenticate(user_name, password, ip_address):
-if user_name != USER_NAME and password != PASSWORD:
-logger.warn('Login attempt to %s from IP %s', user_name, ip_address)
-return False
-# do authentication here
+    if user_name != USER_NAME and password != PASSWORD:
+        logger.warn('Login attempt to %s from IP %s', user_name, ip_address)
+        return False
+    # do authentication here
 ```
 
 有错误发生时肯定会使用 `ERROR` 等级了。比如抛出异常，IO 操作失败或者连接问题等。
 
 ```
 def get_user_by_id(user_id):
-user = db.read_user(user_id)
-if user is None:
-logger.error('Cannot find user with user_id=%s', user_id)
-return user
-return user
+    user = db.read_user(user_id)
+    if user is None:
+        logger.error('Cannot find user with user_id=%s', user_id)
+        return user
+    return user
 ```
 
 我很少使用 CRITICAL 。当一些特别糟糕的事情发生时，你可以使用这个级别来记录。比方说，内存耗尽，磁盘满了或者核危机（希望永远别发生 :S）。
@@ -3676,11 +3676,11 @@ datefmt=%H:%M:%S
 
 [formatter_multiLineFormatter]
 format= ------------------------- %(levelname)s -------------------------
-Time:      %(asctime)s
-Thread:    %(threadName)s
-File:      %(filename)s(line %(lineno)d)
-Message:
-%(message)s
+ Time:      %(asctime)s
+ Thread:    %(threadName)s
+ File:      %(filename)s(line %(lineno)d)
+ Message:
+ %(message)s
 
 datefmt=%Y-%m-%d %H:%M:%S
 ```
@@ -3701,114 +3701,114 @@ logging模块保证在同一个python解释器内，多次调用logging.getLogge
 配置文件：
 
 ```
-[loggers]
-keys=root,main
+ [loggers] 
+ keys=root,main 
 
-[handlers]
-keys=consoleHandler,fileHandler
+ [handlers] 
+ keys=consoleHandler,fileHandler 
 
-[formatters]
-keys=fmt
+ [formatters] 
+ keys=fmt 
 
-[logger_root]
-level=DEBUG
-handlers=consoleHandler
+ [logger_root] 
+ level=DEBUG 
+ handlers=consoleHandler 
 
-[logger_main]
-level=DEBUG
-qualname=main
-handlers=fileHandler
+ [logger_main] 
+ level=DEBUG 
+ qualname=main 
+ handlers=fileHandler 
 
-[handler_consoleHandler]
-class=StreamHandler
-level=DEBUG
-formatter=fmt
-args=(sys.stdout,)
+ [handler_consoleHandler] 
+ class=StreamHandler 
+ level=DEBUG 
+ formatter=fmt 
+ args=(sys.stdout,) 
 
-[handler_fileHandler]
-class=logging.handlers.RotatingFileHandler
-level=DEBUG
-formatter=fmt
-args=('tst.log','a',20000,5,)
+ [handler_fileHandler] 
+ class=logging.handlers.RotatingFileHandler 
+ level=DEBUG 
+ formatter=fmt 
+ args=('tst.log','a',20000,5,) 
 
-[formatter_fmt]
-format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
-datefmt=%Y-%m-%d %H:%M:%S
+ [formatter_fmt] 
+ format=%(asctime)s - %(name)s - %(levelname)s - %(message)s 
+ datefmt=%Y-%m-%d %H:%M:%S
 ```
 
 主模块main.py：
 
 ```
-import logging
-import logging.config
+ import logging 
+ import logging.config 
 
-logging.config.fileConfig('logging.conf')
-root_logger = logging.getLogger('root')
-root_logger.debug('test root logger...')
+ logging.config.fileConfig('logging.conf') 
+ root_logger = logging.getLogger('root') 
+ root_logger.debug('test root logger...') 
 
-logger = logging.getLogger('main')
-logger.info('test main logger')
-logger.info('start import module \'mod\'...')
+ logger = logging.getLogger('main')
+ logger.info('test main logger') 
+ logger.info('start import module \'mod\'...') 
 
-import mod
+ import mod 
 
-logger.debug('let\'s test mod.testLogger()')
-mod.testLogger()
-root_logger.info('finish test...')
+ logger.debug('let\'s test mod.testLogger()') 
+ mod.testLogger() 
+ root_logger.info('finish test...')
 ```
 
 子模块mod.py：
 
 ```
-import logging
-import submod
+ import logging 
+ import submod 
 
-logger = logging.getLogger('main.mod')
-logger.info('logger of mod say something...')
+ logger = logging.getLogger('main.mod') 
+ logger.info('logger of mod say something...') 
 
-def testLogger():
-logger.debug('this is mod.testLogger...')
+ def testLogger():
+     logger.debug('this is mod.testLogger...')
 
-
-submod.tst()
+ 
+     submod.tst()
 ```
 
 子子模块submod.py：
 
 ```
-import logging
-logger = logging.getLogger('main.mod.submod')
-logger.info('logger of submod say something...')
-def tst():
+ import logging 
+ logger = logging.getLogger('main.mod.submod') 
+ logger.info('logger of submod say something...') 
+ def tst():
 
-
-logger.info('this is submod.tst()...')
+ 
+     logger.info('this is submod.tst()...')
 ```
 
 然后运行python main.py，控制台输出：
 
 ```
-2012-03-09 18:22:22,793 - root - DEBUG - test root logger...
-2012-03-09 18:22:22,793 - main - INFO - test main logger
-2012-03-09 18:22:22,809 - main - INFO - start import module 'mod'...
-2012-03-09 18:22:22,809 - main.mod.submod - INFO - logger of submod say something...
-2012-03-09 18:22:22,809 - main.mod - INFO - logger say something...
-2012-03-09 18:22:22,809 - main - DEBUG - let's test mod.testLogger()
-2012-03-09 18:22:22,825 - main.mod - DEBUG - this is mod.testLogger...
-2012-03-09 18:22:22,825 - main.mod.submod - INFO - this is submod.tst()...
-2012-03-09 18:22:22,841 - root - INFO - finish test...
+ 2012-03-09 18:22:22,793 - root - DEBUG - test root logger... 
+ 2012-03-09 18:22:22,793 - main - INFO - test main logger 
+ 2012-03-09 18:22:22,809 - main - INFO - start import module 'mod'... 
+ 2012-03-09 18:22:22,809 - main.mod.submod - INFO - logger of submod say something... 
+ 2012-03-09 18:22:22,809 - main.mod - INFO - logger say something... 
+ 2012-03-09 18:22:22,809 - main - DEBUG - let's test mod.testLogger() 
+ 2012-03-09 18:22:22,825 - main.mod - DEBUG - this is mod.testLogger... 
+ 2012-03-09 18:22:22,825 - main.mod.submod - INFO - this is submod.tst()... 
+ 2012-03-09 18:22:22,841 - root - INFO - finish test...
 ```
 
 可以看出，和预想的一样，然后在看一下tst.log，logger配置中的输出的目的地：
 
 ```
-2012-03-09 18:22:22,793 - main - INFO - test main logger
-2012-03-09 18:22:22,809 - main - INFO - start import module 'mod'...
-2012-03-09 18:22:22,809 - main.mod.submod - INFO - logger of submod say something...
-2012-03-09 18:22:22,809 - main.mod - INFO - logger say something...
-2012-03-09 18:22:22,809 - main - DEBUG - let's test mod.testLogger()
-2012-03-09 18:22:22,825 - main.mod - DEBUG - this is mod.testLogger...
-2012-03-09 18:22:22,825 - main.mod.submod - INFO - this is submod.tst()...
+ 2012-03-09 18:22:22,793 - main - INFO - test main logger 
+ 2012-03-09 18:22:22,809 - main - INFO - start import module 'mod'... 
+ 2012-03-09 18:22:22,809 - main.mod.submod - INFO - logger of submod say something... 
+ 2012-03-09 18:22:22,809 - main.mod - INFO - logger say something... 
+ 2012-03-09 18:22:22,809 - main - DEBUG - let's test mod.testLogger() 
+ 2012-03-09 18:22:22,825 - main.mod - DEBUG - this is mod.testLogger... 
+ 2012-03-09 18:22:22,825 - main.mod.submod - INFO - this is submod.tst()...
 ```
 
 tst.log中没有root logger输出的信息，因为logging.conf中配置了只有main logger及其子logger使用RotatingFileHandler，而root logger是输出到标准输出。
@@ -3822,7 +3822,7 @@ tst.log中没有root logger输出的信息，因为logging.conf中配置了只�
 
 1. 时间戳(timestamp) ：通常来说，时间戳表示的是从1970年1月1日00:00:00开始按秒计算的偏移量。我们运行“type(time.time())”，返回的是float类型。
 2. 格式化的时间字符串 ：按照我们想要的方式输出，比如 2017-05-07-19:37:20
-3. 元组(struct_time)   ：struct_time元组共有9个元素共九个元素:(年，月，日，时，分，秒，一年中第几周，一年中第几天，夏令时)
+3. 元组(struct_time)   ：struct_time元组共有9个元素共九个元素:(年，月，日，时，分，秒，一年中第几周，一年中第几天，夏令时) 
 
 `时间戳`：`time.time()` 从1970年1月1日00:00:00到此刻的秒数，主要用于计算程序的执行时间等。
 
@@ -3846,30 +3846,30 @@ tst.log中没有root logger输出的信息，因为logging.conf中配置了只�
 时间字符串支持的格式符号：（区分大小写）
 
 ```
-%a  本地星期名称的简写（如星期四为Thu）
-%A  本地星期名称的全称（如星期四为Thursday）
-%b  本地月份名称的简写（如八月份为agu）
-%B  本地月份名称的全称（如八月份为august）
-%c  本地相应的日期和时间的字符串表示（如：15/08/27 10:20:06）
-%d  一个月中的第几天（01 - 31）
-%f  微妙（范围0.999999）
-%H  一天中的第几个小时（24小时制，00 - 23）
-%I  第几个小时（12小时制，0 - 11）
-%j  一年中的第几天（001 - 366）
-%m  月份（01 - 12）
-%M  分钟数（00 - 59）
-%p  本地am或者pm的相应符
-%S  秒（00 - 61）
-%U  一年中的星期数。（00 - 53星期天是一个星期的开始。）第一个星期天之    前的所有天数都放在第0周。
-%w  一个星期中的第几天（0 - 6，0是星期天）
-%W  和%U基本相同，不同的是%W以星期一为一个星期的开始。
-%x  本地相应日期字符串（如15/08/01）
-%X  本地相应时间字符串（如08:08:10）
-%y  去掉世纪的年份（00 - 99）两个数字表示的年份
-%Y  完整的年份（4个数字表示年份）
-%z  与UTC时间的间隔（如果是本地时间，返回空字符串）
-%Z  时区的名字（如果是本地时间，返回空字符串）
-%%  ‘%’字符
+%a  本地星期名称的简写（如星期四为Thu）       
+%A  本地星期名称的全称（如星期四为Thursday）       
+%b  本地月份名称的简写（如八月份为agu）     
+%B  本地月份名称的全称（如八月份为august）       
+%c  本地相应的日期和时间的字符串表示（如：15/08/27 10:20:06）       
+%d  一个月中的第几天（01 - 31）   
+%f  微妙（范围0.999999）     
+%H  一天中的第几个小时（24小时制，00 - 23）       
+%I  第几个小时（12小时制，0 - 11）       
+%j  一年中的第几天（001 - 366）     
+%m  月份（01 - 12）     
+%M  分钟数（00 - 59）       
+%p  本地am或者pm的相应符       
+%S  秒（00 - 61）     
+%U  一年中的星期数。（00 - 53星期天是一个星期的开始。）第一个星期天之    前的所有天数都放在第0周。     
+%w  一个星期中的第几天（0 - 6，0是星期天）     
+%W  和%U基本相同，不同的是%W以星期一为一个星期的开始。     
+%x  本地相应日期字符串（如15/08/01）     
+%X  本地相应时间字符串（如08:08:10）     
+%y  去掉世纪的年份（00 - 99）两个数字表示的年份       
+%Y  完整的年份（4个数字表示年份） 
+%z  与UTC时间的间隔（如果是本地时间，返回空字符串） 
+%Z  时区的名字（如果是本地时间，返回空字符串）       
+%%  ‘%’字符  
 ```
 
 
@@ -3912,7 +3912,7 @@ time.struct_time(tm_year=2018, tm_mon=3, tm_mday=20, tm_hour=0, tm_min=27, tm_se
 >>> time.mktime(time.localtime())
 1521506980.0
 
-# 时间截只能转成标准字符串时间.
+# 时间截只能转成标准字符串时间. 
 # 不能直接转为自定义字符串时间, 可以先转成结构化时间, 再转成自定义字符串时间
 # ctime(seconds) -> string
 >>> time.ctime(1521505668.901931)
@@ -3941,10 +3941,10 @@ time.struct_time(tm_year=2018, tm_mon=3, tm_mday=20, tm_hour=0, tm_min=27, tm_se
 
 datetime主要有4种时间类型
 
-`datetime.date`：表示日期的类。常用的属性有year, month, day
-`datetime.time`：表示时间的类。常用的属性有hour, minute, second, microsecond
-`datetime.datetime`：表示日期时间
-`datetime.timedelta`：表示时间间隔，即两个时间点之间的长度
+    `datetime.date`：表示日期的类。常用的属性有year, month, day
+    `datetime.time`：表示时间的类。常用的属性有hour, minute, second, microsecond
+    `datetime.datetime`：表示日期时间
+    `datetime.timedelta`：表示时间间隔，即两个时间点之间的长度
 
 ***datetime.date***
 
@@ -4001,11 +4001,11 @@ datetime.datetime(2018, 3, 20, 9, 15, 26, 809166)
 datetime.datetime(2018, 3, 30, 14, 15, 28, 978371)
 
 # 将字符串时间格式化转化为时间
->>> str_to_date = datetime.datetime.strptime("16/11/17 16:30","%d/%m/%y%H:%M")
+>>> str_to_date = datetime.datetime.strptime("16/11/17 16:30","%d/%m/%y%H:%M") 
 >>> str_to_date
 datetime.datetime(2017, 11, 16, 16, 30)
 # 提取10个小时
->>> datetime.datetime.now() + datetime.timedelta(hours=-10)
+>>> datetime.datetime.now() + datetime.timedelta(hours=-10) 
 datetime.datetime(2017, 5, 28, 20, 1, 11, 805686)
 ```
 
@@ -4016,7 +4016,7 @@ datetime.datetime(2017, 5, 28, 20, 1, 11, 805686)
 date.fromtimestamp(timestamp)：根据给定的时间戮，返回一个date对象
 
 ```
->>> datetime.datetime.fromtimestamp(time.time())
+>>> datetime.datetime.fromtimestamp(time.time()) 
 datetime.datetime(2013, 8, 10, 11, 14, 50, 842812)
 ```
 
@@ -4047,21 +4047,21 @@ time_struct与datetime之间的转换可以通过中间状态string来完成
 ```
 Here are some of the useful functions provided by this module:
 
-ismodule(), isclass(), ismethod(), isfunction(), isgeneratorfunction(),
+ismodule(), isclass(), ismethod(), isfunction(), isgeneratorfunction(), 
 isgenerator(), istraceback(), isframe(), iscode(), isbuiltin(),isroutine() – check object types
 
 getmembers() – get members of an object that satisfy a given condition
 
-getfile(), getsourcefile(), getsource() – find an object’s source code
-getdoc(), getcomments() – get documentation on an object
-getmodule() – determine the module that an object came from
+getfile(), getsourcefile(), getsource() – find an object’s source code 
+getdoc(), getcomments() – get documentation on an object 
+getmodule() – determine the module that an object came from 
 getclasstree() – arrange classes so as to represent their hierarchy
 
-getargspec(), getargvalues() – get info about function arguments
-formatargspec(), formatargvalues() – format an argument spec
-getouterframes(), getinnerframes() – get info about frames
-currentframe() – get the current stack frame
-stack(), trace() – get info about frames on the stack or in a traceback
+getargspec(), getargvalues() – get info about function arguments 
+formatargspec(), formatargvalues() – format an argument spec 
+getouterframes(), getinnerframes() – get info about frames 
+currentframe() – get the current stack frame 
+stack(), trace() – get info about frames on the stack or in a traceback 
 ```
 
 **自我总结**
@@ -4072,22 +4072,22 @@ stack(), trace() – get info about frames on the stack or in a traceback
 
 ```
 def t1():
-pass
+  pass
 
 def t2(a):
-pass
+  pass
 
 def t3(b=1):
-pass
+  pass
 
 def t4(*c):
-pass
+  pass
 
 def t5(**d):
-pass
+  pass
 
 def t6(a,b=1,*c,**d):
-pass
+  pass
 
 ```
 
@@ -4129,7 +4129,7 @@ FullArgSpec(args=[], varargs=None, varkw=None, defaults=None, kwonlyargs=[], kwo
 FullArgSpec(args=['a'], varargs=None, varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={})
 
 >>> inspect.getfullargspec(t3)
-FullArgSpec(args=['b'], varargs=None, varkw=None, defaults=(1,), kwonlyargs=[], kwonlydefaults=None, annotations={})
+ FullArgSpec(args=['b'], varargs=None, varkw=None, defaults=(1,), kwonlyargs=[], kwonlydefaults=None, annotations={})
 
 >>> inspect.getfullargspec(t4)
 FullArgSpec(args=[], varargs='c', varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={})
@@ -4141,10 +4141,10 @@ FullArgSpec(args=[], varargs=None, varkw='d', defaults=None, kwonlyargs=[], kwon
 FullArgSpec(args=['a', 'b'], varargs='c', varkw='d', defaults=(1,), kwonlyargs=[], kwonlydefaults=None, annotations={})
 
 >>> def t7(a, b=0, *c, d, e=1, **f):
-pass
+        pass
 
 >>> inspect.getfullargspec(t7):
-FullArgSpec(args=['a', 'b'], varargs='c', varkw='f', defaults=(0,), kwonlyargs=['d', 'e'], kwonlydefaults={'e': 1}, annotations={})
+ FullArgSpec(args=['a', 'b'], varargs='c', varkw='f', defaults=(0,), kwonlyargs=['d', 'e'], kwonlydefaults={'e': 1}, annotations={})
 
 # 使用inspect.signature
 
@@ -4152,14 +4152,14 @@ FullArgSpec(args=['a', 'b'], varargs='c', varkw='f', defaults=(0,), kwonlyargs=[
 
 >>> x
 mappingproxy({'a': <Parameter "a">,
-'b': <Parameter "b=0">,
-'c': <Parameter "*c">,
-'d': <Parameter "d">,
-'e': <Parameter "e=1">,
-'f': <Parameter "**f">})
+              'b': <Parameter "b=0">,
+              'c': <Parameter "*c">,
+              'd': <Parameter "d">,
+              'e': <Parameter "e=1">,
+              'f': <Parameter "**f">})
 
 >>> for k,v in x.items():
-print("{}.kind: {} ({})".format(k, v.kind, v.kind.name))
+        print("{}.kind: {} ({})".format(k, v.kind, v.kind.name))
 
 a.kind: 1 (POSITIONAL_OR_KEYWORD)
 b.kind: 1 (POSITIONAL_OR_KEYWORD)
@@ -4174,10 +4174,10 @@ f.kind: 4 (VAR_KEYWORD)
 ```
 >>> inspect._ParameterKind.__members__
 mappingproxy({'KEYWORD_ONLY': <_ParameterKind.KEYWORD_ONLY: 3>,
-'POSITIONAL_ONLY': <_ParameterKind.POSITIONAL_ONLY: 0>,
-'POSITIONAL_OR_KEYWORD': <_ParameterKind.POSITIONAL_OR_KEYWORD: 1>,
-'VAR_KEYWORD': <_ParameterKind.VAR_KEYWORD: 4>,
-'VAR_POSITIONAL': <_ParameterKind.VAR_POSITIONAL: 2>})
+              'POSITIONAL_ONLY': <_ParameterKind.POSITIONAL_ONLY: 0>,
+              'POSITIONAL_OR_KEYWORD': <_ParameterKind.POSITIONAL_OR_KEYWORD: 1>,
+              'VAR_KEYWORD': <_ParameterKind.VAR_KEYWORD: 4>,
+              'VAR_POSITIONAL': <_ParameterKind.VAR_POSITIONAL: 2>})
 
 # POSITIONAL_ONLY ： 位置参数 (0)
 # POSITIONAL_OR_KEYWORD ： 位置或关键字参数 (1)
@@ -4225,16 +4225,16 @@ operator 模块也为属性和项目的查找提供了一些工具。这些工�
 
 ```
 def itemgetter(*items):
-if len(items) == 1:
-item = items[0]
-def g(obj):
-return obj[item]
-else:
-def g(obj):
-return tuple(obj[item] for item in items)
-return g
-```
-
+    if len(items) == 1:
+        item = items[0]
+        def g(obj):
+            return obj[item]
+    else:
+        def g(obj):
+            return tuple(obj[item] for item in items)
+    return g
+```   
+ 
 运算符的`__getitem__()`方法可接受任意类型的项目。字典接收任意的哈希值。列表、元组和字符串接收一个索引或字符片段。
 
 ```
@@ -4364,10 +4364,10 @@ i1.save("merge.png")
 
 **1. 数组分组**
 
-每一段正则用一个加圆括起来时，便自动构成一个组，包括(?Ppattern)自定义命名组，也加入到分组序号中
-如果后面有前面圆括中相同部分，则用数字序号表示匹配相同部分
-`r'(正则1)…(正则2)…(正则3) ... \1….\2….\3…'`,
-这里出现`\1`，表示匹配前面第1个圆括号正则内容，
+每一段正则用一个加圆括起来时，便自动构成一个组，包括(?Ppattern)自定义命名组，也加入到分组序号中 
+如果后面有前面圆括中相同部分，则用数字序号表示匹配相同部分 
+`r'(正则1)…(正则2)…(正则3) ... \1….\2….\3…'`, 
+这里出现`\1`，表示匹配前面第1个圆括号正则内容， 
 这里出现`\2`，表示匹配前面第2个圆括号正则内容
 
 ```
@@ -4403,36 +4403,36 @@ SciPy的stats模块提供了大约80种连续随机变量和10多种离散分布
 | rv_continuous.entropy(\*args, \*\*kwds) | Differential entropy of the RV. <br> 微分商 |
 | rv_continuous.fit(data, \*args, \*\*kwds) | Return MLEs for shape, location, and scale parameters from data. <br> 对一组随机取样进行拟合，找出最适合取样数据的概率密度函数的系数 |
 | rv_continuous.expect([func, args, loc, ...]) | Calculate expected value of a function with respect to the distribution. <br> 计算相对于分布的函数的预期值。 |
-
+ 
 <br>可以通过如下语句获得stats模块中所有的连续随机变量，示例代码：
 ```
-from scipy import stats
+from scipy import stats 
 [k for k, v in stats.__dict__.items() if isinstance(v, stats.rv_continuous)]
 ```
 结果为：`ksone`, `kstwobign`, `norm`, `alpha`, `anglit`, `arcsine`, `beta`, `betaprime`, `bradford`, `burr`, `burr12`, `fisk`, `cauchy`, `chi`, `chi2`, `cosine`, `dgamma`, `dweibull`, `expon`, `exponnorm`, `exponweib`, `exponpow`, `fatiguelife`, `foldcauchy`, `f`, `foldnorm`, `frechet_r`, `weibull_min`, `frechet_l`, `weibull_max`, `genlogistic`, `genpareto`, `genexpon`, `genextreme`, `gamma`, `erlang`, `gengamma`, `genhalflogistic`, `gompertz`, `gumbel_r`, `gumbel_l`, `halfcauchy`, `halflogistic`, `halfnorm`, `hypsecant`, `gausshyper`, `invgamma`, `invgauss`, `invweibull`, `johnsonsb`, `johnsonsu`, `laplace`, `levy`, `levy_l`, `levy_stable`, `logistic`, `loggamma`, `loglaplace`, `lognorm`, `gilbrat`, `maxwell`, `mielke`, `kappa4`, `kappa3`, `nakagami`, `ncx2`, `ncf`, `t`, `nct`, `pareto`, `lomax`, `pearson3`, `powerlaw`, `powerlognorm`, `powernorm`, `rdist`, `rayleigh`, `reciprocal`, `rice`, `recipinvgauss`, `semicircular`, `skewnorm`, `trapz`, `triang`, `truncexpon`, `truncnorm`, `tukeylambda`, `uniform`, `vonmises`, `vonmises_line`, `wald`, `wrapcauchy`, `gennorm`, `halfgennorm`
-
+ 
 <br>下面以标准正态分布（函数表示f(x)=(1/√2π)exp(-x^2/2)）为例，简单介绍随机变量的用法。示例代码：
 ```
-from scipy import stats
-# 设置正态分布参数，其中loc是期望值参数，scale是标准差参数
-X = stats.norm(loc=1.0, scale=2.0)
-# 计算随机变量的期望值和方差
+from scipy import stats 
+# 设置正态分布参数，其中loc是期望值参数，scale是标准差参数 
+X = stats.norm(loc=1.0, scale=2.0) 
+# 计算随机变量的期望值和方差 
 print(X.stats())
 ```
 运行结果：`(array(1.0), array(4.0))`
-
+ 
 <br>以上代码说明，norm可以像函数一样调用，通过loc和scale参数可以指定随机变量的偏移和缩放参数。对于正态分布的随机变量来说，这两个参数相当于指定其期望值和标准差，标准差是方差的算术平方根。X的stats()方法，可以计算随机变量X分布的特征值，如期望值和方差。
 此外，通过调用随机变量X的rvs()方法，可以得到包含一万次随机取样值的数组x，然后调用NumPy的mean()和var()计算此数组的均值和方差，其结果符合随机变量X的特性，示例代码：
 ```
-#对随机变量取10000个值
-x = X.rvs(size=10000)
+#对随机变量取10000个值 
+x = X.rvs(size=10000) 
 print(np.mean(x), np.var(x))
 ```
 运行结果：`(1.0287787687588861, 3.9944276709242805)`
 
 <br>使用fit()方法对随机取样序列x进行拟合，它返回的是与随机取样值最吻合的随机变量参数，示例代码：
 ```
-#输出随机序列的期望值和标准差
+#输出随机序列的期望值和标准差 
 print(stats.norm.fit(x))
 ```
 运行结果：`(1.0287787687588861, 1.998606432223283)`
@@ -4442,17 +4442,17 @@ print(stats.norm.fit(x))
 pdf, t = np.histogram(x, bins=100, normed=True)  #pdf为直方图柱子的高度，t为x轴上所有柱子的起始点+最后一个柱子的终止点（个数为柱子数+1）
 t = (t[:-1]+t[1:])*0.5    #求各柱子在x轴的中心点
 cdf = np.cumsum(pdf) * (t[1] - t[0])  #求各柱子在y轴的累积值
-p_error = pdf - X.pdf(t)
-c_error = cdf - X.cdf(t)
+p_error = pdf - X.pdf(t) 
+c_error = cdf - X.cdf(t) 
 print("max pdf error: {}, max cdf error: {}".format(np.abs(p_error).max(), np.abs(c_error).max()))
 ```
 运行结果：`max pdf error: 0.0208405611169, max cdf error: 0.0126874590568`
 
 <br>通过绘图的方式查看概率密度函数求得的理论值（theory value）和直方图统计值（statistic value）的结果，可以看出二者是一致的，示例代码：
 ```
-import pylab as pl
-pl.plot(t, pdf, color="green", label = "statistic value")
-pl.plot(t, X.pdf(t), color="yellow", label ="theory value")
+import pylab as pl 
+pl.plot(t, pdf, color="green", label = "statistic value") 
+pl.plot(t, X.pdf(t), color="yellow", label ="theory value") 
 pl.legend(loc = "best")
 pl.show()
 ```
@@ -4461,10 +4461,10 @@ pl.show()
 
 <br>也可以用同样的方式显示随机变量X的累积分布和数组pdf的累加结果，示例代码：
 ```
-import pylab as pl
-pl.plot(t, cdf, color="green", label = "statistic value")
-pl.plot(t, X.cdf(t), color="yellow", label ="theory value")
-pl.legend(loc = "best")
+import pylab as pl 
+pl.plot(t, cdf, color="green", label = "statistic value") 
+pl.plot(t, X.cdf(t), color="yellow", label ="theory value") 
+pl.legend(loc = "best") 
 pl.show()
 ```
 绘图如下：
@@ -4493,28 +4493,28 @@ pl.show()
 <br>投掷有六个面的骰子时，只能获得1到6的整数，因此所得到的概率分布是离散的。我们以值域离散的分布称为离散概率分布，包括泊松分布、二项分布、几何分布等。通常使用概率质量函数（PMF）描述其分布情况，如几何分布函数PMF=(1-p)<sup>(k-1)</sup>p。
 在stats模块中所有描述离散分布的随机变量都从rv_discrete类继承，也可以直接用rv_discrete类自定义离散概率分布。假设有一个不均匀的骰子，其各点出现的概率不相等，我们用如下代码定义其分布，示例代码：
 ```
-# 数组x保存骰子的所有可能值，数组p保存每个值出现的概率
-x = range(1, 7)
-p = (0.4, 0.2, 0.1, 0.1, 0.1, 0.1)
-# 创建表示这个骰子的随机变量dice，调用其rvs()方法投掷此骰子20次，获得符合概率p的随机数
-dice = stats.rv_discrete(values=(x, p))
+# 数组x保存骰子的所有可能值，数组p保存每个值出现的概率 
+x = range(1, 7) 
+p = (0.4, 0.2, 0.1, 0.1, 0.1, 0.1) 
+ # 创建表示这个骰子的随机变量dice，调用其rvs()方法投掷此骰子20次，获得符合概率p的随机数 
+dice = stats.rv_discrete(values=(x, p)) 
 print(dice.rvs(size=20))
 ```
 运行结果：`array([3, 6, 4, 5, 5, 2, 1, 3, 3, 1, 1, 3, 1, 5, 1, 3, 4, 1, 2, 2])`
 
 <br>除了自定义离散概率分布，我们也可以利用stats模块里的函数定义各种分布。下面以生成几何分布为例，其函数是geom()，示例代码：
 ```
-import numpy as np
-from scipy.stats import geom
-# 设置几何分布的参数
-p = 0.5
-dist = geom(p)
-# 设置样本区间
-x = np.linspace(0, 5, 1000)
-# 得到几何分布的 PMF 和CDF
-pmf = dist.pmf(x)
-cdf = dist.cdf(x)
-# 生成500个随机数
+import numpy as np 
+from scipy.stats import geom 
+ # 设置几何分布的参数 
+p = 0.5 
+dist = geom(p) 
+ # 设置样本区间   
+x = np.linspace(0, 5, 1000)   
+ # 得到几何分布的 PMF 和CDF   
+pmf = dist.pmf(x) 
+ cdf = dist.cdf(x)   
+ # 生成500个随机数   
 sample = dist.rvs(500)
 ```
 
@@ -4543,7 +4543,7 @@ sample = dist.rvs(500)
 | fatiguelife | A fatigue-life (Birnbaum-Sanders) continuous random variable. <br> 疲劳寿命(伯恩鲍姆-桑德斯)分布 |
 | fisk | A Fisk continuous random variable. <br> 菲斯克分布 |
 | foldcauchy | A folded Cauchy continuous random variable. <br> 折叠柯西分布 |
-| foldnorm | A folded normal continuous random variable. <br> 折叠正态分布 |
+| foldnorm | A folded normal continuous random variable. <br> 折叠正态分布 | 
 | frechet_r | A Frechet right (or Weibull minimum) continuous random variable. <br> Frechet右(威布尔最小值)分布 |
 | frechet_l | A Frechet left (or Weibull maximum) continuous random variable. <br> Frechet左(威布尔最大值)分布 |
 | genlogistic | A generalized logistic continuous random variable. <br> 广义逻辑分布 |
@@ -4709,53 +4709,53 @@ sample = dist.rvs(500)
 
 <br>SciPy中有超过60种统计函数。stats模块包括了诸如kstest 和normaltest等样本测试函数，用来检测样本是否服从某种分布。在使用这些工具前，要对数据有较好的理解，否则可能会误读它们的结果。样本分布检验为例，示例代码：
 ```
-import numpy as np
-from scipy import stats
-# 生成包括100个服从正态分布的随机数样本
-sample = np.random.randn(100)
-# 用normaltest检验原假设
-out = stats.normaltest(sample)
-print('normaltest output')
-print('Z-score = ' + str(out[0]))
-print('P-value = ' + str(out[1]))
+import numpy as np 
+ from scipy import stats 
+# 生成包括100个服从正态分布的随机数样本 
+sample = np.random.randn(100) 
+# 用normaltest检验原假设 
+out = stats.normaltest(sample) 
+print('normaltest output') 
+print('Z-score = ' + str(out[0])) 
+print('P-value = ' + str(out[1])) 
 # kstest 是检验拟合度的Kolmogorov-Smirnov检验，这里针对正态分布进行检验
 
-# D是KS统计量的值，越接近0越好
-out = stats.kstest(sample, 'norm')
-print('\nkstest output for the Normal distribution')
-print('D = ' + str(out[0]))
-print('P-value = ' + str(out[1]))
-# 类似地可以针对其他分布进行检验，例如Wald分布
-out = stats.kstest(sample, 'wald')
-print('\nkstest output for the Wald distribution')
-print('D = ' + str(out[0]))
+# D是KS统计量的值，越接近0越好 
+out = stats.kstest(sample, 'norm') 
+print('\nkstest output for the Normal distribution') 
+print('D = ' + str(out[0])) 
+print('P-value = ' + str(out[1])) 
+# 类似地可以针对其他分布进行检验，例如Wald分布 
+out = stats.kstest(sample, 'wald') 
+print('\nkstest output for the Wald distribution') 
+print('D = ' + str(out[0])) 
 print('P-value = ' + str(out[1]))
 ```
 <br> SciPy的stats模块中还提供了一些描述函数，如几何平均（gmean）、偏度（skew）、样本频数（itemfreq）等。示例代码：
 ```
-import numpy as np
-from scipy import stats
-# 生成包括100个服从正态分布的随机数样本
+import numpy as np 
+from scipy import stats 
+# 生成包括100个服从正态分布的随机数样本 
 sample = np.random.randn(100)
 
 
-# 调和平均数，样本值须大于0
-out = stats.hmean(sample[sample > 0])
-print('Harmonic mean = ' + str(out))
-# 计算-1到1之间样本的均值
-out = stats.tmean(sample, limits=(-1, 1))
-print('\nTrimmed mean = ' + str(out))
-# 计算样本偏度
-out = stats.skew(sample)
-print('\nSkewness = ' + str(out))
-# 函数describe可以一次给出样本的多种描述统计结果
-out = stats.describe(sample)
-print('\nSize = ' + str(out[0]))
-print('Min = ' + str(out[1][0]))
-print('Max = ' + str(out[1][1]))
-print('Mean = ' + str(out[2]))
-print('Variance = ' + str(out[3]))
-print('Skewness = ' + str(out[4]))
+# 调和平均数，样本值须大于0 
+out = stats.hmean(sample[sample > 0]) 
+print('Harmonic mean = ' + str(out)) 
+# 计算-1到1之间样本的均值 
+out = stats.tmean(sample, limits=(-1, 1)) 
+print('\nTrimmed mean = ' + str(out)) 
+# 计算样本偏度 
+out = stats.skew(sample) 
+print('\nSkewness = ' + str(out)) 
+# 函数describe可以一次给出样本的多种描述统计结果 
+out = stats.describe(sample) 
+print('\nSize = ' + str(out[0])) 
+print('Min = ' + str(out[1][0])) 
+print('Max = ' + str(out[1][1])) 
+print('Mean = ' + str(out[2])) 
+print('Variance = ' + str(out[3])) 
+print('Skewness = ' + str(out[4])) 
 print('Kurtosis = ' + str(out[5]))
 ```
 
@@ -4919,22 +4919,22 @@ scipy.stats.fligner(a, b, center='mean')
 <br>***参数方法***
 
 ```
-# 独立两样本t检验
-scipy.stats.ttest_ind(a, b, equal_var=True, nan_policy='omit')
-# 成对两样本t检验
-scipy.stats.ttest_rel(a, b, equal_var=True, nan_policy='omit')
-# 通过基本统计量来做独立两样本检验
+# 独立两样本t检验 
+scipy.stats.ttest_ind(a, b, equal_var=True, nan_policy='omit') 
+# 成对两样本t检验 
+scipy.stats.ttest_rel(a, b, equal_var=True, nan_policy='omit') 
+# 通过基本统计量来做独立两样本检验 
 scipy.stats.ttest_ind_from_stats(20.06, 2.902, 50, 13.26, 1.977, 50, equal_var=False)
 ```
 
 <br>***非参数方法***
 
 ```
-# wilcox秩序和检验，n < 20时独立样本效果比较好
-scipy.stats.ranksums(a, b)
-# Mann-Whitney U检验, n > 20时独立样本，比wilcox秩序和检验更稳健
-scipy.stats.mannwhitneyu(a, b)
-# Wilcox检验，成对数据
+# wilcox秩序和检验，n < 20时独立样本效果比较好 
+scipy.stats.ranksums(a, b) 
+# Mann-Whitney U检验, n > 20时独立样本，比wilcox秩序和检验更稳健 
+scipy.stats.mannwhitneyu(a, b) 
+# Wilcox检验，成对数据 
 scipy.stats.wilcoxn(a, b, zero_method='wilcox', correction=False)
 ```
 
@@ -5010,27 +5010,27 @@ area,error = quad(func, a, b)
 >>> pd.set_option('precision', 2)
 
 # 实际修改数据精度
->>> df = pd.DataFrame(np.random.random([3, 3]), columns=['A', 'B', 'C'], index=['first', 'second', 'third'])
+>>> df = pd.DataFrame(np.random.random([3, 3]), columns=['A', 'B', 'C'], index=['first', 'second', 'third']) 
 >>> df
-A         B         C
-first   0.028208  0.992815  0.173891
-second  0.038683  0.645646  0.577595
-third   0.877076  0.149370  0.491027
+               A         B         C 
+first   0.028208  0.992815  0.173891 
+second  0.038683  0.645646  0.577595 
+third   0.877076  0.149370  0.491027 
 >>> df.round(2)
-A     B     C
-first   0.03  0.99  0.17
-second  0.04  0.65  0.58
-third   0.88  0.15  0.49
+           A     B     C 
+first   0.03  0.99  0.17 
+second  0.04  0.65  0.58 
+third   0.88  0.15  0.49 
 >>> df.round({'A': 1, 'C': 2})
-A         B     C
-first   0.0  0.992815  0.17
-second  0.0  0.645646  0.58
-third   0.9  0.149370  0.49
->>> decimals = pd.Series([1, 0, 2], index=['A', 'B', 'C'])
+          A         B     C 
+first   0.0  0.992815  0.17 
+second  0.0  0.645646  0.58 
+third   0.9  0.149370  0.49 
+>>> decimals = pd.Series([1, 0, 2], index=['A', 'B', 'C']) 
 >>> df.round(decimals)
-A  B     C
-first   0.0  1  0.17
-second  0.0  1  0.58
+          A  B     C 
+first   0.0  1  0.17 
+second  0.0  1  0.58 
 third   0.9  0  0.49
 ```
 
@@ -5056,7 +5056,7 @@ df.loc['Row_sum'] = df.apply(lambda x: x.sum())
 >>> a = [['a', '1.2', '4.2'], ['b', '70', '0.03'], ['x', '5', '0']]
 >>> df = pd.DataFrame(a, columns=['col1','col2','col3'])
 >>> df
-col1 col2  col3
+  col1 col2  col3
 0    a  1.2   4.2
 1    b   70  0.03
 2    x    5     0
@@ -5113,33 +5113,33 @@ import pandas as pd
 
 class MyDataFrame(pd.DataFrame):
 
-# 必须加这个属性, 不然使用self.copy()返回的是`pandas.core.frame.DataFrame`, 而不是`MyDataFram`
-@property
-def _constructor(self):
-# return MyDataFrame
-return self.__class__
+    # 必须加这个属性, 不然使用self.copy()返回的是`pandas.core.frame.DataFrame`, 而不是`MyDataFram`
+    @property
+    def _constructor(self):
+        # return MyDataFrame
+        return self.__class__
 
-@classmethod
-def read_csv(cls, *args, **kwargs):
-df = pd.read_csv(*args, **kwargs)
-return cls.copy_dateframe(df)
+    @classmethod
+    def read_csv(cls, *args, **kwargs):
+        df = pd.read_csv(*args, **kwargs)
+        return cls.copy_dateframe(df)
 
-@classmethod
-def copy_dateframe(cls, df):
-return cls(df.values, index=df.index, columns=df.columns)
+    @classmethod
+    def copy_dateframe(cls, df):
+        return cls(df.values, index=df.index, columns=df.columns)
 
-def __init__(*args, **kwargs):
-# super(MyDataFrame, self).__init__(*args, **kwargs)
-super(self.__class__, self).__init__(*args, **kwargs)
-self = self.add_month()
+    def __init__(*args, **kwargs):
+        # super(MyDataFrame, self).__init__(*args, **kwargs)
+        super(self.__class__, self).__init__(*args, **kwargs)
+        self = self.add_month()
 
-def add_month(self):
-df = self.copy()
-df['month'] = 1
-return df
+    def add_month(self):
+        df = self.copy()
+        df['month'] = 1 
+        return df
 
-def get_month(self):
-return df[df['month']==month]
+    def get_month(self):
+        return df[df['month']==month]
 
 df = MyDataFrame.read_csv("test.csv").get_month(month)
 
@@ -5152,40 +5152,40 @@ import pandas as pd
 
 class MyDataFrame(pd.DataFrame):
 
-def __init__(self, data):
-self._data = pd.DataFrame(data)
+    def __init__(self, data):
+        self._data = pd.DataFrame(data)
 
-@classmethod
-def from_frame(self, frame):
-"""frame可以是dict, pd.DataFrame, pd.Series等"""
-return cls(frame)
+    @classmethod
+    def from_frame(self, frame):
+        """frame可以是dict, pd.DataFrame, pd.Series等"""
+        return cls(frame)
 
-@classmethod
-def read_xls(file):
-data = pd.read_table(file, index_col=0)
-return cls(data)
+    @classmethod
+    def read_xls(file):
+        data = pd.read_table(file, index_col=0)
+        return cls(data)
 
-def __str__(self):
-return self._data.to_string()
+    def __str__(self):
+        return self._data.to_string()
 
-def __repr__(self):
-return self._data.to_string()
+    def __repr__(self):
+        return self._data.to_string()
 
-@property
-def shape(self):
-return self.abund.shape
+    @property
+    def shape(self):
+        return self.abund.shape
 
-@property
-def T(self):
-data = self._data.T
-return self.__class__(data)
+    @property
+    def T(self):
+        data = self._data.T
+        return self.__class__(data)
 
-def head(self, n=5):
-return self._data.head(n)
+    def head(self, n=5):
+        return self._data.head(n)
 
-def select_columns(self, columns):
-data = self._data(columns)
-return self.__class__(data)
+    def select_columns(self, columns):
+        data = self._data(columns)
+        return self.__class__(data)
 
 ```
 
@@ -5204,9 +5204,9 @@ return self.__class__(data)
 >>> a = np.arange(16).reshape(4, 4)
 >>> a
 array([[ 0,  1,  2,  3],
-[ 4,  5,  6,  7],
-[ 8,  9, 10, 11],
-[12, 13, 14, 15]])
+       [ 4,  5,  6,  7],
+       [ 8,  9, 10, 11],
+       [12, 13, 14, 15]])
 # Both for indexing:
 >>> a[iu1]
 array([ 0,  1,  2,  3,  5,  6,  7, 10, 11, 15])
@@ -5214,16 +5214,16 @@ array([ 0,  1,  2,  3,  5,  6,  7, 10, 11, 15])
 >>> a[iu1] = -1
 >>> a
 array([[-1, -1, -1, -1],
-[ 4, -1, -1, -1],
-[ 8,  9, -1, -1],
-[12, 13, 14, -1]])
+       [ 4, -1, -1, -1],
+       [ 8,  9, -1, -1],
+       [12, 13, 14, -1]])
 # These cover only a small part of the whole array (two diagonals right of the main one):
 >>> a[iu2] = -10
 >>> a
 array([[ -1,  -1, -10, -10],
-[  4,  -1,  -1, -10],
-[  8,   9,  -1,  -1],
-[ 12,  13,  14,  -1]])
+       [  4,  -1,  -1, -10],
+       [  8,   9,  -1,  -1],
+       [ 12,  13,  14,  -1]])
 ```
 
 **将多维数组转化为一维数组flatten()**
@@ -5312,36 +5312,36 @@ math.log(4,3)
 import click
 
 group_arguments = {
-"context_settings": {
-"help_option_names": ['-h', '--help']  # make `-h` as same as `--help`
-},
-"invoke_without_command": True,  # make the group can be invoked without sub-command
-# 使这组命令可以不调用子命令，即可以调用下文中的cli
+    "context_settings": {
+        "help_option_names": ['-h', '--help']  # make `-h` as same as `--help`
+    },
+    "invoke_without_command": True,  # make the group can be invoked without sub-command
+                     # 使这组命令可以不调用子命令，即可以调用下文中的cli
 }
 
-@click.group(**group_arguments)
+@click.group(**group_arguments) 
 @click.option("--debug", envvar='DEBUG', default=False, is_flag=True, help='debug mode')
 @click.version_option(version="0.1", prog_name="test")  # 增加版本信息
 @click.pass_context  # 返回当前上下文(ctx)作为第一个参数传递给对应的方法
 def cli(ctx, **kwargs):
-if ctx.invoked_subcommand is None:   # 如果不调用子命令，就自动调用initdb子命令
-ctx.invoke(initdb)
+    if ctx.invoked_subcommand is None:   # 如果不调用子命令，就自动调用initdb子命令
+        ctx.invoke(initdb)
 
 @cli.command()
 @click.option("--db-host", help="database host", default="127.0.0.1")  # 自动加"-"改为"_"
 @click.option("--db-port", help="database port", default="8080")
 @click.pass_context
 def initdb(ctx, db_host, db_port):
-click.echo("Initialized the database")
-click.echo("host: {} prot: {}".format(db_host, db_port))
+    click.echo("Initialized the database")
+    click.echo("host: {} prot: {}".format(db_host, db_port))
 
 @cli.command()
 @click.option("--name", help="user name", default="root")
 @click.option("-pw", "--password", help="password") # 使用"password"作为参数
 @click.pass_context
 def dropdb(ctx, name, password):
-click.echo("Dropped the database")
-click.echo("uesr: {} passward: {}".format(name, password))
+    click.echo("Dropped the database")
+    click.echo("uesr: {} passward: {}".format(name, password))
 
 cli()
 
@@ -5351,7 +5351,7 @@ cli()
 **自我总结2**
 
 1. 如果想用`-h`代替`--help`，可以使用`@cli.command(context_settings=dict(help_option_names=['-h', '--help']))`
-2.
+2. 
 
 
 
@@ -5372,45 +5372,45 @@ Python定义了一套操作数据库的API接口，任何数据库要连接到Py
 我们在Python交互式命令行实践一下：
 
 ```
-# 导入SQLite驱动:
->>> import sqlite3
-# 连接到SQLite数据库
-# 数据库文件是test.db
-# 如果文件不存在，会自动在当前目录创建:
->>> conn = sqlite3.connect('test.db')
-# 创建一个Cursor:
->>> cursor = conn.cursor()
-# 执行一条SQL语句，创建user表:
->>> cursor.execute('create table user (id varchar(20) primary key, name varchar(20))')
-<sqlite3.Cursor object at 0x10f8aa260>
-# 继续执行一条SQL语句，插入一条记录:
->>> cursor.execute('insert into user (id, name) values (\'1\', \'Michael\')')
-<sqlite3.Cursor object at 0x10f8aa260>
-# 通过rowcount获得插入的行数:
->>> cursor.rowcount
-1
-# 关闭Cursor:
->>> cursor.close()
-# 提交事务:
->>> conn.commit()
-# 关闭Connection:
+# 导入SQLite驱动: 
+>>> import sqlite3 
+# 连接到SQLite数据库 
+# 数据库文件是test.db 
+# 如果文件不存在，会自动在当前目录创建: 
+>>> conn = sqlite3.connect('test.db') 
+# 创建一个Cursor: 
+>>> cursor = conn.cursor() 
+# 执行一条SQL语句，创建user表: 
+>>> cursor.execute('create table user (id varchar(20) primary key, name varchar(20))') 
+<sqlite3.Cursor object at 0x10f8aa260> 
+# 继续执行一条SQL语句，插入一条记录: 
+>>> cursor.execute('insert into user (id, name) values (\'1\', \'Michael\')') 
+<sqlite3.Cursor object at 0x10f8aa260> 
+# 通过rowcount获得插入的行数: 
+>>> cursor.rowcount 
+1 
+# 关闭Cursor: 
+>>> cursor.close() 
+# 提交事务: 
+>>> conn.commit() 
+# 关闭Connection: 
 >>> conn.close()
 ```
 
 我们再试试查询记录：
 
 ```
->>> conn = sqlite3.connect('test.db')
->>> cursor = conn.cursor()
-# 执行查询语句:
->>> cursor.execute('select * from user where id=?', ('1',))
-<sqlite3.Cursor object at 0x10f8aa340>
-# 获得查询结果集:
->>> values = cursor.fetchall()
+>>> conn = sqlite3.connect('test.db') 
+>>> cursor = conn.cursor() 
+# 执行查询语句: 
+>>> cursor.execute('select * from user where id=?', ('1',)) 
+<sqlite3.Cursor object at 0x10f8aa340> 
+# 获得查询结果集: 
+>>> values = cursor.fetchall() 
 >>> values
 
-[(u'1', u'Michael')]
->>> cursor.close()
+[(u'1', u'Michael')] 
+>>> cursor.close() 
 >>> conn.close()
 ```
 
@@ -5442,25 +5442,25 @@ SQLite支持常见的标准SQL语句以及几种常见的数据类型。具体�
 >>>cursor.execute("PRAGMA table_info(projectdb)")
 >>>cursor.fetchall()
 [(0, u'name', u'', 0, None, 1),
-(1, u'group', u'', 0, None, 0),
-(2, u'status', u'', 0, None, 0),
-(3, u'script', u'', 0, None, 0),
-(4, u'comments', u'', 0, None, 0),
-(5, u'rate', u'', 0, None, 0),
-(6, u'burst', u'', 0, None, 0),
-(7, u'updatetime', u'', 0, None, 0)]
+ (1, u'group', u'', 0, None, 0),
+ (2, u'status', u'', 0, None, 0),
+ (3, u'script', u'', 0, None, 0),
+ (4, u'comments', u'', 0, None, 0),
+ (5, u'rate', u'', 0, None, 0),
+ (6, u'burst', u'', 0, None, 0),
+ (7, u'updatetime', u'', 0, None, 0)]
 ```
 查询某表中的所有字段
 ```
 >>>cursor.execute("SELECT * name FROM from projectdb")
 [(u'taonvlang',
-None,
-u'STOP',
-u'#!/usr/bin/env',
-None,
-1,
-3,
-1517965200.333391)]
+  None,
+  u'STOP',
+  u'#!/usr/bin/env',
+  None,
+  1,
+  3,
+  1517965200.333391)]
 ```
 
 ### 6. JSON 和 pickle
@@ -5533,10 +5533,10 @@ json.dumps(data, ensure_ascii=False)
 `dump`:　　将对象序列化并保存到文件
 
 ```
-#将对象序列化并保存到文件
-obj = ['foo', {'bar': ('baz', None, 1.0, 2)}]
+#将对象序列化并保存到文件 
+obj = ['foo', {'bar': ('baz', None, 1.0, 2)}] 
 with open(r"c:\json.txt","w+") as f:
-json.dump(obj,f)
+    json.dump(obj,f)
 ```
 
 `loads`:　　将序列化字符串反序列化
@@ -5554,7 +5554,7 @@ print json.loads(a)
 
 ```
 with open(r"c:\json.txt","r") as f:
-print json.load(f)
+    print json.load(f)
 ```
 
 ***三、自定义复杂数据类型编解码***
@@ -5574,21 +5574,21 @@ dt = datetime.datetime.now()
 
 
 def time2str(obj):
-#python to json
-if isinstance(obj, datetime.datetime):
-json_str = {"datetime":obj.strftime("%Y-%m-%d %X")}
-return json_str
-return obj
+    #python to json
+    if isinstance(obj, datetime.datetime):
+        json_str = {"datetime":obj.strftime("%Y-%m-%d %X")}
+        return json_str
+    return obj
 
 def str2time(json_obj):
-#json to python
-if "datetime" in json_obj:
-date_str,time_str = json_obj["datetime"].split(' ')
-date = [int(x) for x in date_str.split('-')]
-time = [int(x) for x in time_str.split(':')]
-dt = datetime.datetime(date[0],date[1], date[2], time[0],time[1], time[2])
-return dt
-return json_obj
+    #json to python
+    if "datetime" in json_obj:
+        date_str,time_str = json_obj["datetime"].split(' ')
+        date = [int(x) for x in date_str.split('-')]
+        time = [int(x) for x in time_str.split(':')]
+        dt = datetime.datetime(date[0],date[1], date[2], time[0],time[1], time[2])
+        return dt
+    return json_obj
 
 
 a = json.dumps(dt,default=time2str)
@@ -5610,26 +5610,26 @@ dt = datetime.datetime.now()
 dd = [dt,[1,2,3]]
 
 class MyEncoder(json.JSONEncoder):
-def default(self,obj):
-#python to json
-if isinstance(obj, datetime.datetime):
-json_str = {"datetime":obj.strftime("%Y-%m-%d %X")}
-return json_str
-return obj
+    def default(self,obj):
+        #python to json
+        if isinstance(obj, datetime.datetime):
+            json_str = {"datetime":obj.strftime("%Y-%m-%d %X")}
+            return json_str
+        return obj
 
 class MyDecoder(json.JSONDecoder):
-def __init__(self):
-json.JSONDecoder.__init__(self, object_hook=self.str2time)
+    def __init__(self):
+        json.JSONDecoder.__init__(self, object_hook=self.str2time)
 
-def str2time(self,json_obj):
-#json to python
-if "datetime" in json_obj:
-date_str,time_str = json_obj["datetime"].split(' ')
-date = [int(x) for x in date_str.split('-')]
-time = [int(x) for x in time_str.split(':')]
-dt = datetime.datetime(date[0],date[1], date[2], time[0],time[1], time[2])
-return dt
-return json_obj
+    def str2time(self,json_obj):
+        #json to python
+        if "datetime" in json_obj:
+            date_str,time_str = json_obj["datetime"].split(' ')
+            date = [int(x) for x in date_str.split('-')]
+            time = [int(x) for x in time_str.split(':')]
+            dt = datetime.datetime(date[0],date[1], date[2], time[0],time[1], time[2])
+            return dt
+        return json_obj
 
 
 # a = json.dumps(dt,default=time2str)
@@ -5650,9 +5650,9 @@ pickle反序列化后的对象与原对象是等值的副本对象，类似与de
 from datetime import date
 
 try:
-import cPickle as pickle    #python 2
+    import cPickle as pickle    #python 2
 except ImportError as e:
-import pickle   #python 3
+    import pickle   #python 3
 
 
 src_dic = {"date":date.today(),"oth":([1,"a"],None,True,False),}
@@ -5676,7 +5676,7 @@ print det_str
 # tp7
 # s.
 with open(r"c:\pickle.txt","w") as f:
-pickle.dump(src_dic,f)
+    pickle.dump(src_dic,f)
 ```
 
 `loads/load反序列化`
@@ -5685,15 +5685,15 @@ pickle.dump(src_dic,f)
 from datetime import date
 
 try:
-import cPickle as pickle    #python 2
+    import cPickle as pickle    #python 2
 except ImportError as e:
-import pickle   #python 3
+    import pickle   #python 3
 
 
 src_dic = {"date":date.today(),"oth":([1,"a"],None,True,False),}
 det_str = pickle.dumps(src_dic)
 with open(r"c:\pickle.txt","r") as f:
-print pickle.load(f)
+    print pickle.load(f)
 # {'date': datetime.date(2016, 10, 27), 'oth': ([1, 'a'], None, True, False)}
 ```
 
@@ -5701,7 +5701,7 @@ print pickle.load(f)
 
 1、JSON只能处理基本数据类型。pickle能处理所有Python的数据类型。
 2、JSON用于各种语言之间的字符转换。pickle用于Python程序对象的持久化或者Python程序间对象网络传输，但不同版本的Python序列化可能还有差异。
-
+  
 ### 7. six
 
 python2和3的兼容库
@@ -5783,7 +5783,7 @@ import schedule
 import time
 
 def job():
-print("I'm working...")
+    print("I'm working...")
 
 schedule.every(10).minutes.do(job)
 schedule.every().hour.do(job)
@@ -5792,8 +5792,8 @@ schedule.every().monday.do(job)
 schedule.every().wednesday.at("13:15").do(job)
 
 while True:
-schedule.run_pending()
-time.sleep(1)
+    schedule.run_pending()
+    time.sleep(1)
 ```
 
 ### 10. PyPDF2 和 Reportlab
@@ -5812,18 +5812,18 @@ pr = PdfFileReader(open("15PK1175-127_L1_I517.cnv.pdf", "rb"))
 pw = PdfFileWriter()
 
 for i in range(24):
-po = pr.getPage(i)
-#po.trimBox.lowerLeft = (0, 216)
-#po.trimBox.upperRight = (864, 432)
-#po.cropBox.lowerLeft = (0, 216)
-#po.cropBox.upperRight = (864, 432)
-po.mediaBox.lowerLeft = (0, 216)
-po.mediaBox.upperRight = (864, 432)
-po.compressContentStreams()
-pw.addPage(po)
+    po = pr.getPage(i)
+    #po.trimBox.lowerLeft = (0, 216)
+    #po.trimBox.upperRight = (864, 432)
+    #po.cropBox.lowerLeft = (0, 216)
+    #po.cropBox.upperRight = (864, 432)
+    po.mediaBox.lowerLeft = (0, 216)
+    po.mediaBox.upperRight = (864, 432)
+    po.compressContentStreams()                                                                                                     
+    pw.addPage(po)
 
 with open("e.pdf","wb") as f:
-pw.write(f)
+    pw.write(f)
 
 ```
 
@@ -5873,35 +5873,35 @@ gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -dNOPAUSE -d
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import cm
 def create_watermark(content):
-#默认大小为21cm*29.7cm
-c = canvas.Canvas("mark.pdf", pagesize = (30*cm, 30*cm))
-#移动坐标原点(坐标系左下为(0,0))
-c.translate(10*cm, 5*cm)
-
-#设置字体
-c.setFont("Helvetica", 80)
-#指定描边的颜色
-c.setStrokeColorRGB(0, 1, 0)
-#指定填充颜色
-c.setFillColorRGB(0, 1, 0)
-#画一个矩形
-c.rect(cm, cm, 7*cm, 17*cm, fill=1)
-
-#旋转45度，坐标系被旋转
-c.rotate(45)
-#指定填充颜色
-c.setFillColorRGB(0.6, 0, 0)
-#设置透明度，1为不透明
-c.setFillAlpha(0.3)
-#画几个文本，注意坐标系旋转的影响
-c.drawString(3*cm, 0*cm, content)
-c.setFillAlpha(0.6)
-c.drawString(6*cm, 3*cm, content)
-c.setFillAlpha(1)
-c.drawString(9*cm, 6*cm, content)
-
-#关闭并保存pdf文件
-c.save()
+    #默认大小为21cm*29.7cm
+    c = canvas.Canvas("mark.pdf", pagesize = (30*cm, 30*cm))
+    #移动坐标原点(坐标系左下为(0,0))
+    c.translate(10*cm, 5*cm)
+                                                                                                                               
+    #设置字体
+    c.setFont("Helvetica", 80)
+    #指定描边的颜色
+    c.setStrokeColorRGB(0, 1, 0)
+    #指定填充颜色
+    c.setFillColorRGB(0, 1, 0)
+    #画一个矩形
+    c.rect(cm, cm, 7*cm, 17*cm, fill=1)
+                                                                                                                               
+    #旋转45度，坐标系被旋转
+    c.rotate(45)
+    #指定填充颜色
+    c.setFillColorRGB(0.6, 0, 0)
+    #设置透明度，1为不透明
+    c.setFillAlpha(0.3)
+    #画几个文本，注意坐标系旋转的影响
+    c.drawString(3*cm, 0*cm, content)
+    c.setFillAlpha(0.6)
+    c.drawString(6*cm, 3*cm, content)
+    c.setFillAlpha(1)
+    c.drawString(9*cm, 6*cm, content)
+                                                                                                                               
+    #关闭并保存pdf文件
+    c.save()
 create_watermark('walker')
 ```
 
@@ -5915,14 +5915,14 @@ create_watermark('walker')
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import cm
 def create_watermark(f_jpg):
-f_pdf = 'mark.pdf'
-w_pdf = 20*cm
-h_pdf = 20*cm
-
-c = canvas.Canvas(f_pdf, pagesize = (w_pdf, h_pdf))
-c.setFillAlpha(0.3) #设置透明度
-print c.drawImage(f_jpg, 7*cm, 7*cm, 6*cm, 6*cm)    #这里的单位是物理尺寸
-c.save()
+    f_pdf = 'mark.pdf'
+    w_pdf = 20*cm
+    h_pdf = 20*cm
+                                                                                          
+    c = canvas.Canvas(f_pdf, pagesize = (w_pdf, h_pdf))
+    c.setFillAlpha(0.3) #设置透明度
+    print c.drawImage(f_jpg, 7*cm, 7*cm, 6*cm, 6*cm)    #这里的单位是物理尺寸
+    c.save()
 create_watermark('eg.png')
 ```
 
@@ -5937,31 +5937,31 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 from reportlab.pdfgen import canvas
 #所有路径为绝对路径
 def add_watermark(pdf_file_in, pdf_file_mark, pdf_file_out):
-pdf_output = PdfFileWriter()
-input_stream = file(pdf_file_in, 'rb')
-pdf_input = PdfFileReader(input_stream)
-
-# PDF文件被加密了
-if pdf_input.getIsEncrypted():
-print '该PDF文件被加密了.'
-# 尝试用空密码解密
-try:
-pdf_input.decrypt('')
-except Exception, e:
-print '尝试用空密码解密失败.'
-return False
-else:
-print '用空密码解密成功.'
-# 获取PDF文件的页数
-pageNum = pdf_input.getNumPages()
-#读入水印pdf文件
-pdf_watermark = PdfFileReader(file(pdf_file_mark, 'rb'))
-# 给每一页打水印
-for i in range(pageNum):
-page = pdf_input.getPage(i)
-page.mergePage(pdf_watermark.getPage(0))
-page.compressContentStreams()   #压缩内容
-pdf_output.addPage(page)
+    pdf_output = PdfFileWriter()
+    input_stream = file(pdf_file_in, 'rb')
+    pdf_input = PdfFileReader(input_stream)
+                                                                               
+    # PDF文件被加密了
+    if pdf_input.getIsEncrypted():
+        print '该PDF文件被加密了.'
+        # 尝试用空密码解密
+        try:
+            pdf_input.decrypt('')
+        except Exception, e:
+            print '尝试用空密码解密失败.'
+            return False
+        else:
+            print '用空密码解密成功.'
+    # 获取PDF文件的页数
+    pageNum = pdf_input.getNumPages()
+    #读入水印pdf文件
+    pdf_watermark = PdfFileReader(file(pdf_file_mark, 'rb'))
+    # 给每一页打水印
+    for i in range(pageNum):
+        page = pdf_input.getPage(i)
+        page.mergePage(pdf_watermark.getPage(0))
+        page.compressContentStreams()   #压缩内容
+        pdf_output.addPage(page)
 ```
 
 这种方式唯一的缺点就是效率极低，不适合大批量文件处理。主要限速步骤是page.mergePage()和
@@ -5990,28 +5990,27 @@ from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
 
 with PdfPages('multipage_pdf.pdf') as pdf:
-plt.figure(figsize=(3, 3))
-#对figure进行操作
-pdf.savefig()  # 将当前图存为pdf中的一页
-plt.close()
+    plt.figure(figsize=(3, 3))
+    #对figure进行操作
+    pdf.savefig()  # 将当前图存为pdf中的一页
+    plt.close()
 
-# 创建更多的图并存为pdf
+    # 创建更多的图并存为pdf
 
-# 为pdf文件添加辅助信息
-d = pdf.infodict()
-d['Title'] = 'Multipage PDF Example'
-d['Author'] = u'Jouni K. Sepp\xe4nen'
-d['Subject'] = 'How to create a multipage pdf file and set its metadata'
-d['Keywords'] = 'PdfPages multipage keywords author title subject'
-d['CreationDate'] = datetime.datetime(2009, 11, 13)
-d['ModDate'] = datetime.datetime.today()
+    # 为pdf文件添加辅助信息
+    d = pdf.infodict()
+    d['Title'] = 'Multipage PDF Example'
+    d['Author'] = u'Jouni K. Sepp\xe4nen'
+    d['Subject'] = 'How to create a multipage pdf file and set its metadata'
+    d['Keywords'] = 'PdfPages multipage keywords author title subject'
+    d['CreationDate'] = datetime.datetime(2009, 11, 13)
+    d['ModDate'] = datetime.datetime.today()
 ```
 
 
 ### 12. Bokeh
 
 * [干货推荐 | 掌握这几点，轻松玩转 Bokeh 可视化 （项目实战经验分享）](https://mp.weixin.qq.com/s/ArXJyT2LOPWMXNOLh8xv5A)
-
 
 
 
@@ -6081,9 +6080,9 @@ Redsails是使用python开发的一款后渗透测试工具，其目的是可以
 >常见的XML编程接口有DOM和SAX，这两种接口处理XML文件的方式不同，当然使用场合也不同。
 
 python有三种方法解析XML:
-* `SAX (simple API for XML )`   #python 标准库包含SAX解析器，SAX用事件驱动模型，通过在解析XML的过程中触发一个个的事件并调用用户定义的回调函数来处理XML文件。
-* `DOM (Document Object Model)`   #将XML数据在内存中解析成一个树，通过对树的操作来操作XML。
-* `ElementTree (元素树)`  #ElementTree就像一个轻量级的DOM，具有方便友好的API。代码可用性好，速度快，消耗内存少。
+        * `SAX (simple API for XML )`   #python 标准库包含SAX解析器，SAX用事件驱动模型，通过在解析XML的过程中触发一个个的事件并调用用户定义的回调函数来处理XML文件。
+        * `DOM (Document Object Model)`   #将XML数据在内存中解析成一个树，通过对树的操作来操作XML。
+        * `ElementTree (元素树)`  #ElementTree就像一个轻量级的DOM，具有方便友好的API。代码可用性好，速度快，消耗内存少。
 
 >DOM需要将XML数据映射到内存中的树，一是比较慢，二是比较耗内存，
 SAX流式读取XML文件，比较快，占用内存少，但需要用户实现回调函数（handler）。
@@ -6096,30 +6095,30 @@ ElementTree常用模块包括：[xml.etree.ElementTree](https://docs.python.org/
 ```
 
 try:
-from lxml import etree
-print("running with lxml.etree")
+  from lxml import etree
+  print("running with lxml.etree")
 except ImportError:
-try:
-# Python 2.5
-import xml.etree.cElementTree as etree
-print("running with cElementTree on Python 2.5+")
-except ImportError:
-try:
-# Python 2.5
-import xml.etree.ElementTree as etree
-print("running with ElementTree on Python 2.5+")
-except ImportError:
-try:
-# normal cElementTree install
-import cElementTree as etree
-print("running with cElementTree")
-except ImportError:
-try:
-# normal ElementTree install
-import elementtree.ElementTree as etree
-print("running with ElementTree")
-except ImportError:
-print("Failed to import ElementTree from any known place")
+  try:
+    # Python 2.5
+    import xml.etree.cElementTree as etree
+    print("running with cElementTree on Python 2.5+")
+  except ImportError:
+    try:
+      # Python 2.5
+      import xml.etree.ElementTree as etree
+      print("running with ElementTree on Python 2.5+")
+    except ImportError:
+      try:
+        # normal cElementTree install
+        import cElementTree as etree
+        print("running with cElementTree")
+      except ImportError:
+        try:
+          # normal ElementTree install
+          import elementtree.ElementTree as etree
+          print("running with ElementTree")
+        except ImportError:
+          print("Failed to import ElementTree from any known place")
 ```
 **结论：**<font color="red">**强烈**推荐使用**lxml**</font>
 
@@ -6133,7 +6132,7 @@ print("Failed to import ElementTree from any known place")
 [github](https://github.com/jobbole/awesome-python-cn)
 
 我想很多程序员应该记得 GitHub 上有一个 Awesome - XXX 系列的资源整理。awesome-python 是 vinta 发起维护的 Python 资源列表，内容包括：Web 框架、网络爬虫、网络内容提取、模板引擎、数据库、数据可视化、图片处理、文本处理、自然语言处理、机器学习、日志、代码分析等。由伯乐在线持续更新。
-
+ 
 Awesome 系列虽然挺全，但基本只对收录的资源做了极为简要的介绍，如果有更详细的中文介绍，对相应开发者的帮助会更大。这也是我们发起这个开源项目的初衷。
 
 
@@ -6231,26 +6230,26 @@ sys.path.append(pipeline_dir)
 from core import main
 
 if __name__ == "__main__":
-main.print_setting()
+    main.print_setting()
 ```
 
 **`setting.py`**
 
 ```
 AUTHOR = {
-"NAME": "luyl",
-"EMAIL": "luyl@biomarker.com.cn",
-"AGE": 27
+    "NAME": "luyl",
+    "EMAIL": "luyl@biomarker.com.cn",
+    "AGE": 27
 }
 
 BASE = {
-"DEBUG": True,
-"DIR": ""
+    "DEBUG": True,
+    "DIR": ""
 }
 
 MATH = {
-"PI": 3.1415,
-"E": 2.718
+    "PI": 3.1415,
+    "E": 2.718
 }
 ```
 
@@ -6260,9 +6259,9 @@ MATH = {
 from conf import setting
 
 def print_setting():
-print(setting.AUTHOR)
-print(setting.MATH)
-print(setting.BASE)
+    print(setting.AUTHOR)
+    print(setting.MATH)
+    print(setting.BASE)
 ```
 
 ## 5.2 宏基因组项目框架
@@ -6290,8 +6289,8 @@ print(setting.BASE)
 ├── script
 │   └── sleep.sh
 └── test
-├── config_test.py
-└── test.py
+    ├── config_test.py
+    └── test.py
 ```
 
 `bin/metagenome.py`
@@ -6299,7 +6298,7 @@ print(setting.BASE)
 ```
 #conding:utf-8
 
-import sys
+import sys 
 import os
 
 pipeline_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -6309,7 +6308,7 @@ sys.path.append(pipeline_dir)
 from core import metagenome
 
 if __name__ == "__main__":
-metagenome.run()
+    metagenome.run()
 ```
 
 `core/metagenome.py`
@@ -6339,15 +6338,15 @@ metagenome_config = parse_config(pjoin(CONFIG_DIR, "metagenome.config"))
 config.update(metagenome_config)
 
 def data_processing():
-runOrDie(pjoin(PROJECT_DIR, "script/sleep.sh"))
+    runOrDie(pjoin(PROJECT_DIR, "script/sleep.sh"))
 
 def myassembly():
-threadAssembly()
+    threadAssembly()
 
 
 def run():
-data_processing()
-myassembly()
+    data_processing()
+    myassembly()
 ```
 
 `conf/config.py`
@@ -6359,81 +6358,81 @@ import json
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 with open(os.path.join(current_dir, "base.config"), "r") as f:
-config = json.load(f)
+    config = json.load(f)
 
 class Config(object):
-config = config
+    config = config
 
-@classmethod
-def update(cls, myconf):
-def update_config(oldconfig, newconfig):
-for key in newconfig:
-if key in oldconfig and type(oldconfig[key]) == dict:
-update_config(oldconfig[key], newconfig[key])
-else:
-oldconfig[key] = newconfig[key]
-config = cls.config
-update_config(config, myconf)
+    @classmethod
+    def update(cls, myconf):
+        def update_config(oldconfig, newconfig):
+            for key in newconfig:
+                if key in oldconfig and type(oldconfig[key]) == dict:
+                    update_config(oldconfig[key], newconfig[key])
+                else:
+                    oldconfig[key] = newconfig[key]
+        config = cls.config
+        update_config(config, myconf)
 
 def parse_config(config_file):
-"""config_file: JSON format"""
-config_fp = open(config_file)
-config = json.load(config_fp)
-config_fp.close()
-return config
+    """config_file: JSON format"""
+    config_fp = open(config_file)
+    config = json.load(config_fp)
+    config_fp.close()
+    return config
 ```
 
 `conf/base.config`
 
 ```
 {
-"software": {
-"cd-hit": "/share/nas2/genome/biosoft/cd-hit/v4.6.1",
-"perl": "/share/nas2/genome/biosoft/perl/5.20.0/bin/perl",
-"apython2": "/share/nas2/genome/biosoft/Anaconda2/4.1.1/bin/python -u"
-},
-"database": {
-"Nr": "/share/nas2/database/Micro_Refs/nr_meta/nr_meta_16_3_7/nr_meta",
-"Nt": "/share/nas2/database/ncbi/nr"
-}
+    "software": {
+        "cd-hit": "/share/nas2/genome/biosoft/cd-hit/v4.6.1",
+        "perl": "/share/nas2/genome/biosoft/perl/5.20.0/bin/perl",
+        "apython2": "/share/nas2/genome/biosoft/Anaconda2/4.1.1/bin/python -u"
+    },
+    "database": {
+        "Nr": "/share/nas2/database/Micro_Refs/nr_meta/nr_meta_16_3_7/nr_meta",
+        "Nt": "/share/nas2/database/ncbi/nr"
+    }
 }
 ```
 
 `conf/logging.config`
 
 ```
-[loggers]
+[loggers] 
 keys=root,main
-
-[handlers]
-keys=consoleHandler,fileHandler
-
-[formatters]
-keys=fmt
-
-[logger_root]
-level=DEBUG
-handlers=consoleHandler
-
-[logger_main]
-level=DEBUG
-qualname=main
-handlers=fileHandler
-
-[handler_consoleHandler]
-class=StreamHandler
-level=DEBUG
-formatter=fmt
-args=(sys.stdout,)
-
-[handler_fileHandler]
-class=logging.handlers.RotatingFileHandler
-level=DEBUG
-formatter=fmt
-args=('main.log','w',100000000,5,)
-
-[formatter_fmt]
-format=%(asctime)s - %(name)s - %(threadName)s - %(levelname)s : %(message)s
+ 
+[handlers] 
+keys=consoleHandler,fileHandler 
+ 
+[formatters] 
+keys=fmt 
+ 
+[logger_root] 
+level=DEBUG 
+handlers=consoleHandler 
+ 
+[logger_main] 
+level=DEBUG 
+qualname=main 
+handlers=fileHandler 
+ 
+[handler_consoleHandler] 
+class=StreamHandler 
+level=DEBUG 
+formatter=fmt 
+args=(sys.stdout,) 
+ 
+[handler_fileHandler] 
+class=logging.handlers.RotatingFileHandler 
+level=DEBUG 
+formatter=fmt 
+args=('main.log','w',100000000,5,) 
+ 
+[formatter_fmt] 
+format=%(asctime)s - %(name)s - %(threadName)s - %(levelname)s : %(message)s 
 datefmt= %Y-%m-%d %H:%M:%S
 ```
 
@@ -6450,14 +6449,14 @@ from lib.base import runOrDie
 logger = logging.getLogger("main.assembly")
 
 def assembly():
-logger.info("start assembly")
-sleep(1)
-print config.config
-logger.info("assembly end")
+    logger.info("start assembly")
+    sleep(1)
+    print config.config
+    logger.info("assembly end")
 
 def threadAssembly():
-t = Thread(target=assembly, name="assembly")
-t.start()
+    t = Thread(target=assembly, name="assembly")
+    t.start()
 ```
 
 `lib/base.py`
@@ -6469,12 +6468,12 @@ import logging
 logger = logging.getLogger("main.lib.base")
 
 def runOrDie(shfile):
-cmd = "sh -e {} &> {}.log".format(shfile, shfile)
-logger.info(cmd)
-flag = os.system(cmd)
-if flag:
-logger.error("fail. {}".format(cmd))
-exit(1)
+    cmd = "sh -e {} &> {}.log".format(shfile, shfile)
+    logger.info(cmd)
+    flag = os.system(cmd)
+    if flag:
+        logger.error("fail. {}".format(cmd))
+        exit(1)
 ```
 
 
@@ -6528,7 +6527,7 @@ MKL( Intel Math Kernel Library)是`英特尔`的`数学核心函数库`。
 
 ```
 class MySpider(CrawlSpider):
-handle_httpstatus_list = [404]
+    handle_httpstatus_list = [404]
 ```
 
 

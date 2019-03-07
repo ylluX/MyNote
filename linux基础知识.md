@@ -76,3 +76,34 @@
 * [小试shell中的神器zsh](http://www.zxzyl.com/archives/1001)
 * [http://www.zxzyl.com/archives/1001](https://www.zhihu.com/question/21418449)
 
+
+----
+
+# QSUB
+
+常用投递命令：
+
+> qsub -cwd -l vf=1G -l p=10 -l h=node1 –q all.q –P project test.sh
+
+    * -l vf=1G ：任务的预估内存，内存估计的值应稍微大于真实的内存，内存预估偏小可能会导致节点跑挂。
+    * -l p=10 ：指定核心数
+    * -l h=node1 ： 指定计算节点
+    * -P ：指明任务所属的项目
+
+* 暂停任务：`qmod –sj jobid`
+* 开始暂停任务：`qmod –usj jobid`
+* 重新运行正在运行的任务：`qmod -f –rj jobid`
+
+* 查看节点任务状态：`qhost –j –q –h compute-0-1`
+* 查看任务状态：`qstat –j jobid`
+* 查看任务的内存，cpu使用情况：`qstat –j jobid |grep usage`
+* 删除任务：`qdel –f jobid / qdel –f –u user`
+* 查询队列权限：`qselect –U user`
+* 查询队列节点：`qstat -f | grep -v "\-\-"`
+* 查看所有用户的任务: `qstat -u *,`
+* 查看所有节点正在运行的任务: `qhost -j`
+* 查看某队列中正在运行的任务: `qhost –j | grep "xxx.q"`
+
+
+
+
