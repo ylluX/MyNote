@@ -41,6 +41,7 @@
       * [31. 获得本机IP](#31-获得本机ip)
       * [32. 获得两个概率密度函数交集区域内的概率](#32-获得两个概率密度函数交集区域内的概率)
       * [33. 将pandas数据和matplotlib绘图嵌入html文件](#33-将pandas数据和matplotlib绘图嵌入html文件)
+      * [34. python读写excel文件](#34-python读写excel文件)
    * [高级](#高级)
       * [1. 装饰器（Decorator）](#1-装饰器decorator)
       * [2. 回调函数](#2-回调函数)
@@ -1001,6 +1002,8 @@ print output.read()
 
 尝试第三种方案 `commands.getstatusoutput()` 一个方法就可以获得到返回值和输出，非常好用。
 
+python3中为`subprocess.getstatusoutput()`
+
 ```
 (status, output) = commands.getstatusoutput('cat /proc/cpuinfo')
 print status, output
@@ -1466,6 +1469,68 @@ import webbrowser
 webbrowser.open('iris.html',new = 1)
 ```
 
+
+### 34. python读写excel文件
+
+
+python处理excel已经有大量包，主流代表有：
+
+* xlwings：简单强大，可替代VBA，**只能在windows和macOS系统上使用**
+* openpyxl：简单易用，功能广泛  **所有系统均可使用，但速度较慢**
+* pandas：使用需要结合其他库，数据处理是pandas立身之本  
+* win32com：不仅仅是excel，可以处理office;不过它相当于是 windows COM 的封装，新手使用起来略有些痛苦。
+* Xlsxwriter：丰富多样的特性，缺点是不能打开/修改已有文件，意味着使用 xlsxwriter 需要从零开始。
+* DataNitro：作为插件内嵌到excel中，可替代VBA，在excel中优雅的使用python
+* xlutils：结合xlrd/xlwt，老牌python包，需要注意的是你必须同时安装这三个库
+
+各包速度和功能对比：
+
+![](https://images2017.cnblogs.com/blog/846822/201709/846822-20170922180351790-690554626.png)
+
+
+**1. openpyxl的使用**
+
+* **[Python_Openpyxl 浅谈（最全总结 足够初次使用）](https://blog.csdn.net/weixin_43094965/article/details/82226263)**
+* [python操作Excel模块openpyxl](https://www.cnblogs.com/zeke-python-road/p/8986318.html)
+* [python 读写 Excel文件](https://www.cnblogs.com/shaosks/p/6098282.html)
+
+```
+import openpyxl
+
+xlsxs = ["test"+str(i)+".xlsx" for i in range(1,4)]
+outfile = "a.xlsx"
+
+def add_sheet(in_xlsx, x, outfile):
+     xlsx = openpyxl.load_workbook(in_xlsx)
+     osheet = x.create_sheet(in_xlsx.split(".")[0])
+     sheet = xlsx["Sheet1"]
+     nrows = sheet.max_row
+     ncols = sheet.max_column
+     for i in range(nrows):
+         for j in range(ncols):
+             osheet.cell(None, i+1, j+1, sheet.cell(None, i+1, j+1).value)
+     x.save(outfile)
+
+xo = openpyxl.Workbook()
+
+for xlsx in xlsxs:
+	add_sheet(xlsx, xo, outfile)
+
+sheet = xo.get_sheet_by_name("Sheet")
+xo.remove(sheet)
+xo.save(outfile)
+xo.close()
+```
+
+
+
+**2. xlwings的使用**
+
+* [翻译：xlwings快速入门](https://www.jianshu.com/p/a9d95691c89f)
+* [插上翅膀，让Excel飞起来——xlwings（一）](https://www.jianshu.com/p/e21894fc5501)
+* [插上翅膀，让Excel飞起来——xlwings（二）](https://www.jianshu.com/p/b534e0d465f7)
+* [插上翅膀，让Excel飞起来——xlwings（三）](https://www.jianshu.com/p/de7efe591c12)
+* [插上翅膀，让Excel飞起来——xlwings（四）](https://www.jianshu.com/p/7d6f53e3e6e9)
 
 </br>
 
@@ -5193,6 +5258,9 @@ class MyDataFrame(pd.DataFrame):
 
 ### 3. numpy
 
+* [Numpy练习题100题-提高你的数据分析技能](https://github.com/rougier/numpy-100)
+
+
 1. **基本操作**
 
 **获得矩阵的上三角数据 : np.triu_indices()**
@@ -5976,7 +6044,9 @@ page.compressContentStreams()。要想加速，可以换一种思维：添加空
 
 * [matplotlib核心剖析](http://www.cnblogs.com/vamei/archive/2013/01/30/2879700.html)
 
-* [箱线图boxplot](https://www.cnblogs.com/wyy1480/p/9526264.html)
+
+* `设置中文字体`: [matplotlib显示中文](https://www.cnblogs.com/hhh5460/p/4323985.html)
+
 
 
 **1.python matplotlib 画的多张图，如何合并写入同一pdf？**
@@ -6006,6 +6076,26 @@ with PdfPages('multipage_pdf.pdf') as pdf:
     d['CreationDate'] = datetime.datetime(2009, 11, 13)
     d['ModDate'] = datetime.datetime.today()
 ```
+
+**2. 箱线图**
+
+* [箱线图boxplot](https://www.cnblogs.com/wyy1480/p/9526264.html)
+
+```python
+# https://github.com/matplotlib/matplotlib.github.com/blob/master/mpl_examples/statistics/boxplot_demo.py
+
+boxprops = dict(linestyle='--', linewidth=3, color='darkgoldenrod')
+flierprops = dict(marker='o', markerfacecolor='green', markersize=12,
+                  linestyle='none')
+medianprops = dict(linestyle='-.', linewidth=2.5, color='firebrick')
+meanpointprops = dict(marker='D', markeredgecolor='black',
+                      markerfacecolor='firebrick')
+meanlineprops = dict(linestyle='--', linewidth=2.5, color='purple')
+
+plt.boxplot(data, meanprops=meanpointprops, meanline=False,
+                   showmeans=True)
+```
+
 
 
 ### 12. Bokeh
@@ -6613,4 +6703,3 @@ pypcap 是 WinPcap 的python接口。安装前需要先安装WinPcap，但win10�
 3. 下载[pypcap](https://github.com/pynetwork/pypcap)和[npcap-sdk-0.1.zip](https://nmap.org/npcap/), 并将他们解压后的文件夹放到同一级目录下，同时将npcap-sdk-0.1文件夹重命名为wpdpack
 4. 进入pypcap文件夹中，执行：python setup.py install
 5. 进入python， import pcap 检测是否成功
-

@@ -2,31 +2,29 @@
 
 <!--自动插入TOC：https://github.com/ekalinin/github-markdown-toc-->
 <!--ts-->
-   * [目录](#目录)
-   * [基本概念](#基本概念)
-      * [灵敏度/特异度](#灵敏度特异度)
-      * [损失函数(Loss function)/代价函数(成本函数)(Cost function)](#损失函数loss-function代价函数成本函数cost-function)
-      * [分类/回归](#分类回归)
-   * [模型](#模型)
-      * [Scikit-Learn中文文档](#scikit-learn中文文档)
-      * [数据预处理(归一化)](#数据预处理归一化)
-      * [不均衡数据集处理](#不均衡数据集处理)
-      * [核密度函数](#核密度函数)
-      * [PCA](#pca)
-      * [逻辑回归](#逻辑回归)
-      * [非线性回归](#非线性回归)
-      * [梯度下降](#梯度下降)
-      * [SVM](#svm)
-      * [HMM](#hmm)
-   * [深度学习](#深度学习)
-      * [TensorFlow](#tensorflow)
-   * [分布](#分布)
-      * [泊松分布](#泊松分布)
-   * [学习资料](#学习资料)
-      * [视频资料](#视频资料)
-
-<!-- Added by: luyl, at: 2019-01-31T11:06+08:00 -->
-
+* [目录](#目录)
+* [基本概念](#基本概念)
+   * [灵敏度/特异度](#灵敏度特异度)
+   * [损失函数(Loss function)/代价函数(成本函数)(Cost function)](#损失函数loss-function代价函数成本函数cost-function)
+   * [分类/回归](#分类回归)
+* [模型](#模型)
+   * [Scikit-Learn中文文档](#scikit-learn中文文档)
+   * [数据预处理(归一化)](#数据预处理归一化)
+   * [不均衡数据集处理](#不均衡数据集处理)
+   * [核密度函数](#核密度函数)
+   * [PCA](#pca)
+   * [逻辑回归](#逻辑回归)
+   * [非线性回归](#非线性回归)
+   * [梯度下降](#梯度下降)
+   * [SVM](#svm)
+   * [HMM](#hmm)
+   * [贝叶斯](#贝叶斯)
+* [深度学习](#深度学习)
+   * [TensorFlow](#tensorflow)
+* [分布](#分布)
+   * [泊松分布](#泊松分布)
+* [学习资料](#学习资料)
+   * [视频资料](#视频资料)
 <!--te-->
 
 ----
@@ -1009,8 +1007,12 @@ C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每�
 
 ## TensorFlow
 
+* [五分钟带你入门TensorFlow](https://www.jianshu.com/p/2ea7a0632239)
+* [TensorFlow 机器学习：TensorFlow 基础](https://blog.csdn.net/and_w/article/details/80228243)
+* [干货-史上最全的Tensorflow学习资源汇总](https://blog.csdn.net/fendouaini/article/details/79885721)
 * [Simple and ready-to-use tutorials for TensorFlow](https://github.com/osforscience/TensorFlow-Course#why-use-tensorflow)
 
+* [可视化信息理论(Visual Information Theory) （上）](https://blog.csdn.net/li_ximin/article/details/72364696?utm_source=blogxgwz1)
 
 ----
 
@@ -1027,3 +1029,4 @@ C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每�
 ## 视频资料
 
 * 斯坦福大学机器学习-吴恩达, [学习笔记](https://blog.csdn.net/hujingshuang/article/category/3277895)
+* [吴恩达老师的机器学习和深度学习课程个人笔记](https://github.com/fengdu78/Coursera-ML-AndrewNg-Notes)
