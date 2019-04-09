@@ -5,6 +5,9 @@
 <!--ts-->
 * [目录](#目录)
 * [python之禅](#python之禅)
+* [python核心概念](#python核心概念)
+   * [GIL和互斥锁](#gil和互斥锁)
+   * [进程、线程、协程](#进程线程协程)
 * [1. python基础](#1-python基础)
    * [基础](#基础)
       * [1. 字典格式化输出](#1-字典格式化输出)
@@ -49,6 +52,7 @@
       * [4. 工厂函数](#4-工厂函数)
       * [5. 多进程（multiprocessing和subprocess）](#5-多进程multiprocessing和subprocess)
       * [6. 多线程](#6-多线程)
+      * [协程](#协程)
       * [7. 字符编码](#7-字符编码)
       * [8. 内建函数](#8-内建函数)
    * [python3新特性](#python3新特性)
@@ -87,6 +91,7 @@
       * [10. PyPDF2 和 Reportlab](#10-pypdf2-和-reportlab)
       * [11. matplotlib](#11-matplotlib)
       * [12. Bokeh](#12-bokeh)
+      * [13. tqdm](#13-tqdm)
    * [黑客模块](#黑客模块)
       * [1. pywin32](#1-pywin32)
       * [2. psutil](#2-psutil)
@@ -187,6 +192,49 @@
 >Namespaces are one honking great idea -- let's do more of those!
 
 \# 命名空间是一种绝妙的理念，我们应当多加利用（倡导与号召）
+
+----
+
+# python核心概念
+
+## GIL和互斥锁
+
+* [python面试不得不知道的点——GIL](https://blog.csdn.net/weixin_41594007/article/details/79485847)
+
+以下是几个面试会遇到的问题，希望对大家有所帮助：
+
+问题1: 什么时候会释放Gil锁
+
+1. 遇到像 i/o操作这种 会有时间空闲情况 造成cpu闲置的情况会释放Gil
+2. 会有一个专门ticks进行计数 一旦ticks数值达到100 这个时候释放Gil锁 线程之间开始竞争Gil锁(说明:
+    ticks这个数值可以进行设置来延长或者缩减获得Gil锁的线程使用cpu的时间)
+
+问题2: 互斥锁和Gil锁的关系
+
+Gil锁  : 保证同一时刻只有一个线程能使用到cpu
+
+互斥锁 : 多线程时,保证修改共享数据时有序的修改,不会产生数据修改混乱
+
+
+首先假设只有一个进程,这个进程中有两个线程 Thread1,Thread2, 要修改共享的数据date, 并且有互斥锁
+
+执行以下步骤
+
+1. 多线程运行，假设Thread1获得GIL可以使用cpu，这时Thread1获得 互斥锁lock,Thread1可以改date数据(但并
+没有开始修改数据)
+2. Thread1线程在修改date数据前发生了 i/o操作 或者 ticks计数满100 (注意就是没有运行到修改data数据),这个
+时候 Thread1 让出了Gil,Gil锁可以被竞争
+3. Thread1 和 Thread2 开始竞争 Gil (注意:如果Thread1是因为 i/o 阻塞 让出的Gil Thread2必定拿到Gil,如果
+Thread1是因为ticks计数满100让出Gil 这个时候 Thread1 和 Thread2 公平竞争)
+4. 假设 Thread2正好获得了GIL, 运行代码去修改共享数据date,由于Thread1有互斥锁lock，所以Thread2无法更改共享数据
+date,这时Thread2让出Gil锁 , GIL锁再次发生竞争 
+5. 假设Thread1又抢到GIL，由于其有互斥锁Lock所以其可以继续修改共享数据data,当Thread1修改完数据释放互斥锁lock,
+Thread2在获得GIL与lock后才可对data进行修改
+
+
+## 进程、线程、协程
+
+* [进程、线程、协程及IO模型](https://www.cnblogs.com/xuyaping/p/6825115.html)
 
 ----
 
@@ -2469,6 +2517,14 @@ END
 
 * [Python：使用threading模块实现多线程编程一[综述]](https://blog.csdn.net/bravezhe/article/details/8585437)
 * [Python-threading并发操作](http://blog.csdn.net/y2701310012/article/details/40863145)
+
+
+### 协程
+
+* [Python异步IO之协程(一):从yield from到async的使用](https://blog.csdn.net/SL_World/article/details/86597738)
+* [Python协程深入理解](https://www.cnblogs.com/zhaof/p/7631851.html)
+* [异步协程太吊了！以亲测！简直完美，Python异步协程的葵花宝典！](https://blog.csdn.net/qq_42156420/article/details/81138062)
+* [python3之协程](https://www.cnblogs.com/zhangxinqi/p/8337207.html)
 
 ### 7. 字符编码
 
@@ -6081,6 +6137,38 @@ with PdfPages('multipage_pdf.pdf') as pdf:
 
 * [箱线图boxplot](https://www.cnblogs.com/wyy1480/p/9526264.html)
 
+plt.boxplot(x, notch=None, sym=None, vert=None, whis=None, positions=None, widths=None, patch_artist=None,
+
+            bootstrap=None, usermedians=None, conf_intervals=None, meanline=None, showmeans=None, 
+
+            showcaps=None, showbox=None, showfliers=None, boxprops=None, labels=None, flierprops=None,
+
+            medianprops=None, meanprops=None, capprops=None, whiskerprops=None, manage_xticks=True,
+
+            autorange=False, zorder=None, hold=None, data=None)
+
+* x：指定要绘制箱线图的数据；
+* notch：是否是凹口的形式展现箱线图，默认非凹口；
+* sym：指定异常点的形状，默认为+号显示；
+* vert：是否需要将箱线图垂直摆放，默认垂直摆放；
+* whis：指定上下须与上下四分位的距离，默认为1.5倍的四分位差；
+* positions：指定箱线图的位置，默认为[0,1,2…]；
+* widths：指定箱线图的宽度，默认为0.5；
+* patch_artist：是否填充箱体的颜色；
+* meanline：是否用线的形式表示均值，默认用点来表示；
+* showmeans：是否显示均值，默认不显示；
+* showcaps：是否显示箱线图顶端和末端的两条线，默认显示；
+* showbox：是否显示箱线图的箱体，默认显示；
+* showfliers：是否显示异常值，默认显示；
+* boxprops：设置箱体的属性，如边框色，填充色等；
+* labels：为箱线图添加标签，类似于图例的作用；
+* filerprops：设置异常值的属性，如异常点的形状、大小、填充色等；
+* medianprops：设置中位数的属性，如线的类型、粗细等；
+* meanprops：设置均值的属性，如点的大小、颜色等；
+* capprops：设置箱线图顶端和末端线条的属性，如颜色、粗细等；
+* whiskerprops：设置须的属性，如颜色、粗细、线的类型等；
+
+
 ```python
 # https://github.com/matplotlib/matplotlib.github.com/blob/master/mpl_examples/statistics/boxplot_demo.py
 
@@ -6102,6 +6190,12 @@ plt.boxplot(data, meanprops=meanpointprops, meanline=False,
 
 * [干货推荐 | 掌握这几点，轻松玩转 Bokeh 可视化 （项目实战经验分享）](https://mp.weixin.qq.com/s/ArXJyT2LOPWMXNOLh8xv5A)
 
+
+### 13. tqdm
+
+* [使用python Tqdm进度条库让你的python进度可视化](https://ptorch.com/news/170.html)
+
+当我们使用pip或conda安装包的时候，安装进度条是怎么生成的呢？没错，就是tqdm！
 
 
 ## 黑客模块
