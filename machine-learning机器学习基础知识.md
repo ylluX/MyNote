@@ -790,6 +790,14 @@ one-hot编码就可以很合理的计算出距离，那么就没必要进行one-
 ```
 
 
+在statsmodels.api.Logit中没有weight参数，我们可以使用采样技术进行解决：
+
+* [从重采样到数据合成：如何处理机器学习中的不平衡分类问题？](https://blog.csdn.net/xiaokang06/article/details/76546418)
+* [Over-sampling(过采样) - imblearn](https://imbalanced-learn.readthedocs.io/en/stable/over_sampling.html)
+* [Under-sampling(欠采样)](https://imbalanced-learn.readthedocs.io/en/stable/under_sampling.html)
+
+
+
 ## 核密度函数
 
 * [核密度估计 Kernel Density Estimation(KDE)](https://blog.csdn.net/unixtch/article/details/78556499)
@@ -798,8 +806,136 @@ one-hot编码就可以很合理的计算出距离，那么就没必要进行one-
 
 ## PCA
 
-* [sklearn_PCA实践](https://blog.csdn.net/Huangyi_906/article/details/76438885)
 * [Python scikit-learn 学习笔记—PCA+SVM人脸识别](https://blog.csdn.net/leo_is_ant/article/details/45766315)
+* **[PCA主成分分析学习总结](https://zhuanlan.zhihu.com/p/32412043)** [#]
+
+pca降维的原理是:**“将协方差矩阵化为对角阵的过程。而协方差矩阵的值反映的是不同波段之间数据的相关性，即协方差。
+对角化后的协方差矩阵除了主对角线上的元素外，都是零。所以说，特征之间的相关性被去除了”。**
+
+* [协方差与协方差矩阵](https://www.cnblogs.com/terencezhou/p/6235974.html)
+* [协方差矩阵和对角阵理解](https://blog.csdn.net/ngmanhei/article/details/47109057)
+
+* **[特征值和特征向量的几何意义](https://blog.csdn.net/qq_36653505/article/details/82025971)** (#)
+
+引用《线性代数的几何意义》的描述：**“矩阵乘法对应了一个变换，是把任意一个向量变成另一个方向或长度都大多不同的新向量。
+在这个变换的过程中，原向量主要发生旋转、伸缩的变化。如果矩阵对某一个向量或某些向量只发生伸缩变换，不对这些向量产生
+旋转的效果，那么这些向量就称为这个矩阵的特征向量，伸缩的比例就是特征值”**。对于实对称矩阵来说，不同特征值对应的特征
+向量必定正交;我们也可以说，一个变换矩阵的所有特征向量组成了这个变换矩阵的一组基。
+
+其实，经过数学上的推导的，我们就可以知道，特征值对应的特征向量就是理想中想取得正确的坐标轴，而特征值就等于数据在旋转
+之后的坐标上对应维度上的方差。
+
+PCA：选取特征值最高的k个特征向量来表示一个矩阵，从而达到降维分析+特征显示的方法.
+
+* **[奇异值分解(SVD)原理与在降维中的应用](https://www.cnblogs.com/pinard/p/6251584.html)** (###)
+* [奇异值分解（SVD）原理](https://blog.csdn.net/u013108511/article/details/79016939) (#)
+* [矩阵的对角化（Diagonalizing a Matrix ）](https://blog.csdn.net/danieljianfeng/article/details/22171581)
+
+对角性和可逆性:
+
+	1. 对角性与特征向量有关，如果存在n个线性无关的特征向量，则矩阵可对角化。
+	2. 可逆性与特征值有关，如果存在特征值为0，则矩阵不可逆。
+
+
+**python-PCA**
+
+* [sklearn_PCA实践](https://blog.csdn.net/Huangyi_906/article/details/76438885)
+
+```
+class sklearn.decomposition.PCA(n_components=None, copy=True, whiten=False, svd_solver=’auto’, 
+tol=0.0, iterated_power=’auto’, random_state=None)
+其中参数：
+	n_components=None：指定降维后的维数。如果给定数在（0,1）之间，则为降维后占原维数的百分比。
+	       默认自动选择。[最大值不得超过min(m,n)]
+属性：
+	components_ : 主成分组数 [shape为(k,n), 每一行代表一个主成分] 主成分矩阵(V)是原始矩阵的正交基。
+	n_components_ : 一个整数，指示主成分有多少个元素。
+	explained_variance_: 各成分所能解释的方差量。
+	explained_variance_ratio_: 每个主成分占方差比例
+	noise_variance_: 采用概率PCA模型估计的噪声协方差
+	singular_values_: 各主成分的奇异值
+	mean_: 每个特征的平均值
+方法：
+	fit(X): 训练模型
+	transform(X): 执行降维
+	fit_transform(X): 训练并降维
+	inverse_transform(X): 逆向操作，把降维的数据逆向转换回原来数据。
+说明:
+	X: 原始数据矩阵(m x n)
+	m: 原始数据的行数,代表样本
+	n: 原始数据的列数,代表特征
+	k: 为降维后的特征数(维度)
+	V: 原始数据X的正交基
+	Z：降维后的数据
+其它：
+
+```
+
+
+**怎样排除引起最大方差的前n个因素的影响？**
+
+我们可以使用PCA先对原始数据X进行拟合，再回复到原始维度，获得X的近似X1，X-X1即为噪音数据：
+
+* **[PCA及绘制降维与恢复示意图](https://blog.csdn.net/SHU15121856/article/details/84646874)** (##)
+* **[How to reverse PCA and reconstruct original variables from several principal components?](https://stats.stackexchange.com/questions/229092/how-to-reverse-pca-and-reconstruct-original-variables-from-several-principal-com)** (##)
+
+> PCA reconstruction=PC scores * Eigenvectors^T + Mean
+
+```
+from sklearn.decomposition import PCA
+
+pca = PCA(svd_solver='full')
+pca.fit(X)                    # X.shape (m,n)
+X1 = pca.transform(X)[:, 1:]  # 对X进行线性变换，并扔掉第一维的数据(引起主要方差的因素的值), shape:(m, k-1)
+U = pca.components_[1:, :]    # 扔掉第一个主成分 shape:(k-1, n)
+X_appr = X1.dot(U)            # 还原到原来的维度 shape:(m, n)
+X_appr += pca.mean_           # 回复数据
+```
+
+
+**奇异值分解**
+
+如果特征和样本量都很大，那么计算协方差会很耗时，此时我们可以借助奇异值分解来绕过计算协方差而直接得到特征值
+和特征向量。
+
+> U, D, V = SVD(X)
+X: (m x n)  原始矩阵
+U: (m x m)  左奇异矩阵(一组正交基)
+D: (m x n)  奇异值矩阵(对角线为特征值,其余为0)
+V: (n x n)  右奇异矩阵(一组正交基) 
+
+当m < n 时，PCA主成分等于V；
+当m > n时， PCA主成分不等于V，也不能等于U，不知道等于啥
+
+```
+>>> X = np.array([[-1, -1], [-2, -1], [-3, -2], [1, 1], [2, 1], [3, 2]])
+>>> U, D, V = np.linalg.svd(X)
+>>> V  # 特征向量
+array([[ 0.83849224,  0.54491354],
+       [ 0.54491354, -0.83849224]])
+>>> D  # 特征值
+array([6.30061232, 0.54980396])
+>>> pca = PCA()
+>>> pca.fit(X)
+>>> pca.components_
+array([[ 0.83849224,  0.54491354],
+       [ 0.54491354, -0.83849224]])
+
+>>> U, D, V = np.linalg.svd(X.T)
+>>> V
+array([[ 0.21956688,  0.35264795,  0.57221483, -0.21956688, -0.35264795, -0.57221483],
+       [-0.53396977,  0.45713538, -0.07683439,  0.53396977, -0.45713538,  0.07683439],
+       [-0.48030985, -0.30371038,  0.75680405,  0.03329824,  0.20989771,  0.24319595],
+       [ 0.45219595, -0.31508521,  0.17257785,  0.79735166,  0.03007049, -0.17257785],
+       [ 0.02811389,  0.61879559,  0.0706181 ,  0.1693501 ,  0.7600318 , -0.0706181 ],
+       [ 0.48030985,  0.30371038,  0.24319595, -0.03329824, -0.20989771,  0.75680405]])
+>>> pca = PCA()
+>>> pca.fit(X.T)
+>>> pca.components_
+array([[ 0.  ,  0.5 ,  0.5 ,  0.  , -0.5 , -0.5 ],
+       [ 0.5 ,  0.75, -0.25,  0.  ,  0.25,  0.25]])
+```
+
 
 
 ## 逻辑回归
@@ -808,6 +944,8 @@ one-hot编码就可以很合理的计算出距离，那么就没必要进行one-
 * [逻辑回归的理解](https://blog.csdn.net/t46414704152abc/article/details/79574003)
 * [logistic回归与判别分析](https://www.jianshu.com/p/8afbf60156d2)
 * [逻辑回归（Logistic Regression）](https://blog.csdn.net/liulina603/article/details/78676723)
+* [逻辑回归的常见面试点总结](https://www.cnblogs.com/ModifyRong/p/7739955.html)
+* [逻辑回归模型及LBFGS的Sherman Morrison(SM) 公式推导](https://blog.csdn.net/langb2014/article/details/48915425)
 
 逻辑回归虽然名字叫做回归，但实际上却是一种分类学习方法。 
 

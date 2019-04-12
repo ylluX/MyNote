@@ -359,6 +359,20 @@ RR 为 10，我们可以理解为：与不吸烟人群相比，吸烟人群在 3
 
 
 
+## 6. pearson、spearman和kendall相关性分析
+
+* [三大统计相关系数：Pearson、Spearman秩相关系数、kendall等级相关系数](https://blog.csdn.net/zhaozhn5/article/details/78392220)
+
+计算积距pearson相关系数，连续性变量才可采用;计算Spearman秩相关系数和Kendall秩相关系数，适合于定序变量或
+不满足正态分布假设的等间隔数据。
+
+pearson：  积差相关   计算连续变量或是等间距测度的变量间的相关分析   连续数据且总体是正态分布
+spearman： 等级相关   计算斯皮尔曼相关，适用于连续等级资料
+kendall：  等级相关   计算分类变量间的秩相关，适用于合并等级资料
+
+
+----
+
 # 2. 参考资料
 
 ## 1. [说人话的统计学-协和八](https://mp.weixin.qq.com/s/9UQ-dXbP9wuOZ5B_TjDstg)
@@ -445,9 +459,11 @@ RR 为 10，我们可以理解为：与不吸烟人群相比，吸烟人群在 3
 
 ## 2. [观察性研究控制混杂因素-医咖会]
 
+* [如何借助图形优势来构建疾病的预测模型？](https://www.mediecogroup.com/method_topic_article_detail/126/)
+* [那么多变量，我该选择哪些进入统计模型呢？](https://www.mediecogroup.com/method_topic_article_detail/127/)
 * [观察性研究控制混杂因素第一弹：分层分析](https://www.mediecogroup.com/method_topic_article_detail/131/)
 * [说道控制混杂因素，怎么能不提多因素分析！](https://www.mediecogroup.com/method_topic_article_detail/133/)
-* [大量混杂因素要调整？这4中倾向性分析方法你值得了解！](http://www.mediecogroup.com/method_topic_article_detail/134/)
+* [大量混杂因素要调整？这4中倾向性分析方法你值得了解！](https://www.mediecogroup.com/method_topic_article_detail/134/)
 * [控制混杂因素，再给你支个大招：工具变量分析](https://www.mediecogroup.com/method_topic_article_detail/135/)
 * [如何理解回归模型中的"调整"和"独立作用"](https://www.mediecogroup.com/method_topic_article_detail/157/)
 * [搞懂传统单因素分析和单因素回归分析的纠葛，有这篇文章就够了！](https://www.mediecogroup.com/method_topic_article_detail/158/)
@@ -507,3 +523,16 @@ RR 为 10，我们可以理解为：与不吸烟人群相比，吸烟人群在 3
 3. 存在因素间交互作用时，Logistic回归系数的解释变得更为复杂，应特别小心。
 4. 模型估计出OR，当发病率较低时，OR≈RR，因此发病率高的疾病资料不适合使用该模型。另外，Logistic模型不能利用随访研究中的
 时间信息，不考虑发病时间上的差异，因而只适于随访期较短的资料，否则随着随访期的延长，回归系数变得不稳定，标准误增加。
+
+
+
+当遇到不均衡数据时，相对较为麻烦。sklearn能够通过weight参数来平衡数据，但不能像statsmodels一样输出p值，置信区间等统计
+信息；而statsmodels又没有weight参数可以解决不平衡数据的问题，我们可以使用imblearn模块的过采样技术来平衡数据。
+
+* [stackoverflow - Statsmodels Logistic Regression class imbalance](https://stackoverflow.com/questions/33605979/statsmodels-logistic-regression-class-imbalance)
+* [imblearn - Over-sampling(过采样)](https://imbalanced-learn.readthedocs.io/en/stable/over_sampling.html)
+* [imblearn - Under-sampling(欠采样)](https://imbalanced-learn.readthedocs.io/en/stable/under_sampling.html)
+* [statsmodels-github - SUMM/ENH rare events, unbalanced sample, matching, weights #2701](https://github.com/statsmodels/statsmodels/issues/2701)
+
+其实我们也可以在sklearn中手动去计算p值：
+[Find p-value (significance) in scikit-learn LinearRegression](https://stackoverflow.com/questions/27928275/find-p-value-significance-in-scikit-learn-linearregression)
