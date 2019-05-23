@@ -7,9 +7,11 @@
    * [灵敏度/特异度](#灵敏度特异度)
    * [损失函数(Loss function)/代价函数(成本函数)(Cost function)](#损失函数loss-function代价函数成本函数cost-function)
    * [分类/回归](#分类回归)
+   * [哑变量](#哑变量)
 * [模型](#模型)
    * [Scikit-Learn中文文档](#scikit-learn中文文档)
    * [数据预处理(归一化)](#数据预处理归一化)
+   * [数据标准化(Normalization)](#数据标准化normalization)
    * [不均衡数据集处理](#不均衡数据集处理)
    * [核密度函数](#核密度函数)
    * [PCA](#pca)
@@ -19,12 +21,14 @@
    * [SVM](#svm)
    * [HMM](#hmm)
    * [贝叶斯](#贝叶斯)
+   * [随机森林](#随机森林)
 * [深度学习](#深度学习)
    * [TensorFlow](#tensorflow)
 * [分布](#分布)
    * [泊松分布](#泊松分布)
 * [学习资料](#学习资料)
    * [视频资料](#视频资料)
+   * [深度学习](#深度学习)
 <!--te-->
 
 ----
@@ -71,6 +75,10 @@
 如果从training角度来看，分类模型和回归模型的目标函数不同，分类常见的是 log loss(对数损失函数), hinge loss(铰链损失函数), 
 而回归是 square loss(平方损失函数)。
 
+
+## 哑变量
+
+* [回归模型中的哑变量](https://blog.csdn.net/xiezhen_zheng/article/details/80598258)
 
 
 ----
@@ -761,6 +769,12 @@ one-hot编码就可以很合理的计算出距离，那么就没必要进行one-
 于距离的模型，都是要进行特征的归一化。
 
 
+## 数据标准化(Normalization)
+
+* [Quantile Normalization](https://en.wikipedia.org/wiki/Quantile_normalization)
+* [quantile normalization on pandas dataframe](https://stackoverflow.com/questions/37935920/quantile-normalization-on-pandas-dataframe)
+
+
 ## 不均衡数据集处理
 
 * [不平衡数据集下的SVM算法研究](https://blog.csdn.net/u011414200/article/details/47310795)
@@ -874,10 +888,17 @@ tol=0.0, iterated_power=’auto’, random_state=None)
 
 **怎样排除引起最大方差的前n个因素的影响？**
 
-我们可以使用PCA先对原始数据X进行拟合，再回复到原始维度，获得X的近似X1，X-X1即为噪音数据：
+我们可以使用PCA先对原始数据X进行拟合，再恢复到原始维度，获得X的近似X1，X-X1即为噪音数据：
 
 * **[PCA及绘制降维与恢复示意图](https://blog.csdn.net/SHU15121856/article/details/84646874)** (##)
 * **[How to reverse PCA and reconstruct original variables from several principal components?](https://stats.stackexchange.com/questions/229092/how-to-reverse-pca-and-reconstruct-original-variables-from-several-principal-com)** (##)
+* **[Relationship between SVD and PCA. How to use SVD to perform PCA?](https://stats.stackexchange.com/questions/134282/relationship-between-svd-and-pca-how-to-use-svd-to-perform-pca)** (###)
+
+
+**PCA使用协方差矩阵(covariance matrix)来计算特征值和特征向量； 如果要使用相关矩阵(correlation matrix )，
+原始数据需要做中心化处理(减去平均值)和标准化处理(除以标准差)；，当恢复数据时，需要反向处理(乘以标准化
+和加上平均值)**
+
 
 > PCA reconstruction=PC scores * Eigenvectors^T + Mean
 
@@ -892,6 +913,21 @@ X_appr = X1.dot(U)            # 还原到原来的维度 shape:(m, n)
 X_appr += pca.mean_           # 回复数据
 ```
 
+或者通过奇异值分解来排除 
+
+```
+M = X.mean(axis=0) 
+U, S, VT = np.linalg.svd((X-M), full_matrices=False) # 先centered,再svd 
+expvar = (S ** 2) / (X.shape[0] - 1)  # 计算各主成分对方差的贡献 
+self._exp_var_ratio = expvar / expvar.sum()  # 计算各主成分对方差的贡献率 
+S[:n] = 0   # 去除前n个主成分的影响 
+S_ = np.zeros((U.shape[1], VT.shape[0])) 
+np.fill_diagonal(S_, S) 
+X_ = U.dot(S_).dot(VT) + M 
+return X_
+```
+
+
 
 **奇异值分解**
 
@@ -899,11 +935,12 @@ X_appr += pca.mean_           # 回复数据
 和特征向量。
 
 > U, D, V = SVD(X)
+>
 X: (m x n)  原始矩阵
 U: (m x m)  左奇异矩阵(一组正交基)
 D: (m x n)  奇异值矩阵(对角线为特征值,其余为0)
 V: (n x n)  右奇异矩阵(一组正交基) 
-
+>
 当m < n 时，PCA主成分等于V；
 当m > n时， PCA主成分不等于V，也不能等于U，不知道等于啥
 
@@ -946,6 +983,10 @@ array([[ 0.  ,  0.5 ,  0.5 ,  0.  , -0.5 , -0.5 ],
 * [逻辑回归（Logistic Regression）](https://blog.csdn.net/liulina603/article/details/78676723)
 * [逻辑回归的常见面试点总结](https://www.cnblogs.com/ModifyRong/p/7739955.html)
 * [逻辑回归模型及LBFGS的Sherman Morrison(SM) 公式推导](https://blog.csdn.net/langb2014/article/details/48915425)
+
+* [医学研究中的logistic模型精讲](https://wenku.baidu.com/view/70c12ec916fc700aba68fcc2.html)
+
+* [你应该要掌握的7种回归分析方法](https://blog.csdn.net/lynnucas/article/details/47948639)
 
 逻辑回归虽然名字叫做回归，但实际上却是一种分类学习方法。 
 
@@ -1138,6 +1179,10 @@ C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每�
 * [怎么简单理解贝叶斯公式？](https://www.zhihu.com/question/51448623/answer/175907274)
 
 
+## 随机森林
+
+* [机器学习算法---随机森林实现（包括回归和分类）](https://blog.csdn.net/jiede1/article/details/78245597)
+
 
 ----
 
@@ -1156,6 +1201,9 @@ C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每�
 
 # 分布
 
+[各种分布的公式及关系](http://www.math.wm.edu/~leemis/2008amstat.pdf)
+
+
 ## 泊松分布
 
 * [如何通俗理解泊松分布？](https://blog.csdn.net/ccnt_2012/article/details/81114920)
@@ -1168,3 +1216,9 @@ C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每�
 
 * 斯坦福大学机器学习-吴恩达, [学习笔记](https://blog.csdn.net/hujingshuang/article/category/3277895)
 * [吴恩达老师的机器学习和深度学习课程个人笔记](https://github.com/fengdu78/Coursera-ML-AndrewNg-Notes)
+
+## 深度学习
+
+* [github-apachecn/AiLearning (12044 Star)](https://github.com/apachecn/AiLearning)
+* [良心推荐：机器学习入门资料汇总及学习建议（2018版）](https://mp.weixin.qq.com/s?__biz=Mzg5NzAxMDgwNg==&mid=2247484000&idx=1&sn=92f198b840073e79e1a267d15a48a279&chksm=c0791f79f70e966fccd525bc2ecb11d328a12f566ccdc781132ffeeb41c484c1f7757db03911&mpshare=1&scene=1&srcid=0415mIj7jMQtloDMwK0AK0bv&key=f6869c76f8fd06b8a6d822fd10ecfac0697204a8d235aff9db21e4bda74c247e25d32c07bf415f8d65a07ccaeab92ffa96a320034f98d7c938f405bde1fc4b24923ce93730071dfcc2936fbce8c1d189&ascene=1&uin=MjQ4MTQ1NDg4Mw%3D%3D&devicetype=Windows+10&version=62060728&lang=zh_CN&pass_ticket=gUwf80IY9bbYJwc333gYdD0OP8S6sMBUN4dtMY%2Fi0EKPTWn3IuyCk%2BoIi924zIUC)
+* [干货 | 机器学习入门方法和资料合集](https://mp.weixin.qq.com/s?__biz=MzI3ODgwODA2MA==&mid=2247486377&idx=1&sn=e275eb251f3ec4b9fecbe3ec49402448&chksm=eb501f3adc27962c39ba45260f78ad7ce6525587eaf84836d89f817a724598f80ce5f5281418&mpshare=1&scene=1&srcid=0424WGgc62TpsPvrJ6ioDuBC&key=7c2de03dd17390131dd1a56115dfa8eca8b4d582f9e97281be9c2344906e92125be117db058369a20d60578c220d4f03ca506681107a57da53f84c37aa158a467854801f43e444bb2ad7eded9064f8ad&ascene=1&uin=MjQ4MTQ1NDg4Mw%3D%3D&devicetype=Windows+10&version=62060728&lang=zh_CN&pass_ticket=gUwf80IY9bbYJwc333gYdD0OP8S6sMBUN4dtMY%2Fi0EKPTWn3IuyCk%2BoIi924zIUC)

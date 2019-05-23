@@ -9,14 +9,21 @@
    * [3. 误差(Error)，偏差(Bias)，方差(Variance)](#3-误差error偏差bias方差variance)
    * [4. 医学统计学中的OR，HR，RR](#4-医学统计学中的orhrrr)
    * [5. 医学统计学中的三大多变量回归分析：Cox 回归、logistic 回归和多元线性回归](#5-医学统计学中的三大多变量回归分析cox-回归logistic-回归和多元线性回归)
+   * [6. pearson、spearman和kendall相关性分析](#6-pearsonspearman和kendall相关性分析)
+   * [总体方差，样本方差，样本均值方差，样本方差期望](#总体方差样本方差样本均值方差样本方差期望)
 * [2. 参考资料](#2-参考资料)
    * [1. 说人话的统计学-协和八](#1-说人话的统计学-协和八)
    * [2. [观察性研究控制混杂因素-医咖会]](#2-观察性研究控制混杂因素-医咖会)
 * [3. 各种分布](#3-各种分布)
    * [1. 泊松分布](#1-泊松分布)
+   * [2. 二项分布(Binomial distribution, 贝努里分布)](#2-二项分布binomial-distribution-贝努里分布)
 * [4. 统计检验](#4-统计检验)
    * [1. 卡方检验](#1-卡方检验)
    * [2. 多变量逻辑回归分析](#2-多变量逻辑回归分析)
+   * [3. 参数检验和非参数检验](#3-参数检验和非参数检验)
+* [python实现](#python实现)
+* [疑问](#疑问)
+* [中英文对照](#中英文对照)
 <!--te-->
 
 ----
@@ -27,6 +34,7 @@
 
 * [抽样分布与参数估计](https://wenku.baidu.com/view/df8a35aef90f76c661371ab9.html)
 * [一文快速搞懂对95%置信区间的理解](https://blog.csdn.net/pannn0504/article/details/82455934)
+* [Python量化统计——『置信区间』全角度解析](https://www.sohu.com/a/116174099_505915)
 
 
 **概念**
@@ -371,6 +379,18 @@ spearman： 等级相关   计算斯皮尔曼相关，适用于连续等级资�
 kendall：  等级相关   计算分类变量间的秩相关，适用于合并等级资料
 
 
+## 总体方差，样本方差，样本均值方差，样本方差期望
+
+* [样本方差的期望等于总体方差，这个意思是样本要取样很多次吗？多次取样算样本的方差的均值吗？不是一次？](https://www.zhihu.com/question/267716005)
+
+总体方差，样本方差 **略**。
+
+**样本方差期望** 就等于总体方差
+
+**样本均值方差** = 总体方差 / 样本量(n)
+
+随着样本数（或测量次数）n的增大，标准差趋向某个稳定值，即样本标准差s越接近总体标准差σ，而标准误差则随着样本数（或测量次数）n的增大逐渐减小，即样本平均数越接近总体平均数μ.
+
 ----
 
 # 2. 参考资料
@@ -488,6 +508,17 @@ kendall：  等级相关   计算分类变量间的秩相关，适用于合并�
 * [近似高斯分布](https://www.ppkao.com/tiku/shiti/5520985.html)
 
 
+## 2. 二项分布(Binomial distribution, 贝努里分布)
+
+* [智库](https://wiki.mbalib.com/wiki/%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83)
+
+
+二项分布是一种具有广泛用途的离散型随机变量的概率分布，二项分布是指统计变量中只有性质不同的两项群体的
+概率分布。所谓两项群体是按两种不同性质划分的统计变量，是二项试验的结果。即各个变量都可归为两个不同性
+质中的一个，两个观测值是对立的。因而两项分布又可说是两个对立事件的概率分布。
+
+
+
 ----
 
 
@@ -500,6 +531,9 @@ kendall：  等级相关   计算分类变量间的秩相关，适用于合并�
 * [Python 卡方检验](https://blog.csdn.net/kk185800961/article/details/79054968)
 * [几种常见的滥（乱）用卡方检验的情况](http://paper.dxy.cn/article/78383)
 * [三维卡方检验](http://www.dxy.cn/bbs/thread/28440824#28440824) [三维卡方检验](http://www.dxy.cn/bbs/topic/25248045)
+
+* [chi-square卡方检验的理解与应用](http://typename.net/statistics/chi-square/)
+* [Does your data violate goodness of fit (chi-square) test assumptions?](https://www.quality-control-plan.com/StatGuide/gf-dist_ass_viol.htm)
 
 * `scipy.stats.chi2_contingency`: 列联表中变量间的独立性卡方检验，如统计收入是否与性别有关。
 * `scipy.stats.chisquare`: 单变量卡方检验(适合度卡方检验，卡方适度检验) (零假设：分类数据有相同频率)。
@@ -514,6 +548,7 @@ kendall：  等级相关   计算分类变量间的秩相关，适用于合并�
 * [logistic回归介绍](http://f.dataguru.cn/thread-847938-1-1.html)
 * [Find p-value (significance) in scikit-learn LinearRegression](https://stackoverflow.com/questions/27928275/find-p-value-significance-in-scikit-learn-linearregression)
 * [python logistic回归](https://www.jianshu.com/p/27c8b39c94f9)
+* [5 个 W 元素 助你跨过 Logistic 回归分析的阶梯](http://paper.dxy.cn/article/503431)
 
 参数意义
 1. Logistic回归中的常数项（b0）表示，在不接触任何潜在危险／保护因素条件下，效应指标发生与不发生事件的概率之比的对数值。
@@ -536,3 +571,48 @@ kendall：  等级相关   计算分类变量间的秩相关，适用于合并�
 
 其实我们也可以在sklearn中手动去计算p值：
 [Find p-value (significance) in scikit-learn LinearRegression](https://stackoverflow.com/questions/27928275/find-p-value-significance-in-scikit-learn-linearregression)
+
+
+## 3. 参数检验和非参数检验
+
+* [关于显著性检验，你想要的都在这儿了！！（基础篇）](https://www.cnblogs.com/hdu-zsk/p/6293721.html)
+
+
+| 编号 | 数据正态（参数检验） | 非正态（非参数检验） | 功能 |
+| ---- | ---- | ---- | ---- | |
+| 1 | 单样本T检验 | 单样本Wilcoxon检验 | 与某数字对比差异 |
+| 2 | 配对T检验 | 配对Wilcoxon检验 | 配对数据差异 |
+| 3 | 独立样本T检验（也称T检验） | Mann-Whitney检验（也称非参数检验） | 2组数据的差异 |
+| 4 | 单因素方差分析（也称方差分析） | Kruskal-Wallis检验（也称非参数检验） | 多组数据的差异 |
+| 5 | 双因素方差分析(2-way ANOVA) | Friedman's 检验 | 双因素的差异 |
+
+
+
+----
+
+# python实现
+
+* `scipy.stats.kstest()`: [python实现正态性检验](https://blog.csdn.net/QimaoRyan/article/details/72861387)
+* `scipy.stats.boxcox()`: [python实现box-cox转换](https://blog.csdn.net/jylong1110/article/details/88308984)
+
+
+----
+
+# 疑问
+
+1. 当独立性卡方检验不满足假设条件时(如最小期望值小于5)，可以使用Fisher's检验，
+但是拟合优度卡方检验不满足假设条件时，该怎么办呢？
+
+2. 在PGS中，分析影响胚胎异常率的因素有哪些(孕妇年龄, 排卵障碍, 精子障碍, 用药类型等)？
+自变量都是分类变量，因变量是百分比。
+
+3. 逻辑回归怎么校正非处理因素的影响？
+
+
+----
+
+# 中英文对照
+
+* 连续型因变量 ：continuous dependent variable
+* 分类型自变量 ：categorical independent variable
+* 混杂变量 ：confounding variables 

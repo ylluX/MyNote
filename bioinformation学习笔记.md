@@ -6,6 +6,8 @@
 * [常见问题](#常见问题)
    * [GC偏好](#gc偏好)
    * [重复序列(Dup)](#重复序列dup)
+   * [CNV和SV](#cnv和sv)
+   * [标准化](#标准化)
 * [概念](#概念)
    * [专业名词](#专业名词)
    * [等位基因频率(AF)](#等位基因频率af)
@@ -39,6 +41,7 @@
          * [基础操作](#基础操作)
          * [API](#api)
             * [SAM/BAM/CRAM files](#sambamcram-files)
+   * [BWA & Bowtie2](#bwa--bowtie2)
 * [文件格式](#文件格式)
    * [.fai (索引文件)](#fai-索引文件)
 <!--te-->
@@ -111,6 +114,45 @@ PCR放大成百上千倍，为什么NGS的Dup rate只有十位数甚至是个位
 大多数人认为NGS数据的Dup主要来自于上述第二种。但据真实案例显示，第三种荧光信号采集单元
 生成的过程中引入的Dup和第四种芯片测序过程中引入的光学Dup居多。而第一种样本本身的Dup反倒
 是我们生物学中应真正关注，并与测序数据的Dup加以区分的一种“有用的”Dup。
+
+
+
+## CNV和SV
+
+* [基因组变异检测概述（SNP、InDel、SV）](https://blog.csdn.net/Alex6plus7/article/details/50236375)
+
+人类基因组上的变异主要分为三大类：
+    1. 单核苷酸变异，（通常称为单核苷酸多态性，通俗的说法就是单个DNA碱基的不同，简称SNP）；
+    2. 小的Indel（Insertion 和 Deletion的简），指的是在基因组的某个位置上所发生的小片段序列的插入或者删除，
+其长度通常在50bp以下（这个长度范围的变异可以利用Smith-Waterman 的比对算法来获得1,2）；
+    3. 大的结构性变异，这种类型比较多，包括长度在50bp以上的长片段序列的插入或者删除、染色体倒位，染色体内
+部或染色体之间的序列易位，拷贝数变异，以及一些形式更为复杂的变异。
+
+为了和SNP变异作区分，第2和第3类变异通常也被称为基因组结构性变异（Structural variation，简称SV）。
+
+这里值得一提的是，研究人员对基因组的结构性变异发生兴趣，主要是由于这几年的研究发现：（1）虽然还未被广泛公认，
+但研究人员发现SV对基因组的影响比起SNP来说还要大3；（2）基因组上的SV比起SNP而言，似乎更能用于解释人类群体多样
+性的特征；（3）稀有且相同的一些结构性变异往往和疾病（包括一些癌症）的发生相关联甚至还是其致病的诱因4–6。不过
+应该注意的地方是，大多数的结构性变异并不真正与疾病的发生相关联，但是却确实与周围环境的响应或者其他的一些表型
+多态性相联系。
+
+目前主要有4种检测基因组上结构性变异的策略，分别为：（1）Read pair（也称为Pair-end Mapping，简称PEM）；
+（2）Split read（简称SR）；（3）Read Depth（简称RD）和（4）基于de novo组装的方法（图1）。
+
+
+## 标准化
+
+* [Loess Normalization and Quantile Normalization](http://eln.iis.sinica.edu.tw/lims/files/users/admin/sheng_wu_jing_pian_de_ji_ben_fen_xi_liu_cheng_.pdf)
+* [3种Normalization的R实例](https://genomicsclass.github.io/book/pages/normalization.html)
+* [基因芯片数据分析中的标准化算法和聚类算法](https://www.plob.org/article/829.html)
+* [quantile normalization on pandas dataframe](https://stackoverflow.com/questions/37935920/quantile-normalization-on-pandas-dataframe)
+
+芯片间的数据标准化(Cross slide normalization): 平均数, 中位数标准化(mean or median normalization)
+
+平行实验数据的标准化: Quantile Normalization
+
+芯片内的数据标准化(within slide normalization): Lowess Normalization
+
 
 
 
@@ -1278,6 +1320,26 @@ operation的类型：
 >class pysam.PileupRead
 
 >class pysam.IndexedReads(AlignmentFile samfile, int multiple_iterators=True)
+
+
+
+## BWA & Bowtie2
+
+* [BWA中文手册](https://cncbi.github.io/BWA-Manual-CN/)
+* [关于map当中的unique mapped reads问题](http://blog.sina.com.cn/s/blog_5d5f892a0102wbwc.html)
+
+
+之后先后出现了两个重要的比对软件， MAQ/BWA以及Bowtie。MAQ/BWA是Heng Li发表的。
+Li是从华大基因走出来的人，后来去了Wellcome Trust Sanger Institute, 现在在哈佛Broad Institute。
+MAQ的引用率非常高，并成为了Li的成名作。之后写作的BWA以准确率高而闻名，是SNP分析的首选比对软件。
+
+而Bowtie借着其算法上的优势，在运算速度上一举成名。如果对速度的要求高于准确率的时候，
+bowtie就成了不二选择。bowtie被广泛地应用于ChIP-seq, RNA-seq的分析当中。
+
+就我个人经验而言（其实是对研究机构前人脚本学习和接受），对于ChIP-seq, RNA-seq，多使用bowtie2，
+因为它快速，下游结合cufflinks等结果验证率很高。
+
+对于SNP， Indels, methylation分析，使用BWA，下游结合GATK可能会好一点。
 
 
 

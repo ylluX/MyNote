@@ -92,6 +92,9 @@
       * [11. matplotlib](#11-matplotlib)
       * [12. Bokeh](#12-bokeh)
       * [13. tqdm](#13-tqdm)
+      * [14. statsmodels](#14-statsmodels)
+      * [15. sklearn](#15-sklearn)
+      * [15. seaborn](#15-seaborn)
    * [黑客模块](#黑客模块)
       * [1. pywin32](#1-pywin32)
       * [2. psutil](#2-psutil)
@@ -123,6 +126,8 @@
       * [Django](#django)
 * [8. 第三方包安装教程](#8-第三方包安装教程)
    * [8.1 pypcap](#81-pypcap)
+* [9. 常见问题及解决方案](#9-常见问题及解决方案)
+   * [9.1 numpy: ImportError: DLL load failed](#91-numpy-importerror-dll-load-failed)
 <!--te-->
 
 ----
@@ -2996,6 +3001,7 @@ open()函数的bufsize选项参数决定从文件中读取数据时所使用的�
 * `sys.exc_info`：返回异常的`(类型，值，追踪对象)`，可以使用`traceback.print_tb(追踪对象)`来显示详细信息。
 * `sys.stdin` 、`sys.stdout`、`sys.stderr`: 标准输入，标准输出，错误输出
 * `sys.stdin.isatty()`：判断标准输入是否是控制台（console），如果从windows的DOS，或者类unix的终端输入，则为console，如果将stdin重定向到文件（< filename）以及通过管道（|）将内容输出到stdin则不是console
+* `sys.getsizeof()`: 查看变量占用内存大小
 
 ### 2. `os`
 
@@ -5104,6 +5110,8 @@ scipy,stats.kendalltau(a, b, initial_lexsort=None, nan_policy='omit')
 
 ### scipy
 
+* [易百 - Scipy教程](https://www.yiibai.com/scipy/scipy_optimize.html)
+
 **基本函数**
 
 利用积分来求面积
@@ -5116,6 +5124,8 @@ from scipy.integrate import quad
 #        b:积分上限。
 area,error = quad(func, a, b)
 ```
+
+
 
 
 
@@ -5216,7 +5226,31 @@ df.apply(pd.to_numeric, errors='ignore')
 dx = dx.groupby("test_method").resample("M", on="amplify_date").count()["embryo_id"]
 ```
 
-***1.6. 其它***
+
+***1.6. 多个dataframe 与 N维数组的转换***
+
+```
+import numpy as np
+import pandas as pd
+
+## 将10个(5,20)的dataframe合并成一个(5,100)的dataframe
+
+dfs = []  # 10个dataframe (shape: 5 x 20)
+for i in range(10):
+	df = pd.DataFrame(np.random.randint(0,100,(5,20)))
+	dfs.append(df)
+# 将10个(5,20)的dataframe转成(10,5,20)的数组
+arrs = np.array([df.values for df in dfs])
+# 将(10,5,20)的数组转成(10,100)的数组
+arrs1 = arrs.reshape(10, -1)
+# 再将(10,100)的数组转成dataframe
+df1 = pd.DataFrame(arrs1)
+
+```
+
+
+
+***1.7. 其它***
 
 * 将NaN和inf替换为0 ： `df[df.isin([np.nan, np.inf])] = 0`
 
@@ -5249,7 +5283,7 @@ class MyDataFrame(pd.DataFrame):
     def copy_dateframe(cls, df):
         return cls(df.values, index=df.index, columns=df.columns)
 
-    def __init__(*args, **kwargs):
+    def __init__(self, *args, **kwargs):
         # super(MyDataFrame, self).__init__(*args, **kwargs)
         super(self.__class__, self).__init__(*args, **kwargs)
         self = self.add_month()
@@ -5405,6 +5439,224 @@ np.log(4) / np.log(3)
 math.log(4,3)
 ```
 
+**获得index**
+
+* `np.nonzero`: 返回非0元素的index
+* `np.where`: 获得符合条件的元素的index
+
+
+**提取对角线或构造对角线数组**
+
+* `np.diag`: 提取对角线或构造对角线数组
+* `np.diag_indices`: 返回索引以访问数组的主对角线
+* `np.diag_indices_from`: 返回索引以访问n维数组的主对角线
+* `np.diagflat`: 创建一个二维数组，将扁平的输入作为对角线
+* `np.diagonal`: 返回指定的对角线
+* `np.fill_diagonal`: 填充给定数组的任意维数的主对角线
+
+
+**连接数组**
+
+* `np.append`: 添加值(或数组)到数组
+* `np.concatenate`: 连接数组
+* `np.vstack`: 垂直连接数组
+* `np.hstack`: 水平连接数组
+* `np.c_[]`: 将向量按列合并
+
+
+**调整轴顺序**
+
+* `np.transpose`: 重新指定轴顺序
+* `np.swapaxes`: 交换两个轴
+
+
+**空或非空操作**
+
+* `np.nan`: 空值，float类型
+* `np.nan_to_num`: 用0替代nan；用最大的有限数替代无穷值(∞)
+* `np.nanargmin`: 忽略nan，返回最小值的坐标
+* `np.nanargmax`: 
+* `np.nancumprod`: 累乘，nan置为1
+* `np.nancumsum`: 累加，nan置为0
+* `np.nanmax`: 
+* `np.nanmean`: 忽略nan，再求平均
+* `np.nanmedian`: 
+* `np.nanmin`: 
+* `np.nanpercentile`: 忽略nan，求分位数
+* `np.nanprod`: 乘，nan置为1
+* `np.nanquantile`: 忽略nan，求分位数
+* `np.nanstd`: 
+* `np.nansum`: 
+* `np.nanvar`: 忽略nan，计算方差
+
+
+**数组属性**
+* `ndarray.ndim`: 秩，即轴的数量或维度的数量
+* `ndarray.shape`: 数组的维度，对于矩阵，n 行 m 列
+* `ndarray.size`: 数组元素的总个数，相当于 .shape 中 n*m 的值
+* `ndarray.dtype`: ndarray 对象的元素类型
+* `ndarray.itemsize`: ndarray 对象中每个元素的大小，以字节为单位
+* `ndarray.flags`: ndarray 对象的内存信息
+* `ndarray.real`: ndarray元素的实部
+* `ndarray.imag`: ndarray 元素的虚部
+* `ndarray.data`: 包含实际数组元素的缓冲区，由于一般通过数组的索引获取元素，所以通常不需要使用这个属性。
+
+ndarray.flags 返回 ndarray 对象的内存信息，包含以下属性：
+
+|属性|描述|
+|----|----|
+|C_CONTIGUOUS (C)|数据是在一个单一的C风格的连续段中|
+|F_CONTIGUOUS (F)|数据是在一个单一的Fortran风格的连续段中|
+|OWNDATA (O)|数组拥有它所使用的内存或从另一个对象中借用它|
+|WRITEABLE (W)|数据区域可以被写入，将该值设置为 False，则数据为只读|
+|ALIGNED (A)|数据和所有元素都适当地对齐到硬件上|
+|UPDATEIFCOPY (U)|这个数组是其它数组的一个副本，当这个数组被释放时，原数组的内容将被更新|
+
+
+**创建数组**
+
+* `np.empty`:
+* `np.zeros`:
+* `np.ones`:
+* `np.full`: 创建一个数组，并填充某个值。如创建一个全是NaN的数组
+* `np.asarray`:
+* `np.frombuffer`: 用于实现动态数组. 接受 buffer 输入参数，以流的形式读入转化成 ndarray 对象。
+buffer 是字符串的时候，Python3 默认 str 是 Unicode 类型，所以要转成 bytestring 在原 str 前加上 b。
+* `np.fromiter`: 从可迭代对象中建立 ndarray 对象，返回一维数组。
+* `np.arange`:
+* `np.linspace`: 函数用于创建一个一维数组，数组是一个等差数列构成的
+* `np.logspace`: 函数用于创建一个于等比数列
+
+
+**算数函数**
+
+* `np.add`: 加
+* `np.subtract`: 减
+* `np.multiply`: 乘
+* `np.divide`: 除
+* `np.reciprocal`: 求倒数
+* `np.power`: 求指数
+* `np.mod`: 求模; 同`np.remainder`
+
+**位运算**
+
+NumPy "bitwise_" 开头的函数是位运算函数。
+
+* `np.bitwise_and`: 对数组元素执行位与操作
+* `np.bitwise_or`: 对数组元素执行位或操作
+* `np.invert`: 按位取反
+* `np.left_shift`: 向左移动二进制表示的位
+* `np.right_shift`: 向右移动二进制表示的位
+
+也可以使用 "&"、 "~"、 "|" 和 "^" 等操作符进行计算。
+
+
+**字符串函数**
+
+以下函数用于对 dtype 为 numpy.string_ 或 numpy.unicode_ 的数组执行向量化字符串操作。
+ 它们基于 Python 内置库中的标准字符串函数。
+
+这些函数在字符数组类（numpy.char）中定义。
+
+* `np.char.add`:
+* `np.char.center`:
+* `np.char.split`:
+
+...
+
+
+**排序、条件刷选函数**
+
+NumPy 提供了多种排序的方法。 这些排序函数实现不同的排序算法，
+每个排序算法的特征在于执行速度，最坏情况性能，所需的工作空间和算法的稳定性。 
+下表显示了三种排序算法的比较。
+
+|算法|速度|最坏情况|工作空间|稳定性|
+|----|----|----|----|----|
+|quicksort 快速排序|1|O(n^2)|0|否|
+|mergesort 归并排序|2|O(n*log(n))|~n/2|是|
+|heapsort 堆排序|3|O(n*log(n))|0|否|
+
+* `np.argsort`: 返回数组值从小到大的索引值
+* `np.lexsort`: 用于对多个序列进行排序。把它想象成对电子表格进行排序，每一列代表一个序列，
+排序时优先照顾靠后的列。这里举一个应用场景：小升初考试，重点班录取学生按照总成绩录取。
+在总成绩相同时，数学成绩高的优先录取，在总成绩和数学成绩都相同时，按照英语成绩录取…… 这里，
+总成绩排在电子表格的最后一列，数学成绩在倒数第二列，英语成绩在倒数第三列。
+* `np.msort`: 数组按第一个轴排序，返回排序后的数组副本。np.msort(a) 相等于 np.sort(a, axis=0)。
+* `np.sort_complex`: 对复数按照先实部后虚部的顺序进行排序。
+* `np.partition`: 指定一个数，对数组进行分区
+* `np.argpartition`: 指定一个数，对数组进行分区
+
+* `numpy.extract`: 根据某个条件从数组中抽取元素，返回满条件的元素。
+
+```
+x = np.arange(9.).reshape(3,  3)  
+# 定义条件, 选择偶数元素
+condition = np.mod(x,2)  ==  0  
+# 使用条件提取元素
+np.extract(condition, x)
+```
+
+
+**矩阵库**
+
+NumPy 中包含了一个矩阵库 numpy.matlib，该模块中的函数返回的是一个矩阵，而不是 ndarray 对象。
+
+* `np.matlib.empty`: 返回一个新的矩阵(填充为随机数据)
+* `np.matlib.zeros`: 创建一个以 0 填充的矩阵
+* `np.matlib.ones`: 创建一个以 1 填充的矩阵。
+* `np.matlib.eye`: 返回一个矩阵，对角线元素为 1，其他位置为零。
+* `np.matlib.identity`: 返回给定大小的单位矩阵
+* `np.matlib.rand`: 创建一个给定大小的矩阵，数据是随机填充的。
+
+
+**线性代数**
+
+NumPy 提供了线性代数函数库 linalg，该库包含了线性代数所需的所有功能，可以看看下面的说明：
+
+* `np.dot`: 两个数组的点积，即元素对应相乘。
+* `np.vdot`: 两个向量的点积。如果第一个参数是复数，那么它的共轭复数会用于计算。 如果参数是多维数组，它会被展开。
+* `np.inner`: 两个数组的内积。对于更高的维度，它返回最后一个轴上的和的乘积。
+* `np.matmul`: 两个数组的矩阵积
+* `np.determinant`: 数组的行列式
+* `np.solve`: 求解线性矩阵方程
+* `np.inv`: 计算矩阵的乘法逆矩阵
+* `np.linalg.det`: 计算输入矩阵的行列式
+* `np.linalg.solve`: 给出了矩阵形式的线性方程的解
+* `np.linalg.inv`: 计算矩阵的乘法逆矩阵
+
+
+**IO操作**
+
+NumPy 为 ndarray 对象引入了一个简单的文件格式：npy。npy 文件用于存储重建 ndarray 所需的数据、图形、dtype 和其他信息。
+
+常用的 IO 函数有：
+
+* load() 和 save() 函数是读写文件数组数据的两个主要函数，默认情况下，数组是以未压缩的原始二进制格
+式保存在扩展名为 .npy 的文件中。
+* savez() 函数用于将多个数组写入文件，默认情况下，数组是以未压缩的原始二进制格式保存在扩展名为 
+.npz 的文件中。 savez_compressed() 压缩的原始二进制保存
+* loadtxt() 和 savetxt() 函数处理正常的文本文件(.txt 等)
+
+```
+np.savetxt(outfile, x, delimiter="\t", header=title, comments="# ", fmt="%s")
+
+# delimiter: 分隔符
+# header: 放在文件开头的字符串
+# footer: 放在文件结尾的字符串
+# comments: 将文件开头和结尾的字符串转成注释信息, 默认为"# "
+# encoding: 编码格式
+# newline: 每行的界定符， 默认为"\n"
+# fmt: 书写格式, 如"%.18e", "%10.5f", " %.4e %+.4ej %.4e %+.4ej %.4e %+.4ej", "['%.3e + %.3ej', '(%.15e%+.15ej)']"
+```
+
+
+**其它**
+
+`np.allclose()`: numpy的allclose方法，比较两个array是不是每一元素都相等，默认在1e-05的误差范围内
+`np.ptp()`: 计算数组中元素最大值与最小值的差（最大值 - 最小值）
+`np.amin()`和`np.amax()`: 计算数组中的元素沿指定轴的最小(大)值
+`np.ndarray.byteswap`: 将 ndarray 中每个元素中的字节进行大小端转换
 
 
 ### 4. click
@@ -6099,6 +6351,7 @@ page.compressContentStreams()。要想加速，可以换一种思维：添加空
 ### 11. matplotlib
 
 * [matplotlib核心剖析](http://www.cnblogs.com/vamei/archive/2013/01/30/2879700.html)
+* [Matplotlib 教程](http://www.runoob.com/w3cnote/matplotlib-tutorial.html)
 
 
 * `设置中文字体`: [matplotlib显示中文](https://www.cnblogs.com/hhh5460/p/4323985.html)
@@ -6185,6 +6438,27 @@ plt.boxplot(data, meanprops=meanpointprops, meanline=False,
 ```
 
 
+**设置中文字体**
+
+```
+import numpy as np 
+from matplotlib import pyplot as plt 
+import matplotlib
+ 
+# fname 为 你下载的字体库路径，注意 SimHei.ttf 字体的路径
+zhfont1 = matplotlib.font_manager.FontProperties(fname="SimHei.ttf") 
+ 
+x = np.arange(1,11) 
+y =  2  * x +  5 
+plt.title("菜鸟教程 - 测试", fontproperties=zhfont1) 
+ 
+# fontproperties 设置中文显示，fontsize 设置字体大小
+plt.xlabel("x 轴", fontproperties=zhfont1)
+plt.ylabel("y 轴", fontproperties=zhfont1)
+plt.plot(x,y) 
+plt.show()
+```
+
 
 ### 12. Bokeh
 
@@ -6196,6 +6470,180 @@ plt.boxplot(data, meanprops=meanpointprops, meanline=False,
 * [使用python Tqdm进度条库让你的python进度可视化](https://ptorch.com/news/170.html)
 
 当我们使用pip或conda安装包的时候，安装进度条是怎么生成的呢？没错，就是tqdm！
+
+
+### 14. statsmodels
+
+普通最小二乘法（OLS）
+
+* [Python统计分析库statsmodels的OLS](https://blog.csdn.net/cymy001/article/details/78364652)
+
+```
+import statsmodels.api as sm 
+#最小二乘
+from statsmodels.stats.outliers_influence import summary_table 
+#获得汇总信息
+
+x=sm.add_constant(daily_data['temp'])
+#线性回归增加常数项 y=kx+b
+y=daily_data['cnt']
+regr=sm.OLS(y,x)
+res=regr.fit() 
+
+st, data, ss2 = summary_table(res, alpha=0.05) 
+#置信水平alpha=5%，st数据汇总，data数据详情，ss2数据列名
+fitted_values = data[:,2]  
+#等价于res.fittedvalues
+```
+
+
+### 15. sklearn
+
+**数据集**
+
+使用sklearn.datasets.load_boston即可加载相关数据。该数据集是一个回归问题。
+每个类的观察值数量是均等的，共有 506 个观察，13 个输入变量和1个输出变量。
+
+每条数据包含房屋以及房屋周围的详细信息。其中包含城镇犯罪率，一氧化氮浓度，
+住宅平均房间数，到中心区域的加权距离以及自住房平均房价等等。
+
+* CRIM：城镇人均犯罪率。
+* ZN：住宅用地超过 25000 sq.ft. 的比例。
+* INDUS：城镇非零售商用土地的比例。
+* CHAS：查理斯河空变量（如果边界是河流，则为1；否则为0）。
+* NOX：一氧化氮浓度。
+* RM：住宅平均房间数。
+* AGE：1940 年之前建成的自用房屋比例。
+* DIS：到波士顿五个中心区域的加权距离。
+* RAD：辐射性公路的接近指数。
+* TAX：每 10000 美元的全值财产税率。
+* PTRATIO：城镇师生比例。
+* B：1000（Bk-0.63）^ 2，其中 Bk 指代城镇中黑人的比例。
+* LSTAT：人口中地位低下者的比例。
+* MEDV：自住房的平均房价，以千美元计。
+
+预测平均值的基准性能的均方根误差（RMSE）是约 9.21 千美元。
+
+
+
+### 15. seaborn
+
+JointGrid
+
+```
+import seaborn as sns
+from scipy import stats
+g1 = sns.JointGrid(x, y, space=0, dropna=True, xlim=(0.2, 0.8), ylim=(0, 80))\                                       
+        .plot_joint(plt.scatter, c="black", s=0.8)\
+        .plot_marginals(sns.kdeplot, gridsize=200, shade=True, color="black")\
+        .annotate(stats.pearsonr)\
+        .set_axis_labels("GC content", "Reads count")
+```
+
+怎么在一张图上画两个JointGrid？
+
+[How to plot multiple Seaborn Jointplot in Subplot](https://stackoverflow.com/questions/35042255/how-to-plot-multiple-seaborn-jointplot-in-subplot)
+
+```
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+import seaborn as sns
+import numpy as np
+
+class SeabornFig2Grid():
+
+    def __init__(self, seaborngrid, fig,  subplot_spec):
+        self.fig = fig
+        self.sg = seaborngrid
+        self.subplot = subplot_spec
+        if isinstance(self.sg, sns.axisgrid.FacetGrid) or \
+            isinstance(self.sg, sns.axisgrid.PairGrid):
+            self._movegrid()
+        elif isinstance(self.sg, sns.axisgrid.JointGrid):
+            self._movejointgrid()
+        self._finalize()
+
+    def _movegrid(self):
+        """ Move PairGrid or Facetgrid """
+        self._resize()
+        n = self.sg.axes.shape[0]
+        m = self.sg.axes.shape[1]
+        self.subgrid = gridspec.GridSpecFromSubplotSpec(n,m, subplot_spec=self.subplot)
+        for i in range(n):
+            for j in range(m):
+                self._moveaxes(self.sg.axes[i,j], self.subgrid[i,j])
+
+    def _movejointgrid(self):
+        """ Move Jointgrid """
+        h= self.sg.ax_joint.get_position().height
+        h2= self.sg.ax_marg_x.get_position().height
+        r = int(np.round(h/h2))
+        self._resize()
+        self.subgrid = gridspec.GridSpecFromSubplotSpec(r+1,r+1, subplot_spec=self.subplot)
+
+        self._moveaxes(self.sg.ax_joint, self.subgrid[1:, :-1])
+        self._moveaxes(self.sg.ax_marg_x, self.subgrid[0, :-1])
+        self._moveaxes(self.sg.ax_marg_y, self.subgrid[1:, -1])
+
+    def _moveaxes(self, ax, gs):
+        #https://stackoverflow.com/a/46906599/4124317
+        ax.remove()
+        ax.figure=self.fig
+        self.fig.axes.append(ax)
+        self.fig.add_axes(ax)
+        ax._subplotspec = gs
+        ax.set_position(gs.get_position(self.fig))
+        ax.set_subplotspec(gs)
+
+    def _finalize(self):
+        plt.close(self.sg.fig)
+        self.fig.canvas.mpl_connect("resize_event", self._resize)
+        self.fig.canvas.draw()
+
+    def _resize(self, evt=None):
+        self.sg.fig.set_size_inches(self.fig.get_size_inches())
+```
+
+用法如下：
+
+```
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+import seaborn as sns; sns.set()
+import SeabornFig2Grid as sfg
+
+
+iris = sns.load_dataset("iris")
+tips = sns.load_dataset("tips")
+
+# An lmplot
+g0 = sns.lmplot(x="total_bill", y="tip", hue="smoker", data=tips, 
+                palette=dict(Yes="g", No="m"))
+# A PairGrid
+g1 = sns.PairGrid(iris, hue="species")
+g1.map(plt.scatter, s=5)
+# A FacetGrid
+g2 = sns.FacetGrid(tips, col="time",  hue="smoker")
+g2.map(plt.scatter, "total_bill", "tip", edgecolor="w")
+# A JointGrid
+g3 = sns.jointplot("sepal_width", "petal_length", data=iris,
+                   kind="kde", space=0, color="g")
+
+
+fig = plt.figure(figsize=(13,8))
+gs = gridspec.GridSpec(2, 2)
+
+mg0 = sfg.SeabornFig2Grid(g0, fig, gs[0])
+mg1 = sfg.SeabornFig2Grid(g1, fig, gs[1])
+mg2 = sfg.SeabornFig2Grid(g2, fig, gs[3])
+mg3 = sfg.SeabornFig2Grid(g3, fig, gs[2])
+
+gs.tight_layout(fig)
+#gs.update(top=0.7)
+
+plt.show()
+```
+
 
 
 ## 黑客模块
@@ -6797,3 +7245,19 @@ pypcap 是 WinPcap 的python接口。安装前需要先安装WinPcap，但win10�
 3. 下载[pypcap](https://github.com/pynetwork/pypcap)和[npcap-sdk-0.1.zip](https://nmap.org/npcap/), 并将他们解压后的文件夹放到同一级目录下，同时将npcap-sdk-0.1文件夹重命名为wpdpack
 4. 进入pypcap文件夹中，执行：python setup.py install
 5. 进入python， import pcap 检测是否成功
+
+
+
+# 9. 常见问题及解决方案
+
+## 9.1 numpy: ImportError: DLL load failed
+
+解决方案：
+
+添加以下5个path路径，并将其放到最前边：
+
+* Anaconda3
+* Anaconda3\Library\mingw-w64\bin
+* Anaconda3\Library\usr\bin
+* Anaconda3\Library\bin
+* Anaconda3\Scripts

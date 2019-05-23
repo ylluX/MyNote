@@ -2,15 +2,12 @@
 
 <!--自动插入TOC：https://github.com/ekalinin/github-markdown-toc-->
 <!--ts-->
-   * [目录](#目录)
-   * [Windows编程-基本知识](#windows编程-基本知识)
-      * [TCHAR](#tchar)
-   * [Office](#office)
-      * [Excel](#excel)
-         * [基本函数](#基本函数)
-
-<!-- Added by: luyl, at: 2018-12-25T17:38+08:00 -->
-
+* [目录](#目录)
+* [Windows编程-基本知识](#windows编程-基本知识)
+   * [TCHAR](#tchar)
+* [Office](#office)
+   * [Excel](#excel)
+      * [基本函数](#基本函数)
 <!--te-->
 
 ----
@@ -69,3 +66,9 @@ TCHAR ptszArray[10];
 ## Excel
 
 ### 基本函数
+
+* `HYPERLINK`：超链接
+* `CONCATENATE`: 连接字符串
+* `LEFT`: 
+* `RIGHT`:
+* `MID`:
