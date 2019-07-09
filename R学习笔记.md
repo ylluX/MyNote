@@ -2,17 +2,16 @@
 
 <!--自动插入TOC：https://github.com/ekalinin/github-markdown-toc-->
 <!--ts-->
-   * [目录](#目录)
-   * [随笔](#随笔)
-      * [常用命令](#常用命令)
-      * [创建空data.frame](#创建空dataframe)
-      * [paste和cat区别](#paste和cat区别)
-      * [插入1行或1列](#插入1行或1列)
-   * [包](#包)
-      * [stringr](#stringr)
-
-<!-- Added by: luyl, at: 2019-02-19T17:07+08:00 -->
-
+* [目录](#)
+* [随笔](#)
+   * [常用命令](#)
+   * [创建空data.frame](#dataframe)
+   * [paste和cat区别](#pastecat)
+   * [插入1行或1列](#11)
+   * [生成随机数](#)
+   * [R之向量的创建和数据框的转换](#r)
+* [包](#)
+   * [stringr](#stringr)
 <!--te-->
 
 ----
@@ -62,6 +61,32 @@ data2 <- cbind(data1[,1:2],y,data1[,3:ncol(data1)])
 data1<- data.frame(x1=runif(10),x2= runif(10),x3= runif(10))
 row<- c(1, 1, 1)
 data2 <- rbind(data1[1:5,], row, data1[6:nrow(data1), ])
+
+
+## 生成随机数
+
+[用R生成随机数](https://blog.csdn.net/wangd6/article/details/59119307)
+
+
+## R之向量的创建和数据框的转换
+
+```
+a <- rnomal(12, mean=40, sd=20)
+is.verctor(a) # TRUE
+is.array(a)   # FALSE
+is.numeric(a) # TRUE
+# 改变维度
+dim(a) <- c(3,4)
+is.verctor(a) # FALSE
+is.array(a)   # TRUE
+is.numeric(a) # FALSE
+# 将array转换成data.frame
+a <- as.data.frame(a)
+is.data.frame(a) # TRUE
+```
+
+
+----
 
 # 包
 

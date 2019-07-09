@@ -2,33 +2,35 @@
 
 <!--自动插入TOC：https://github.com/ekalinin/github-markdown-toc-->
 <!--ts-->
-* [目录](#目录)
-* [基本概念](#基本概念)
-   * [灵敏度/特异度](#灵敏度特异度)
-   * [损失函数(Loss function)/代价函数(成本函数)(Cost function)](#损失函数loss-function代价函数成本函数cost-function)
-   * [分类/回归](#分类回归)
-   * [哑变量](#哑变量)
-* [模型](#模型)
-   * [Scikit-Learn中文文档](#scikit-learn中文文档)
-   * [数据预处理(归一化)](#数据预处理归一化)
-   * [数据标准化(Normalization)](#数据标准化normalization)
-   * [不均衡数据集处理](#不均衡数据集处理)
-   * [核密度函数](#核密度函数)
+* [目录](#)
+* [基本概念](#)
+   * [灵敏度/特异度](#)
+   * [损失函数(Loss function)/代价函数(成本函数)(Cost function)](#loss-functioncost-function)
+   * [分类/回归](#)
+   * [哑变量](#)
+* [模型](#)
+   * [Scikit-Learn中文文档](#scikit-learn)
+   * [数据预处理(归一化)](#)
+   * [数据标准化(Normalization)](#normalization)
+   * [不均衡数据集处理](#)
+   * [核密度函数](#)
    * [PCA](#pca)
-   * [逻辑回归](#逻辑回归)
-   * [非线性回归](#非线性回归)
-   * [梯度下降](#梯度下降)
+   * [逻辑回归](#)
+   * [非线性回归](#)
+   * [梯度下降](#)
    * [SVM](#svm)
    * [HMM](#hmm)
-   * [贝叶斯](#贝叶斯)
-   * [随机森林](#随机森林)
-* [深度学习](#深度学习)
+   * [贝叶斯](#)
+   * [随机森林](#)
+* [深度学习](#)
    * [TensorFlow](#tensorflow)
-* [分布](#分布)
-   * [泊松分布](#泊松分布)
-* [学习资料](#学习资料)
-   * [视频资料](#视频资料)
-   * [深度学习](#深度学习)
+* [分布](#)
+   * [泊松分布](#)
+* [学习资料](#)
+   * [视频资料](#)
+   * [深度学习](#)
+* [其它](#)
+   * [statsmodels只能做loess拟合，而不能做预测，怎么办？](#statsmodelsloess)
 <!--te-->
 
 ----
@@ -1222,3 +1224,50 @@ C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每�
 * [github-apachecn/AiLearning (12044 Star)](https://github.com/apachecn/AiLearning)
 * [良心推荐：机器学习入门资料汇总及学习建议（2018版）](https://mp.weixin.qq.com/s?__biz=Mzg5NzAxMDgwNg==&mid=2247484000&idx=1&sn=92f198b840073e79e1a267d15a48a279&chksm=c0791f79f70e966fccd525bc2ecb11d328a12f566ccdc781132ffeeb41c484c1f7757db03911&mpshare=1&scene=1&srcid=0415mIj7jMQtloDMwK0AK0bv&key=f6869c76f8fd06b8a6d822fd10ecfac0697204a8d235aff9db21e4bda74c247e25d32c07bf415f8d65a07ccaeab92ffa96a320034f98d7c938f405bde1fc4b24923ce93730071dfcc2936fbce8c1d189&ascene=1&uin=MjQ4MTQ1NDg4Mw%3D%3D&devicetype=Windows+10&version=62060728&lang=zh_CN&pass_ticket=gUwf80IY9bbYJwc333gYdD0OP8S6sMBUN4dtMY%2Fi0EKPTWn3IuyCk%2BoIi924zIUC)
 * [干货 | 机器学习入门方法和资料合集](https://mp.weixin.qq.com/s?__biz=MzI3ODgwODA2MA==&mid=2247486377&idx=1&sn=e275eb251f3ec4b9fecbe3ec49402448&chksm=eb501f3adc27962c39ba45260f78ad7ce6525587eaf84836d89f817a724598f80ce5f5281418&mpshare=1&scene=1&srcid=0424WGgc62TpsPvrJ6ioDuBC&key=7c2de03dd17390131dd1a56115dfa8eca8b4d582f9e97281be9c2344906e92125be117db058369a20d60578c220d4f03ca506681107a57da53f84c37aa158a467854801f43e444bb2ad7eded9064f8ad&ascene=1&uin=MjQ4MTQ1NDg4Mw%3D%3D&devicetype=Windows+10&version=62060728&lang=zh_CN&pass_ticket=gUwf80IY9bbYJwc333gYdD0OP8S6sMBUN4dtMY%2Fi0EKPTWn3IuyCk%2BoIi924zIUC)
+
+
+----
+
+# 其它
+
+## statsmodels只能做loess拟合，而不能做预测，怎么办？
+
+[Predicting on new data using locally weighted regression (LOESS/LOWESS)](https://stackoverflow.com/questions/36252434/predicting-on-new-data-using-locally-weighted-regression-loess-lowess)
+
+Lowess works great for predicting (when combined with interpolation)! 
+I think the code is pretty straightforward-- let me know if you have any questions!
+
+```
+import matplotlib.pyplot as plt
+%matplotlib inline
+from scipy.interpolate import interp1d
+import statsmodels.api as sm
+
+# introduce some floats in our x-values
+x = list(range(3, 33)) + [3.2, 6.2]
+y = [1,2,1,2,1,1,3,4,5,4,5,6,5,6,7,8,9,10,11,11,12,11,11,10,12,11,11,10,9,8,2,13]
+
+# lowess will return our "smoothed" data with a y value for at every x-value
+lowess = sm.nonparametric.lowess(y, x, frac=.3)
+
+# unpack the lowess smoothed points to their values
+lowess_x = list(zip(*lowess))[0]
+lowess_y = list(zip(*lowess))[1]
+
+# run scipy's interpolation. There is also extrapolation I believe
+f = interp1d(lowess_x, lowess_y, bounds_error=False)
+
+xnew = [i/10. for i in range(400)]
+
+# this this generate y values for our xvalues by our interpolator
+# it will MISS values outsite of the x window (less than 3, greater than 33)
+# There might be a better approach, but you can run a for loop
+#and if the value is out of the range, use f(min(lowess_x)) or f(max(lowess_x))
+ynew = f(xnew)
+
+
+plt.plot(x, y, 'o')
+plt.plot(lowess_x, lowess_y, '*')
+plt.plot(xnew, ynew, '-')
+plt.show()
+```

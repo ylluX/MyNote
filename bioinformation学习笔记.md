@@ -2,48 +2,55 @@
 
 <!--自动插入TOC：https://github.com/ekalinin/github-markdown-toc-->
 <!--ts-->
-* [目录](#目录)
-* [常见问题](#常见问题)
-   * [GC偏好](#gc偏好)
-   * [重复序列(Dup)](#重复序列dup)
-   * [CNV和SV](#cnv和sv)
-   * [标准化](#标准化)
-* [概念](#概念)
-   * [专业名词](#专业名词)
-   * [等位基因频率(AF)](#等位基因频率af)
-   * [易位](#易位)
-   * [显(隐)性遗传病](#显隐性遗传病)
-   * [染色体带型](#染色体带型)
+* [目录](#)
+* [常见问题](#)
+   * [GC偏好](#gc)
+   * [重复序列(Dup)](#dup)
+   * [CNV和SV](#cnvsv)
+   * [标准化](#)
+   * [对离散的RNA-seq数据建模，负二项分布(negative binomial distribution)优于泊松分布(poisson distribution)](#rna-seqnegative-binomial-distributionpoisson-distribution)
+   * [CNV-seq与CMA之争](#cnv-seqcma)
+* [概念](#)
+   * [专业名词](#)
+   * [隐性基因、显性基因以及共显性基因](#)
+   * [等位基因频率(AF)](#af)
+   * [外显率](#)
+   * [易位](#)
+   * [显(隐)性遗传病](#)
+   * [染色体带型](#)
    * [UPD](#upd)
-   * [LOH](#loh)
-   * [XO核型](#xo核型)
-   * [染色体](#染色体)
-   * [剂量敏感基因(Dosage Sensitivity Gene)](#剂量敏感基因dosage-sensitivity-gene)
-   * [基因组变异检测](#基因组变异检测)
-      * [基本概念](#基本概念)
-      * [检测流程](#检测流程)
-         * [变异检测](#变异检测)
-         * [变异注释](#变异注释)
-* [技术原理](#技术原理)
+   * [印记基因](#)
+   * [LOH, AOH, ROH, LCSH](#loh-aoh-roh-lcsh)
+   * [XO核型](#xo)
+   * [染色体](#)
+   * [剂量敏感基因(Dosage Sensitivity Gene)](#dosage-sensitivity-gene)
+   * [基因组变异检测](#)
+      * [基本概念](#)
+      * [检测流程](#)
+         * [变异检测](#)
+         * [变异注释](#)
+* [技术原理](#)
    * [PGS/PGD](#pgspgd)
       * [FISH](#fish)
       * [Array-CGH](#array-cgh)
-* [数据库](#数据库)
-   * [肿瘤数据库](#肿瘤数据库)
-   * [遗传疾病公共数据库](#遗传疾病公共数据库)
-   * [其它](#其它)
-* [软件](#软件)
-   * [生物信息软件参数解析](#生物信息软件参数解析)
+   * [CNV-seq](#cnv-seq)
+* [数据库](#)
+   * [肿瘤数据库](#)
+   * [遗传疾病公共数据库](#)
+   * [其它](#)
+* [软件](#)
+   * [生物信息软件参数解析](#)
       * [samtools](#samtools)
       * [bcftools](#bcftools)
-   * [python模块](#python模块)
+   * [python模块](#python)
       * [pysam](#pysam)
-         * [基础操作](#基础操作)
+         * [基础操作](#)
          * [API](#api)
             * [SAM/BAM/CRAM files](#sambamcram-files)
    * [BWA & Bowtie2](#bwa--bowtie2)
-* [文件格式](#文件格式)
-   * [.fai (索引文件)](#fai-索引文件)
+* [文件格式](#)
+   * [.fai (索引文件)](#fai-)
+* [期刊杂志](#)
 <!--te-->
 
 ----
@@ -154,6 +161,29 @@ PCR放大成百上千倍，为什么NGS的Dup rate只有十位数甚至是个位
 芯片内的数据标准化(within slide normalization): Lowess Normalization
 
 
+## 对离散的RNA-seq数据建模，负二项分布(negative binomial distribution)优于泊松分布(poisson distribution)
+
+参考文献：
+
+1. [Differential expression analysis for sequence count data](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-10-r106)
+【2010年，影响因子12+，引用次数8000+】
+2. [ReadDepth: A Parallel R Package for Detecting Copy Number Alterations from Short Sequencing Reads](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0016327)
+【2011年，plos one， 引用100+】
+
+其它
+
+1. [二项分布 | 泊松分布 | 指数分布 | 负二项分布 | 伽玛分布 | Βeta分布 | 卡方分布 | 正态分布 | 多维高斯分布 | 狄利克雷分布 | 帕累托分布 | 柯西分布 | 持续收集~...](https://blog.csdn.net/weixin_34166847/article/details/86395350)
+2. [Question: What Makes One Probability Distribution Better For Rna-Seq Than Another?](https://www.biostars.org/p/6028/)
+3. [Why do we use the negative binomial distribution for analysing RNAseq data?](http://bridgeslab.sph.umich.edu/posts/why-do-we-use-the-negative-binomial-distribution-for-rnaseq)
+4. **[WHY SEQUENCING DATA IS MODELED AS NEGATIVE BINOMIAL](https://bioramble.wordpress.com/2016/01/30/why-sequencing-data-is-modeled-as-negative-binomial/)**
+
+
+
+## CNV-seq与CMA之争
+
+* [现阶段产前临床应用时选择哪种方法较好: CNV-seq和CMA (伊宁)](https://zhuanlan.zhihu.com/p/70315264)
+* [CMA和CNV-seq技术哪个更好？—— 选择CMA (蒋宇林)](https://mp.weixin.qq.com/s?__biz=MzA4NTI5ODgwOQ==&mid=570030518&idx=1&sn=dfc3c0c3ba2b1b94fecf3073f8f83d2f&chksm=3bd742a00ca0cbb6ca8e9d387e3e5c86e49ee705fadd9225a012fe3b0722cb237a33619c29dd&mpshare=1&scene=1&srcid=06306jqvZl28fWX4J3lzA5zY&key=6ff676ea8e4091fd7d49bafc28ed57f39d123c2dd78120642e4d6a44fdab0f390c504a76cbb365a31a8162c8609fe6de6e3cff9fb20b6370968367f8ca0f866caabf2a588df6a70c237fdf89fe14f1eb&ascene=1&uin=MjQ4MTQ1NDg4Mw%3D%3D&devicetype=Windows+10&version=62060728&lang=zh_CN&pass_ticket=1%2FBYjCaDwDx5g%2FUK4Qpp5Da%2Bs1GM2hvU1qolE43hGId9rJr6llFP6Fbwf4vV1Jzp)
+* [好东西应该再次分享——CNV数据分析 (徐雄)](https://mp.weixin.qq.com/s?__biz=MzI0NjQ3OTIwMA==&mid=100000647&idx=1&sn=ee3698b8255f5a180eb277f167d60c15&chksm=69bfe3885ec86a9e5f6b2eca652622306943ad9430e0aa61478c5c6a88b73137d7fdd188c3f1&scene=18&xtrack=1&key=0d395d45dee340535117e67eadabde94a49c87d85a9b41aa71a655ec35c5f20a0bd6c313958c40ff2c1f0720746098dc3b09f1a4ebff14d84cf9ded05779a05dda55188bac051edd99c1db71270d1576&ascene=1&uin=MjQ4MTQ1NDg4Mw%3D%3D&devicetype=Windows+10&version=62060728&lang=zh_CN&pass_ticket=1%2FBYjCaDwDx5g%2FUK4Qpp5Da%2Bs1GM2hvU1qolE43hGId9rJr6llFP6Fbwf4vV1Jzp)
 
 
 ----
@@ -167,6 +197,23 @@ PCR放大成百上千倍，为什么NGS的Dup rate只有十位数甚至是个位
 * VUS (Variant Uncertain Significance)：未知的变异，意义不确定的变异
 * AF (Allele Frequency): 等位基因频率
 * MAF (Minor Allele Frequency): 多个群体中总的AF?
+
+
+## 隐性基因、显性基因以及共显性基因
+
+显性基因常能形成一种有功能的物质（如酶），而它的隐性等位基因则由于相应的核苷酸发生了突变而
+不能产生这种物质，所以在杂合体中只有显性基因能表现出正常的功能（显性），而隐性基因则不能表现。
+
+一对等位基因之间，彼此没有显性和隐性的区别，在杂合子状态时，两种基因的作用都能表达，分别独立
+地产生基因产物。形成相应的表型，这种遗传方式称为共显性（codominance)遗传。ABO血型的遗传可作为
+共显性遗传的实例。
+
+ABO血型的基因已定位于第9号染色体上的9q4.2位点，在这一基因座位上，由A.B和O三种基因组成复等位基因。
+基因A对基因0为显性。基因B对基因O也是显性，基限A和基因B为共显性。基因型AA和AO都决定红胞膜上机抗
+原A的产生，这种个体为A型血，基因型BB和BO都决定红细胞膜上抗原B的产生，这种个体为B型血，基因型OO
+则只有H物质的产生面而不产生抗原A和抗原B，这种个体为O型血，基因型AB决定红细胞膜上有抗原A和抗原B，
+故为AB型血，为共显性遗传。
+
 
 
 ## 等位基因频率(AF)
@@ -198,6 +245,26 @@ pa = (0+1+0+2+1+0+0+1+1+0)/20 = 0.3
 因此 pA + pa = 1（100%），所以 pa 也可以这样计算：
 
 pa = 1-0.7 = 0.3
+
+
+## 外显率
+
+外显率是指一定环境条件下，群体中某一基因型（通常在杂合子状态下）个体表现出相应表型的百分率。
+
+外显率(penetrance)等于100%时称为完全外显(complete penetrance)，低于100%时则为不完全外显
+（incomplete penetrance)或外显不全。譬如说，玉米形成叶绿素的基因型AA或Aa，在有光的条件下，
+应该 100%形成叶绿体，基因A的外显率是100%；而在无光的条件下，则不能形成叶绿体，我们就可以
+说在无光的条件下，基因A的外显率为0。另外如在黑腹果 蝇中，隐性的间断翅脉基因i的外显率只有90%，
+那也就是说90%的ii基因型个体有间断翅脉，而其余10%的个体是野生型，但它们的遗传组成仍然都是 ii。
+
+基因的作用可受环境和其他基因的影响而改变其表型的表达（表现度）。因此，即使在同一家庭中，
+有相同基因改变（等位基因）者可表现出非常不同的表型。例如Waardenburg综合征Ⅰ型中，PAX3基
+因突变产生的典型表现是额部白发，眼距增宽，虹膜异色，但有20%不到的病例有严重的听力丧失。
+有些带有异常等位基因的家庭成员除了额部白发外无其他表现。然而他们的子女可因同一突变而有
+严重的先天性耳聋。较罕见者，表现度很低而无临床异常可见，但他可把异常等位基因传给后代，
+使其产生所有临床症状。这种情况下，系谱上可有一代跳空。此现象称为外显率缺失。然而，某些
+外显率缺失的情况是由于检查者未能识别或是不熟悉遗传病的轻微表现所致。表现度很小的病例有
+时可视作疾病的逍遥型。
 
 
 ## 易位
@@ -275,13 +342,111 @@ pa = 1-0.7 = 0.3
 
 ## UPD
 
-uniparental disomy, UPD: 单亲二体
+uniparental disomy, UPD: 单亲二体 [Wiki](https://en.wikipedia.org/wiki/Uniparental_disomy)
 
-## LOH
+当一个人两个拷贝来源于一个亲本或染色体的一部分仅来源于一个亲本时，发生单亲二倍体（UPD）。 
+UPD是卵子或精子形成期间发生的随机事件，或者是在早期胎儿发育中发生。
 
-loss of heterozygosity, LOH: 杂合性缺失
+![](http://image107.360doc.com/DownloadImg/2017/06/2310/102552590_4)
 
-杂合性缺失，位于一对同源染色体上的相同基因座位的两个等位基因中的一个（或其中部分核苷酸片段）发生缺失，与之配对的染色体上仍然存在。
+在许多情况下，UPD可能对健康或发育没有影响。因为大多数基因没有印记，如果一个人从父亲遗传两个拷贝，
+而不是从父母各遗传一个拷贝，这并不重要。然而，在一些特殊情况下，基因是否全部遗传自一个人的母亲或
+父亲是有影响的。具有UPD的人(必需基因经历印记)可能缺乏活性拷贝。这种基因功能的丧失可导致发育延迟，
+智力残疾或其他健康问题。
+
+一些遗传疾病的发生是由UPD或正常基因组的印记印记导致的。最着名的病症包括Prader-Willi综合征，
+其特征在于进食和肥胖不受控制; Angelman综合征，该疾病导致智力残疾和语言障碍。这些疾病都可以
+由UPD或染色体15的长臂上的基因的印记中的其他错误引起。其它病症, 例如Beckwith-Wiedemann综合征
+（以加速生长和癌性肿瘤的风险增加为特征的病症）与染色体11短臂上印迹基因的异常相关。
+
+
+## 印记基因
+
+[印记基因数据库](http://www.geneimprint.com)
+
+ 人体继承的基因，其两个拷贝一个来自母亲，一个来自父亲。通常两个拷贝的基因都是有活性的(表达出来)，
+ 或在细胞中被“开启”。然而，在一些情况下，两个拷贝中只有一个正常开启，基因的表达与否取决于它们是
+ 在父亲的染色体上还是在母亲的染色体上：通常一些基因只有当它们由父亲遗传时才是有活性的; 其他一些
+ 只有当从从母亲遗传时才是有活性的，该现象被称为基因组印记。
+
+ 经历基因组印记的基因在卵和精细胞形成期间，亲本的来源通常被标记或“印记”。该印记过程称为甲基化, 
+ 是将甲基团连接到DNA的某些片段的化学反应。这些分子可识别基因拷贝是遗传自母亲或者是父亲。甲基基
+ 团的的添加和去除可用于控制基因的活性。
+
+ 所有人类基因中只有小部分经历基因组印记。目前,研究人员还不确定为什么部分基因被印记，而其他基因
+ 却没有。但是，经研究他们知道印迹基因具有一定的倾向性，即在染色体的相同区域聚集。在人体中已经鉴
+ 定了两个主要的印迹基因簇，一个在染色体11的短（p）臂（在位置11p15），另一个在染色体15的长（q）
+ 臂（在区域15q11至15q13）
+
+
+
+## LOH, AOH, ROH, LCSH
+
+loss of heterozygosity, LOH: 杂合性丢失
+
+杂合性丢失，是指（由于某些原因），染色体（整体或局部）杂合性丢失（曾经存在）。 
+[ This term describes an event where heterozygosity (once present) is now absent]
+是位于一对同源染色体上的相同基因座位的两个等位基因中的一个（或其中部分核苷酸片段）发生丢失，
+与之配对的染色体上仍然存在。 [拷贝数异常]
+
+
+absence of heterozygosity, AOH: 杂合性缺失
+
+是指染色体（整体或局部）杂合性是不存在的。  [拷贝数正常]
+[This term describes an observation where no heterozygosity is present]
+
+
+runs of homozygosity, ROH: 
+
+也有文献写作：regions of homozygosity. 拷贝数正常的纯和区域。 
+[This term is specific to copy number neutral homozygosity]
+[Does not apply to hemizygous deletions]
+
+long contiguous stretch of homozygosity, LCSH:
+
+等同于ROH，可以互换。[This term is interchangeable with ROH]
+
+
+LOH、AOH、ROH和LCSH都在说纯合性现象。
+
+后3个都是在说现象，而没有道出造成这种现象的原因，只有LOH透露出一点信息，是杂合性消失（丢失），
+至于消失的原因是simi还是UPD，需要做定量分析。
+
+LOH最先用在STR检测肿瘤组织DNA与癌旁组织DNA的扩增结果时发现并加以描述的，即原先是杂合性的位点变成
+了纯合性的了。
+
+在肿瘤样本中只检测到一个等位基因而呈纯合状态了。是一个等位基因丢失了（缺失），还是其中一个STR长度
+发生了变动而使两个等位基因都是一样的长度了（没有缺失发生）？后来RDB检测肿瘤样本，也发现了同样的现象。
+这是肿瘤中染色体不稳定的一个生物标记。如果没有个体配对样本的对照分析，出现这种纯合状态，只能说是
+AOH（不存在杂合性）。
+
+	* 用aCGH进行定量分析，不如SNP芯片提供的信息多。SNP芯片既显示拷贝数剂量（单倍体、二倍体或多倍体），
+还显示基因型、揭示嵌合体等数方面的信息。会明确显示这种AOH是否有拷贝数的改变（缺失），loss了一个拷贝，
+但不一定LOH，因为并不知道原先有无杂合性，需要用外周血以外的检材（例如口腔黏膜脱落上皮细胞）平行检测
+才能证实。
+
+	* 在NGS，也只能见到这种纯合现象，在正常人中出现杂合的多态性区域，检材出现纯合状态，若是个别的点，
+	只能说是此位点“纯合”，若是多个（一溜儿，run）多态性位点出现纯合现象，就是ROH。
+
+	长筒袜上出现跳丝，也叫run：先是一个小眼，如果用手一抻，脱扣更多，就像跑步一样，向两头延长了。
+
+这种ROH提示缺失也可能是UPD，因为点突变不会有这么多点同时发生（N个点的突变率的积，可能性太低！）；
+而UPD有可能是染色体损伤的抢救性复制，也可能是由于近亲婚配所致。若是近亲婚配所致，会在该染色体和其
+他染色体多处出现ROH区域，而且亲源越近，片段越长、越多。若是单独出现，则多为缺失。如果这个run很长，
+就属于LCSH了。
+
+
+AOH 判定原则，需关注是否为微缺失微重复综合征，参考ACMG指南（2013 CNV guideline）
+
+ROH 是否导致疾病?主要考虑2个因素：1. 区域内是否包含印记基因，如果ROH是由单亲二倍体UPD造成的，
+那么有可能造成相关基因印记缺陷，从而导致疾病。2. 区域内是否包含于临床表型相关的基因？ 如果包
+含相关基因，提示需对相关基因进行测序，以排除hot spot 或 founder mutation造成的纯合突变。
+
+目前AOH最推荐的检测方案为SNP-ARRAY. 低深度全基因组测序受测序深度限制，尚不能进行genotype分析，
+所以无法检测AOH. 全外显子组测序，进行参数优化后，可以在一定范围内分析AOH。但外显子区域仅占基
+因组1%,其分析范围相对有限，通常不作为临床分子诊断应用。
+
+
 
 
 ## XO核型
@@ -414,6 +579,8 @@ loss of heterozygosity, LOH: 杂合性缺失
 `tri` 三着丝粒。
 
 **2.染色体临床意义：**
+
+[各种综合征](http://www.biodiscover.com/news/industry/115442.html)
 
 ***1、性染色体数目和形态异常 ***
 
@@ -831,6 +998,83 @@ Sick  Chidren医院针对在人群中发现的家族CNVs建立了“基因变异
 相信最终能够捕获基因组上的每一个变异。
 
 
+## CNV-seq
+
+前言
+
+CNV，即拷贝数变异（copy number variation），一般指长度为1kb到几个Mb基因组大片段的拷贝数复制、缺失。CNV在基因组
+中的存在形式主要有以下几种：两条同源染色体拷贝数同时出现缺失；1条同源染色体发生缺失，1条正常；一条同源染色体出
+现拷贝数重复，另一条正常；1条同源染色体出现缺失，另一条出现拷贝数重复；两条同源染色体同时出现拷贝数重复。
+
+CNV在人类基因组中分布广泛，是人类疾病的重要致病因素之一。致病性CNV可引起智力障碍、生长发育迟缓、自闭症、各种各
+样的出生缺陷、白血病和肿瘤等多种疾病。目前对CNV进行检测的方法主要有aCGH, SNP-array, CNV-seq、MLPA等，这些方法
+各有哪些优缺点，我们又该如何选择？
+
+检测方法一：aCGH
+
+aCGH也称为基于芯片的比较基因组杂交（array-based comparative genomic hybridization）。
+
+原理：将等量的待测DNA和正常对照DNA分别用红色和绿色荧光染料标记，混合，然后与全基因组DNA芯片进行竞争性杂交。杂交
+后的芯片经激光扫描，比较每个点红光和绿光的发光强度。若红光过强，表明待测样本拷贝数复制；若红光较弱，表明待测样
+本拷贝数缺失；若红绿光均等，则表明待测样品拷贝数正常。
+
+应用：可以检测全基因组水平上的CNV。
+
+点评：aCGH的分辨率，取决于芯片中探针在全基因组中的密度和探针长度。安捷伦SurePrint G3 Human CGH Microarray 1×1M芯
+片中，探针间距约为2kb。因为来自一个点的荧光的光强变化，可能会带有一定的偶然性，所以，一般是看染色体空间位置上相
+邻的3个点（或者更多的点），如果这3个点的荧光比值，都发生同一个方向的偏离，就可以判断这一段有拷贝数变异的证据。
+基于这点考虑，按照3个点计算，aCGH的分辨率约为6kb。
+
+检测方法二：SNP-array
+
+SNP（Single Nucleotide Polymorphisms，单核苷酸多态）是指在基因组水平上由单个核苷酸的变异所引起的DNA序列多态性而
+形成的遗传标记。SNP在人类基因组中广泛存在，平均约每500-1000个碱基对中就有1个SNP，人类30亿碱基中大约有300万个。
+
+原理： 与aCGH采用的双杂交策略不同的是，SNP-array利用待测样本与芯片探针进行单杂交，通过比较不同样本信号的强度来
+确定每个位点的拷贝数。
+
+应用：SNP-array芯片的探针为SNP位点序列，可以提供SNP信息。除可检测CNV外，还可检测单亲二倍体(UPD)、杂合性缺失(LOH)
+和嵌合体。
+
+点评：SNP 芯片探针在全基因组上的的密度非常大，分辨率很高。但是这些探针在基因组中并非均衡分布，在一些重复序列和复
+杂的CNV 区域， SNP 密度是较小的，不能得到较为清晰的CNV 图谱。Affymetrix 公司和Illumina 公司在新一代芯片中增加一
+个非多态性的探针，将探针更好地定位在特定区域，提高图谱的清晰度。目前Affymetrix 公司的CytoScan HD芯片为探针密度最
+高的芯片，含有270万个探针，基因间探针间距平均为1kb。按照3个点计算，SNP-array的分辨率约为3kb。
+
+
+检测方法三：CNV-seq
+
+CNV-seq，即通过低倍全基因组测序检测CNV的技术，2009年由Xie[1]等开发提出。
+
+原理：CNV-seq检测原理与aCGH相似。将等量的待测样本DNA和正常对照DNA建库测序后，分别与reference sequence进行对比。
+通过比较两个样本每个滑窗内比对reads数目的多少来确定每个位点的拷贝数。
+
+应用：可以检测全基因组水平上的大片段CNV。
+
+点评：贝瑞和康采用双盲实验设计，对染色体结构异常的样本进行检测，滑窗大小为20kb的情况下，CNV-seq和高密度SNP-array
+对于已知致病CNVs都能达到100%的检出[2]。与中等密度SNP-array相比，CNV-seq表现更优。鉴于CNV-seq价格较低，CNV-seq可
+以替代微阵列芯片用于大片段CNV检测。关于CNV-seq的分辨率取决于滑窗的大小。一般来讲，如果是低倍基因组测序，要使滑窗
+内的reads数目可信的话，所取的滑窗不可能太小。根据文章2描述，以20kb滑窗大小计算，按照3个点计算，CNV-seq的分辨率约
+为60kb。
+
+
+检测方法四：MLPA
+
+MLPA(multiplex ligation-dependent probe amplication，多重连接依赖式探针扩增)于2002年由荷兰学者Dr.SchoutenJP等首
+先提出，是针对待检DNA靶序列进行定性和半定量分析的技术。
+
+原理：在DNA靶序列的特定变异位点（如点突变）两侧设计一对MLPA探针。每条探针包含一段通用引物序列和一段特异性杂交序
+列。杂交序列与靶序列杂交后，使用连接酶将两部分探针连接成一条核苷酸单链，再使用通用引物进行PCR扩增。通过比较待测
+DNA与正常对照DNA的PCR产物量，来确定待测样本DNA靶序列的拷贝数。值得注意的是，连接酶很挑剔，只有在检测位点处探针与
+靶序列完美互补配对的情况下，连接酶才能将两部分探针顺利连接成单链进行后续扩增。如果检测位点存在甲基化、点突变、
+CNV，则探针连接失败，不能进行后续PCR扩增。
+
+应用：验证高度怀疑的特定基因中的点突变、甲基化、CNV。
+
+点评：该技术具有快速及特异性高的特点，但是不能对染色体组进行全局分析。单一反应管内可以同时检测40个不同的核苷酸序
+列的拷贝数变化。
+
+
 ----
 
 # 数据库
@@ -1025,6 +1269,13 @@ dbSNP接受明显中性的多态性，对应于已知表型的多态性和无变
 1000 Genome Project 的目标是发现在人群中频率大于1%的变异位点，对来自不同人群的大量样本进行测序，识别
 到了许多的变异位点，为人类遗传变异的研究提供了一个综合的资源。
 
+
+* [印记基因数据库](http://www.geneimprint.com)
+
+
+* [肿瘤学和血液学的遗传学和细胞遗传学图谱](http://atlasgeneticsoncology.org/Educ/PolyMecaEng.html)
+
+小芳推荐的，挺好
 
 
 
@@ -1327,7 +1578,7 @@ operation的类型：
 
 * [BWA中文手册](https://cncbi.github.io/BWA-Manual-CN/)
 * [关于map当中的unique mapped reads问题](http://blog.sina.com.cn/s/blog_5d5f892a0102wbwc.html)
-
+* [BWA，Bowtie，Bowtie2的比对算法推导](https://zhuanlan.zhihu.com/p/30485711)
 
 之后先后出现了两个重要的比对软件， MAQ/BWA以及Bowtie。MAQ/BWA是Heng Li发表的。
 Li是从华大基因走出来的人，后来去了Wellcome Trust Sanger Institute, 现在在哈佛Broad Institute。
@@ -1428,3 +1679,19 @@ def get_seq(self, fbuffer, start, end, offset, line, size):
 ```
 这样直接返回的就是序列了。为了确认查询的是否正确，
 我一般会用同样的坐标在用samtools查一遍。确认没问题。
+
+
+
+----
+
+# 期刊杂志
+
+* Science, Nature, PANS, CELL (顶级综合类期刊)
+* genetics in medicine (医学遗传学, IF=10)
+* AMERICAN JOURNAL OF HUMAN GENETICS (美国人类遗传学杂志, IF=10)
+* nature genetics (自然遗传学, IF=27)
+* science translational medicine (科学转化医学, IF=16)
+* clinical cancer research (临床癌症研究, IF=10)
+* journal of clinical oncology (临床肿瘤学杂志, IF=26)
+* genome research (基因组研究, IF=10)
+* clinical chemistry (临床化学, IF=8)

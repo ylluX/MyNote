@@ -3,63 +3,64 @@
 <!--自动插入TOC：https://github.com/ekalinin/github-markdown-toc-->
 [TOC]
 <!--ts-->
-* [目录](#目录)
-* [python之禅](#python之禅)
-* [python核心概念](#python核心概念)
-   * [GIL和互斥锁](#gil和互斥锁)
-   * [进程、线程、协程](#进程线程协程)
-* [1. python基础](#1-python基础)
-   * [基础](#基础)
-      * [1. 字典格式化输出](#1-字典格式化输出)
-      * [2. `str.split('\\n')`与`str.splitlines`区别](#2-strsplitn与strsplitlines区别)
-      * [3. `exec`, `eval`和`repr`区别](#3-exec-eval和repr区别)
-      * [4. 查看内建函数](#4-查看内建函数)
-      * [5. 查看模块的所有属性和方法](#5-查看模块的所有属性和方法)
-      * [6. `input`的新特性](#6-input的新特性)
-      * [7. python的标准流与shell的管道联用](#7-python的标准流与shell的管道联用)
-      * [8. 列表推导式中使用多个for](#8-列表推导式中使用多个for)
-      * [9. 智能排序](#9-智能排序)
-      * [10. 排列组合](#10-排列组合)
-      * [11.\_\_import\_\_ 与动态加载 python module](#11__import__-与动态加载-python-module)
-      * [12. print带汉字的字典或列表](#12-print带汉字的字典或列表)
-      * [13. 通过配置文件共享全局变量](#13-通过配置文件共享全局变量)
-      * [14. @staticmethod 和 @classmethod的区别](#14-staticmethod-和-classmethod的区别)
-      * [15. pip使用国内镜像](#15-pip使用国内镜像)
-      * [16. python内存变量保存到磁盘, 方便下次读入](#16-python内存变量保存到磁盘-方便下次读入)
-      * [17. 查看内存汇总的所有变量](#17-查看内存汇总的所有变量)
-      * [18. python的搜索路径](#18-python的搜索路径)
-      * [18.1 python的环境变量](#181-python的环境变量)
-      * [19. 数据的归一化/标准化/正则化](#19-数据的归一化标准化正则化)
-      * [20. for...else...语法](#20-forelse语法)
-      * [21. 将png合成gif](#21-将png合成gif)
-      * [22. 捕获警告](#22-捕获警告)
-      * [23. 将PDF转成PNG](#23-将pdf转成png)
-      * [24. os.walk()和os.path.walk()区别](#24-oswalk和ospathwalk区别)
-      * [25. 以非root身份安装module](#25-以非root身份安装module)
-      * [26. 执行shell命令](#26-执行shell命令)
-      * [27. Python 对数字的千分位处理](#27-python-对数字的千分位处理)
-      * [28. 按位运算](#28-按位运算)
-      * [29. 进制](#29-进制)
-      * [30. 模拟SSH登录和SCP传输](#30-模拟ssh登录和scp传输)
-      * [31. 获得本机IP](#31-获得本机ip)
-      * [32. 获得两个概率密度函数交集区域内的概率](#32-获得两个概率密度函数交集区域内的概率)
-      * [33. 将pandas数据和matplotlib绘图嵌入html文件](#33-将pandas数据和matplotlib绘图嵌入html文件)
-      * [34. python读写excel文件](#34-python读写excel文件)
-   * [高级](#高级)
-      * [1. 装饰器（Decorator）](#1-装饰器decorator)
-      * [2. 回调函数](#2-回调函数)
-      * [3. 魔法方法](#3-魔法方法)
-      * [4. 工厂函数](#4-工厂函数)
-      * [5. 多进程（multiprocessing和subprocess）](#5-多进程multiprocessing和subprocess)
-      * [6. 多线程](#6-多线程)
-      * [协程](#协程)
-      * [7. 字符编码](#7-字符编码)
-      * [8. 内建函数](#8-内建函数)
-   * [python3新特性](#python3新特性)
+* [目录](#)
+* [python之禅](#python)
+* [python核心概念](#python)
+   * [GIL和互斥锁](#gil)
+   * [进程、线程、协程](#)
+* [1. python基础](#1-python)
+   * [基础](#)
+      * [1. 字典格式化输出](#1-)
+      * [2. `str.split('\\n')`与`str.splitlines`区别](#2-strsplitnstrsplitlines)
+      * [3. `exec`, `eval`和`repr`区别](#3-exec-evalrepr)
+      * [4. 查看内建函数](#4-)
+      * [5. 查看模块的所有属性和方法](#5-)
+      * [6. `input`的新特性](#6-input)
+      * [7. python的标准流与shell的管道联用](#7-pythonshell)
+      * [8. 列表推导式中使用多个for](#8-for)
+      * [9. 智能排序](#9-)
+      * [10. 排列组合](#10-)
+      * [11.\_\_import\_\_ 与动态加载 python module](#11__import__--python-module)
+      * [12. print带汉字的字典或列表](#12-print)
+      * [13. 通过配置文件共享全局变量](#13-)
+      * [14. @staticmethod 和 @classmethod的区别](#14-staticmethod--classmethod)
+      * [15. pip使用国内镜像](#15-pip)
+      * [16. python内存变量保存到磁盘, 方便下次读入](#16-python-)
+      * [17. 查看内存汇总的所有变量](#17-)
+      * [18. python的搜索路径](#18-python)
+      * [18.1 python的环境变量](#181-python)
+      * [19. 数据的归一化/标准化/正则化](#19-)
+      * [20. for...else...语法](#20-forelse)
+      * [21. 将png合成gif](#21-pnggif)
+      * [22. 捕获警告](#22-)
+      * [23. 将PDF转成PNG](#23-pdfpng)
+      * [24. os.walk()和os.path.walk()区别](#24-oswalkospathwalk)
+      * [25. 以非root身份安装module](#25-rootmodule)
+      * [26. 执行shell命令](#26-shell)
+      * [27. Python 对数字的千分位处理](#27-python-)
+      * [28. 按位运算](#28-)
+      * [29. 进制](#29-)
+      * [30. 模拟SSH登录和SCP传输](#30-sshscp)
+      * [31. 获得本机IP](#31-ip)
+      * [32. 获得两个概率密度函数交集区域内的概率](#32-)
+      * [33. 将pandas数据和matplotlib绘图嵌入html文件](#33-pandasmatplotlibhtml)
+      * [34. python读写excel文件](#34-pythonexcel)
+      * [35. 编译好的包](#35-)
+   * [高级](#)
+      * [1. 装饰器（Decorator）](#1-decorator)
+      * [2. 回调函数](#2-)
+      * [3. 魔法方法](#3-)
+      * [4. 工厂函数](#4-)
+      * [5. 多进程（multiprocessing和subprocess）](#5-multiprocessingsubprocess)
+      * [6. 多线程](#6-)
+      * [协程](#)
+      * [7. 字符编码](#7-)
+      * [8. 内建函数](#8-)
+   * [python3新特性](#python3)
       * [1. pathlib](#1-pathlib)
       * [2. f-string](#2-f-string)
-* [2. 常用模块](#2-常用模块)
-   * [标准模块](#标准模块)
+* [2. 常用模块](#2-)
+   * [标准模块](#)
       * [1. `sys`](#1-sys)
       * [2. `os`](#2-os)
       * [3. `os.path`](#3-ospath)
@@ -71,31 +72,32 @@
       * [9. str](#9-str)
       * [10. collections](#10-collections)
       * [11. logging](#11-logging)
-      * [12. `time` 和 `datetime`](#12-time-和-datetime)
+      * [12. `time` 和 `datetime`](#12-time--datetime)
       * [13. `inspect`](#13-inspect)
       * [14. operator](#14-operator)
       * [15. contextlib](#15-contextlib)
       * [16. PIL](#16-pil)
       * [17. re](#17-re)
-   * [第三方模块](#第三方模块)
+      * [18. struct 解析二进制或socket数据](#18-struct-socket)
+   * [第三方模块](#)
       * [1. `scipy.stats`](#1-scipystats)
       * [scipy](#scipy)
       * [2. pandas](#2-pandas)
       * [3. numpy](#3-numpy)
       * [4. click](#4-click)
       * [5. sqlite3](#5-sqlite3)
-      * [6. JSON 和 pickle](#6-json-和-pickle)
+      * [6. JSON 和 pickle](#6-json--pickle)
       * [7. six](#7-six)
       * [8. pathlib](#8-pathlib)
       * [9. schedule](#9-schedule)
-      * [10. PyPDF2 和 Reportlab](#10-pypdf2-和-reportlab)
+      * [10. PyPDF2 和 Reportlab](#10-pypdf2--reportlab)
       * [11. matplotlib](#11-matplotlib)
       * [12. Bokeh](#12-bokeh)
       * [13. tqdm](#13-tqdm)
       * [14. statsmodels](#14-statsmodels)
       * [15. sklearn](#15-sklearn)
       * [15. seaborn](#15-seaborn)
-   * [黑客模块](#黑客模块)
+   * [黑客模块](#)
       * [1. pywin32](#1-pywin32)
       * [2. psutil](#2-psutil)
       * [3. pypcap](#3-pypcap)
@@ -103,30 +105,30 @@
       * [5. PyUserInput](#5-pyuserinput)
       * [6. pydivert](#6-pydivert)
       * [7. redsails](#7-redsails)
-* [3. 模块比较](#3-模块比较)
-   * [3.1. xml解析模块](#31-xml解析模块)
-* [4. 学习资料](#4-学习资料)
-   * [4.1 Python 资源大全中文版](#41-python-资源大全中文版)
+* [3. 模块比较](#3-)
+   * [3.1. xml解析模块](#31-xml)
+* [4. 学习资料](#4-)
+   * [4.1 Python 资源大全中文版](#41-python-)
    * [4.2 \<\<Python Cookbook\>\>](#42-python-cookbook)
-   * [4.3 python各路大神](#43-python各路大神)
+   * [4.3 python各路大神](#43-python)
    * [4.4 Python Code Examples](#44-python-code-examples)
    * [4.5 openCV](#45-opencv)
-* [5. 编写规范](#5-编写规范)
-   * [5.1 软件目录结构规范](#51-软件目录结构规范)
-   * [5.2 宏基因组项目框架](#52-宏基因组项目框架)
-* [6. 常见问题](#6-常见问题)
+* [5. 编写规范](#5-)
+   * [5.1 软件目录结构规范](#51-)
+   * [5.2 宏基因组项目框架](#52-)
+* [6. 常见问题](#6-)
    * [6.1 `mkl_serv_getenv: undefined symbol: mkl_serv_getenv`](#61-mkl_serv_getenv-undefined-symbol-mkl_serv_getenv)
    * [6.2 `nicodeEncodeError: 'charmap' codec can't encode characters in position 7-8: character maps to <undefined>`](#62-nicodeencodeerror-charmap-codec-cant-encode-characters-in-position-7-8-character-maps-to-undefined)
-* [7. 优秀框架](#7-优秀框架)
-   * [爬虫](#爬虫)
+* [7. 优秀框架](#7-)
+   * [爬虫](#)
       * [pyspider](#pyspider)
       * [scrapy](#scrapy)
-   * [web服务](#web服务)
+   * [web服务](#web)
       * [Flask](#flask)
       * [Django](#django)
-* [8. 第三方包安装教程](#8-第三方包安装教程)
+* [8. 第三方包安装教程](#8-)
    * [8.1 pypcap](#81-pypcap)
-* [9. 常见问题及解决方案](#9-常见问题及解决方案)
+* [9. 常见问题及解决方案](#9-)
    * [9.1 numpy: ImportError: DLL load failed](#91-numpy-importerror-dll-load-failed)
 <!--te-->
 
@@ -1585,6 +1587,12 @@ xo.close()
 * [插上翅膀，让Excel飞起来——xlwings（三）](https://www.jianshu.com/p/de7efe591c12)
 * [插上翅膀，让Excel飞起来——xlwings（四）](https://www.jianshu.com/p/7d6f53e3e6e9)
 
+
+### 35. 编译好的包
+
+[Unofficial Windows Binaries for Python Extension Packages](https://www.lfd.uci.edu/~gohlke/pythonlibs/)
+
+
 </br>
 
 ## 高级
@@ -2789,6 +2797,89 @@ UnicodeDecodeError: 'utf8' codec can't decode byte 0xbe in position 0: invalid s
 >>> print y.decode("unicode-escape")
 评价线性模型
 ```
+
+**将8进制转换成中文字符**
+
+```
+import chardet
+
+a = b"\345\260\274\345\217\244\346\213\211\346\226\257\350\265\265\345\233\233"
+# 如果是python2.7，应写成：
+# a = "\345\260\274\345\217\244\346\213\211\346\226\257\350\265\265\345\233\233" (少了b)
+# 判断当前字符串的格式（编码类型）
+fencoding = chardet.detect(a) 
+# {'confidence': 0.99, 'encoding': 'utf-8', 'language': ''}
+
+# 编码类型为打印出来的fencoding编码类型
+a = a.decode('utf-8')
+print(a)
+```
+
+来点有些难度的，现有如下乱码字符：
+
+\xe4\xbd\xa0\xe5\xa5\xbd\xef\xbc\x8c\xe9\xba\xbb\xe7\x83\xa6\xe6\x8e\xa7\xe5\x88\xb6
+\xe4\xb8\x80\xe4\xb8\x8b\xe4\xbd\xa0\xe5\x9c\xa80\xe5\x8f\xb7\xe8\x8a\x82\xe7\x82\xb9
+\xe8\xbf\x90\xe8\xa1\x8c\xe7\x9a\x84\xe7\xba\xbf\xe7\xa8\x8b\xe6\x95\xb0\xef\xbc\x8c0
+\xe5\x8f\xb7\xe8\x8a\x82\xe7\x82\xb9\xe6\x9c\x89\xe5\x95\x86\xe4\xb8\x9a\xe6\xa0\xb7
+\xe6\x9c\xac\xe5\x9c\xa8\xe8\xbf\x90\xe8\xa1\x8c\xef\xbc\x8c\xe5\xa6\x82\xe6\x9e\x9c
+\xe5\x8f\xaf\xe4\xbb\xa5\xe7\x9a\x84\xe8\xaf\x9d\xef\xbc\x8c\xe8\xaf\xb7\xe6\x8d\xa2
+\xe4\xb8\xaa\xe8\xae\xa1\xe7\xe5\x85\xb6\xe4\xbb\x96\xe7\x9a\x84\xe8\xae\xa1\xe7\xae
+\x97\xe8\x8a\x82\xe7\x82\xb9
+
+请将其翻译成中文。我们可以先用chardet试试
+
+```
+>>> import chardet
+
+>>> a = b"\xe4\xbd\xa0\xe5\xa5\xbd\xef\xbc\x8c\xe9\xba\xbb\xe7\x83\xa6\xe6\x8e\xa7\xe5\x88
+\xb6\xe4\xb8\x80\xe4\xb8\x8b\xe4\xbd\xa0\xe5\x9c\xa80\xe5\x8f\xb7\xe8\x8a\x82\xe7\x82
+\xb9\xe8\xbf\x90\xe8\xa1\x8c\xe7\x9a\x84\xe7\xba\xbf\xe7\xa8\x8b\xe6\x95\xb0\xef\xbc
+\x8c0\xe5\x8f\xb7\xe8\x8a\x82\xe7\x82\xb9\xe6\x9c\x89\xe5\x95\x86\xe4\xb8\x9a\xe6\xa0
+\xb7\xe6\x9c\xac\xe5\x9c\xa8\xe8\xbf\x90\xe8\xa1\x8c\xef\xbc\x8c\xe5\xa6\x82\xe6\x9e
+\x9c\xe5\x8f\xaf\xe4\xbb\xa5\xe7\x9a\x84\xe8\xaf\x9d\xef\xbc\x8c\xe8\xaf\xb7\xe6\x8d
+\xa2\xe4\xb8\xaa\xe8\xae\xa1\xe7\xe5\x85\xb6\xe4\xbb\x96\xe7\x9a\x84\xe8\xae\xa1\xe7
+\xae\x97\xe8\x8a\x82\xe7\x82\xb9"
+
+>>> chardet.detect(a)
+{'confidence': 0.3597696002270644,
+ 'encoding': 'windows-1251',
+ 'language': 'Russian'}
+
+>>> a.decode("windows-1251")
+'дЅ\xa0еҐЅпјЊйє»зѓ¦жЋ§е€¶дёЂдё‹дЅ\xa0ењЁ0еЏ·иЉ‚з‚№иїђиЎЊзљ„зєїзЁ‹ж•°пјЊ0еЏ·иЉ‚з‚
+№жњ‰е•†дёљж\xa0·жњ¬ењЁиїђиЎЊпјЊе¦‚жћњеЏЇд»Ґзљ„иЇќпјЊиЇ·жЌўдёЄи®Ўзе…¶д»–зљ„и®Ўз®—иЉ‚з‚№'
+
+# 发现为乱码，说明chardet识别的不对，其置信度也只有0.35
+# 怎么办呢，我们可以试试常见的编码格式
+# 先试试gbk
+>>> a.decode("gbk")
+---------------------------------------------------------------------------
+UnicodeDecodeError                        Traceback (most recent call last)
+<ipython-input-28-a12a1ac95270> in <module>()
+----> 1 b.decode("gbk")
+UnicodeDecodeError: 'gbk' codec can't decode byte 0xa8 in position 32: illegal multibyte sequence
+
+# gbk编码不对，再试试utf-8
+>>> a.decode("utf-8")
+---------------------------------------------------------------------------
+UnicodeDecodeError                        Traceback (most recent call last)
+<ipython-input-29-2643b56e8e14> in <module>()
+----> 1 b.decode("utf-8")
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe7 in position 134: invalid continuation byte
+
+# 看来还不对，那接下来怎么办呢？别急，我们发现decode有error参数，再试试它：
+>>> a.decode("gbk", error="ignore")
+'浣犲ソ锛岄夯鐑︽帶鍒朵竴涓嬩綘鍦0鍙疯妭鐐硅繍琛岀殑绾跨▼鏁帮紝0鍙疯妭鐐规湁鍟
+嗕笟鏍锋湰鍦ㄨ繍琛岋紝濡傛灉鍙浠ョ殑璇濓紝璇锋崲涓璁＄鍏朵粬鐨勮＄畻鑺傜偣'
+
+# 没报错了，但是还是不对，我们再试试utf-8
+>>> a.decode("utf-8", error="ignore")
+'你好，麻烦控制一下你在0号节点运行的线程数，0号节点有商业样本在运行，如果可以的话，
+请换个计其他的计算节点'
+
+# 哈哈，这下正确了吧。
+```
+
 
 ### 8. 内建函数
 
@@ -4503,6 +4594,14 @@ re.sub(r"(\d+) *(\d+)", r"\1,\2", "[34 22]")
 ```
 
 
+### 18. struct 解析二进制或socket数据
+
+* [Python使用struct处理二进制 解析二进制数据 解析socket数据](https://blog.csdn.net/a382486075/article/details/54973612)
+* [Python解析二进制文件](https://blog.csdn.net/lovelyaiq/article/details/81988185)
+
+
+
+
 </br>
 
 ## 第三方模块
@@ -5657,6 +5756,16 @@ np.savetxt(outfile, x, delimiter="\t", header=title, comments="# ", fmt="%s")
 `np.ptp()`: 计算数组中元素最大值与最小值的差（最大值 - 最小值）
 `np.amin()`和`np.amax()`: 计算数组中的元素沿指定轴的最小(大)值
 `np.ndarray.byteswap`: 将 ndarray 中每个元素中的字节进行大小端转换
+`np.packbits`, `np.unpackbits`: 将二进制值数组的元素打包成uint8数组中的位
+`np.nbytes`: 查看数组占用的总内存空间  (也可以用sys.getsizeof函数)
+`np.itemsize`: 查看数组中单个元素占用的内存空间
+
+
+**参考**
+
+将bool数组压缩成位。[numpy boolean array with 1 bit entries](https://stackoverflow.com/questions/5602155/numpy-boolean-array-with-1-bit-entries)
+
+
 
 
 ### 4. click
