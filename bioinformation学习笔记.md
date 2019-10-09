@@ -4,14 +4,19 @@
 <!--ts-->
 * [目录](#目录)
 * [常见问题](#常见问题)
+   * [gtf和gff中，exon, UTR, 和CDS区别？](#gtf和gff中exon-utr-和cds区别)
+   * [序列比对时，E值是什么？为什么E值越小越好？](#序列比对时e值是什么为什么e值越小越好)
    * [GC偏好](#gc偏好)
    * [重复序列(Dup)](#重复序列dup)
    * [CNV和SV](#cnv和sv)
    * [标准化](#标准化)
    * [对离散的RNA-seq数据建模，负二项分布(negative binomial distribution)优于泊松分布(poisson distribution)](#对离散的rna-seq数据建模负二项分布negative-binomial-distribution优于泊松分布poisson-distribution)
    * [CNV-seq与CMA之争](#cnv-seq与cma之争)
+   * [芯片数据为什么经常取log2](#芯片数据为什么经常取log2)
+   * [芯片(microArray)和panel区别](#芯片microarray和panel区别)
 * [概念](#概念)
    * [专业名词](#专业名词)
+   * [综合征](#综合征)
    * [隐性基因、显性基因以及共显性基因](#隐性基因显性基因以及共显性基因)
    * [等位基因频率(AF)](#等位基因频率af)
    * [外显率](#外显率)
@@ -51,11 +56,52 @@
 * [文件格式](#文件格式)
    * [.fai (索引文件)](#fai-索引文件)
 * [期刊杂志](#期刊杂志)
+* [下载](#下载)
 <!--te-->
 
 ----
 
 # 常见问题
+
+
+## gtf和gff中，exon, UTR, 和CDS区别？
+
+* [彻底搞清楚promoter, exon, intron, and UTR](http://www.xybiotech.com/resources/support/667.html)
+* [关于exon,CDS,start_codon,stop_codon,UTR那点事情](http://blog.sciencenet.cn/blog-1113671-1079417.html)
+
+
+
+## 序列比对时，E值是什么？为什么E值越小越好？
+
+* [p值、E值、FDR、q值…你晕菜了吗？](https://mp.weixin.qq.com/s?__biz=MzI3MTM3OTExNQ==&mid=2247483871&idx=1&sn=2acadddcc14a01d8bf074e9b6fcadab8&scene=21#wechat_redirect)
+* [人气推文p值、E值、FDR、q值…你晕菜了吗？续集来啦！](https://mp.weixin.qq.com/s?__biz=MzI3MTM3OTExNQ==&mid=2247483940&idx=1&sn=be08093540e43b2cbc386fc5a6e2d934&chksm=eac3fde0ddb474f65cdf50e0c14ec408eb796b7d3422f2c215b7fe5b32aa6790e2c281eeb835&scene=21#wechat_redirect)
+
+
+举个比较极端的例子：我们知道两天序列比对时都有一个打分，打分超过某个阈值，则认为匹配，否则不匹配
+。假设出现假阳(不匹配但被识别为匹配)的概率为0.01(p-value=0.01)，我们使用一条查询序列去匹配某数据库，
+获得了500条候选序列(上帝说：它们与该查询序列其实都不匹配)，则这500个比对中至少出现一次pvalue小于0.01
+的概率为 1-(1-0.01)^500≈0.99。
+
+500个随机比对中打分最好的p值小于等于0.01的概率接近于1！也就是说，p值小于等于0.01的筛选完全无法避免
+错误匹配的混入啊！难道，这么严格的取值都不足以作为这个序列匹配是正确的证据了？！
+
+很遗憾地告诉你，当候选序列很多的时候，这个证据确实还不够强！那么，这种情况下，我们应该继续减小
+p-value的阈值吗？非也！因为这个问题不是出在p-value阈值定高定低了，而是出在p-value指标体现不出
+该查询序列对应的候选序列的数目。所以我们应该做的是，引入另一个既考虑了p-value又考虑了候选序列
+数目的统计指标，它就是传说中的E-value！它的别名就是：期望值(在一个离散性随机变量试验中每次可
+能结果的概率乘以其结果的总和, E-value = p-value * n)。事实上，目前比较知名的一些搜索引擎都使用
+了E值。
+
+是不是大家现在一脸懵圈？这就对了。如果现在碰到和你一样懵或更懵的人的概率是万分之一，对面有1万个人，
+那么，懵圈的E-value就是1（别问我怎么算的）。也就是说，对面大概有1个人和你一样懵或更懵。
+
+对一查询序列来说，比对软件报告一个候选序列A与其匹配的E-value是1，就意味着其他候选序列中还有一个序列B
+（虽然不知道B一定是谁）也可以与这个查询序列匹配得不错，至少和候选序列A与该查询序列的匹配程度相当或更好。
+那么，软件报告这个候选序列A就极有可能是假阳性结果。我们肯定是希望，E-value越小越好，E-value为0.001，
+就是只有千分之一个候选序列可以威胁当前的匹配（突然想到电影院里半个人都没有的梗）。Mascot中常用的阈值
+30分就是这么来的：30分 = -10*log10(E-value=0.001)
+
+
 
 ## GC偏好
 
@@ -186,6 +232,30 @@ PCR放大成百上千倍，为什么NGS的Dup rate只有十位数甚至是个位
 * [好东西应该再次分享——CNV数据分析 (徐雄)](https://mp.weixin.qq.com/s?__biz=MzI0NjQ3OTIwMA==&mid=100000647&idx=1&sn=ee3698b8255f5a180eb277f167d60c15&chksm=69bfe3885ec86a9e5f6b2eca652622306943ad9430e0aa61478c5c6a88b73137d7fdd188c3f1&scene=18&xtrack=1&key=0d395d45dee340535117e67eadabde94a49c87d85a9b41aa71a655ec35c5f20a0bd6c313958c40ff2c1f0720746098dc3b09f1a4ebff14d84cf9ded05779a05dda55188bac051edd99c1db71270d1576&ascene=1&uin=MjQ4MTQ1NDg4Mw%3D%3D&devicetype=Windows+10&version=62060728&lang=zh_CN&pass_ticket=1%2FBYjCaDwDx5g%2FUK4Qpp5Da%2Bs1GM2hvU1qolE43hGId9rJr6llFP6Fbwf4vV1Jzp)
 
 
+## 芯片数据为什么经常取log2
+
+* [Question: Log2 Ratio or Log2 Fold Change - terminology confusion and which one should I use?](https://www.biostars.org/p/221766/)
+* [Why do we usually use Log2 when normalizing the expression of genes?](https://www.researchgate.net/post/Why_do_we_usually_use_Log2_when_normalizing_the_expression_of_genes)
+* [MA plot](https://www.jianshu.com/p/cdfac0bfb733)
+* [文献：The limits of log-ratios](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC400743/)
+* [Nature: Microarray data normalization and transformation](https://www.nature.com/articles/ng1032z)
+
+与对照组相比，实验组fold change变大的取值范围是1-正无穷；但FC变小的取值范围是0-1，不对称。
+将其转化成log2，则不对称数据变成了以0为中心的对称数据。
+
+**为什么不将fold change转换成拷贝数(CN,copy number)，而是要取log2呢？**
+主要是因为芯片数据常用来分析实验组/对照组的基因表达差异，而每个基因的正常拷贝数是多少可能事先不清楚。
+
+
+## 芯片(microArray)和panel区别
+
+* [microarray 和二代测序(NGS)的区别](http://blog.sina.com.cn/s/blog_6babbcb8010165qr.html)
+* **[SNP芯片的原理](https://www.cnblogs.com/think-and-do/p/6611334.html)** 分别介绍了Illumina、Affymetrix(昂飞)和Agilen(安捷伦)的多款芯片设计原理，非常棒！
+
+本质区别：芯片属于一代测序(本质是核酸杂交), panel属于二代测序(本质是PCR)
+
+
+
 ----
 
 
@@ -197,6 +267,14 @@ PCR放大成百上千倍，为什么NGS的Dup rate只有十位数甚至是个位
 * VUS (Variant Uncertain Significance)：未知的变异，意义不确定的变异
 * AF (Allele Frequency): 等位基因频率
 * MAF (Minor Allele Frequency): 多个群体中总的AF?
+* X-inactivation ([X染色体去激活](https://en.wikipedia.org/wiki/X-inactivation)): 
+又称X染色体失活或里昂化，是指雌性哺乳类细胞中两条X染色体的其中之一失去活性的现象。
+X染色体会被包装成异染色质，进而因功能受抑制而沉默化。
+
+
+## 综合征
+
+[WiKi收录的1430个综合征](https://en.wikipedia.org/wiki/List_of_syndromes)
 
 
 ## 隐性基因、显性基因以及共显性基因
@@ -1141,6 +1219,11 @@ COSMIC是一个在人类癌症中发现的体细胞获得性突变的在线数�
 
 ## 遗传疾病公共数据库
 
+* `DECIPHER`: 国际公共致病性CNVs数据库
+* `CliGen(原ISCA)`: 国际细胞基因芯片标准化联合会
+* `OMIM`: 在线人类孟德尔遗传数据库
+* `DGV`: 国际公共良性CNVs数据库
+
 **DECIPHER**
 
 [DECIPHER](https://decipher.sanger.ac.uk/disorders#syndromes/overview) 为“Database of Chromosomal Imbalance and Phenotype 
@@ -1695,3 +1778,10 @@ def get_seq(self, fbuffer, start, end, offset, line, size):
 * journal of clinical oncology (临床肿瘤学杂志, IF=26)
 * genome research (基因组研究, IF=10)
 * clinical chemistry (临床化学, IF=8)
+
+
+----
+
+# 下载
+
+* affyCytoScan探针: http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/affyCytoScan.txt.gz

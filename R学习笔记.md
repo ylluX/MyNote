@@ -5,6 +5,7 @@
 * [目录](#目录)
 * [随笔](#随笔)
    * [常用命令](#常用命令)
+   * [数组](#数组)
    * [创建空data.frame](#创建空dataframe)
    * [paste和cat区别](#paste和cat区别)
    * [插入1行或1列](#插入1行或1列)
@@ -22,6 +23,12 @@
 
 * 查看R版本：`version`
 * 安装包: `install.packages(package)`
+
+## 数组
+
+* 生成连续序列：`seq(from=1,to=5,by=2)`, 增量为1可写成：c(1:5)
+* 生成重复序列：`rep(1, times=5)`
+
 
 ## 创建空data.frame
 

@@ -5542,6 +5542,7 @@ math.log(4,3)
 
 * `np.nonzero`: 返回非0元素的index
 * `np.where`: 获得符合条件的元素的index
+* **`np.searchsorted`**: 如果将某个值按大小插入到已经排过序的数组中，返回该值应该插入的位置
 
 
 **提取对角线或构造对角线数组**
@@ -6567,6 +6568,54 @@ plt.ylabel("y 轴", fontproperties=zhfont1)
 plt.plot(x,y) 
 plt.show()
 ```
+
+
+**画图例(legend)**
+
+画方块
+
+```
+import matplotlib.patches as patches
+
+rect1 = patches.Rectangle((0,0),1,1,facecolor='#FF605E')
+rect2 = patches.Rectangle((0,0),1,1,facecolor='#64B2DF')
+plt.legend((rect1, rect2), ('2016', '2015'))
+```
+
+画圆
+
+```
+from matplotlib.lines import Line2D
+
+red_circle = Line2D([0], [0], marker='o', color='w', label='Circle',
+                        markerfacecolor='r', markersize=15)
+
+plt.legend(handles=red_circle, lables="circle legend")
+```
+
+
+**参考系transforms**
+
+X坐标使用数据参考系，Y坐标使用axes参考系
+
+```
+import matplotlib.transforms as transforms
+
+trans = transforms.blended_transform_factory(
+
+    ax.transData, ax.transAxes)
+
+rect = patches.Rectangle((1,0), width=1, height=1,
+                         transform=trans, color='yellow',
+                         alpha=0.5)
+```
+
+
+
+**其它**
+
+`ax.axis("equal")` # 这个是将X轴和Y轴坐标设置为一样。
+
 
 
 ### 12. Bokeh

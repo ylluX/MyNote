@@ -2,30 +2,28 @@
 
 <!--自动插入TOC：https://github.com/ekalinin/github-markdown-toc-->
 <!--ts-->
-   * [目录](#目录)
-   * [基本概念](#基本概念)
-      * [1. 工作区、暂存区和仓库:](#1-工作区暂存区和仓库)
-      * [2. 分支间的关系](#2-分支间的关系)
-   * [常见问题](#常见问题)
-      * [参考资料](#参考资料)
-      * [修改远端仓库的标签](#修改远端仓库的标签)
-      * [push到Github每次都要输入密码](#push到github每次都要输入密码)
-      * [添加了ssh-key还是需要输入用户名密码的问题](#添加了ssh-key还是需要输入用户名密码的问题)
-      * [一台电脑同时使用GitLab和GitHub仓库](#一台电脑同时使用gitlab和github仓库)
-      * [git如何clone所有的远程分支](#git如何clone所有的远程分支)
-      * [git本地的撤销修改和删除操作](#git本地的撤销修改和删除操作)
-   * [常见操作](#常见操作)
-      * [分支(branch)](#分支branch)
-      * [log](#log)
-      * [标签(tag)](#标签tag)
-      * [diff](#diff)
-      * [rm](#rm)
-      * [merge](#merge)
-      * [根据commit id查询包含该提交id的所有分支](#根据commit-id查询包含该提交id的所有分支)
-   * [ssh-keygen](#ssh-keygen)
-
-<!-- Added by: luyl, at: 2018-12-25T17:37+08:00 -->
-
+* [目录](#目录)
+* [基本概念](#基本概念)
+   * [1. 工作区、暂存区和仓库:](#1-工作区暂存区和仓库)
+   * [2. 分支间的关系](#2-分支间的关系)
+* [常见问题](#常见问题)
+   * [参考资料](#参考资料)
+   * [修改远端仓库的标签](#修改远端仓库的标签)
+   * [push到Github每次都要输入密码](#push到github每次都要输入密码)
+   * [添加了ssh-key还是需要输入用户名密码的问题](#添加了ssh-key还是需要输入用户名密码的问题)
+   * [一台电脑同时使用GitLab和GitHub仓库](#一台电脑同时使用gitlab和github仓库)
+   * [git如何clone所有的远程分支](#git如何clone所有的远程分支)
+   * [git本地的撤销修改和删除操作](#git本地的撤销修改和删除操作)
+   * [同tag和branch同名同姓时，各种操作错误](#同tag和branch同名同姓时各种操作错误)
+* [常见操作](#常见操作)
+   * [分支(branch)](#分支branch)
+   * [log](#log)
+   * [标签(tag)](#标签tag)
+   * [diff](#diff)
+   * [rm](#rm)
+   * [merge](#merge)
+   * [根据commit id查询包含该提交id的所有分支](#根据commit-id查询包含该提交id的所有分支)
+* [ssh-keygen](#ssh-keygen)
 <!--te-->
 
 ----
@@ -257,6 +255,16 @@ git clone只能clone远程库的master分支，无法clone所有分支，解决�
 如果要回退到上个版本： `git reset -hard HEAD^`
 
 如果已经add到暂存区，但还没有commit，想要回退到修改前的状态：`git reset HEAD <file>`
+
+
+## 同tag和branch同名同姓时，各种操作错误
+
+主要报错类型：error: src refspec XXX matches more than one  [这里](https://blog.csdn.net/ydt_lwj/article/details/7812413)的解决方案是
+先删除同名tag，再更新branch。那么在不删除同名tag时，能否更新branch呢，答案是肯定的：
+`git push origin refs/heads/branchname:refs/heads/branchname`
+
+还有一种情况是：远端同名branch和tag是藕连的，及branch和tag一样是静止快照？此时更新branch后，看不到更新，此时怎么办呢？
+我们可以在本地先将branch打个新标签再更新，就能通过新标签查看最新内容。
 
 
 ----
