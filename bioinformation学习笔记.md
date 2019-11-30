@@ -14,6 +14,8 @@
    * [CNV-seq与CMA之争](#cnv-seq与cma之争)
    * [芯片数据为什么经常取log2](#芯片数据为什么经常取log2)
    * [芯片(microArray)和panel区别](#芯片microarray和panel区别)
+   * [怎么获取unique mapping read？](#怎么获取unique-mapping-read)
+   * [双端测序中read1和read2的关系](#双端测序中read1和read2的关系)
 * [概念](#概念)
    * [专业名词](#专业名词)
    * [综合征](#综合征)
@@ -43,6 +45,7 @@
    * [肿瘤数据库](#肿瘤数据库)
    * [遗传疾病公共数据库](#遗传疾病公共数据库)
    * [其它](#其它)
+   * [在线资源](#在线资源)
 * [软件](#软件)
    * [生物信息软件参数解析](#生物信息软件参数解析)
       * [samtools](#samtools)
@@ -52,9 +55,12 @@
          * [基础操作](#基础操作)
          * [API](#api)
             * [SAM/BAM/CRAM files](#sambamcram-files)
+         * [实例](#实例)
    * [BWA & Bowtie2](#bwa--bowtie2)
+   * [IGV](#igv)
 * [文件格式](#文件格式)
    * [.fai (索引文件)](#fai-索引文件)
+   * [sam](#sam)
 * [期刊杂志](#期刊杂志)
 * [下载](#下载)
 <!--te-->
@@ -256,8 +262,69 @@ PCR放大成百上千倍，为什么NGS的Dup rate只有十位数甚至是个位
 
 
 
-----
+## 怎么获取unique mapping read？
 
+[怎么获取unique mapping read？](http://www.biotrainee.com/thread-1115-1-1.html)
+
+**tophat/hisat2**
+
+grep 'NH:i:1' out.sam > unique.sam
+
+**BWA**
+
+有`XT:A:U`就代表这一条是unique read。 ("XT"代表mapping类型，数据类型为"A"，即可打印字符，其值可以是Unique/Repeat/N/Mate-sw).
+
+由于BWA还提供了"AS"(alignment score)和"XS"(suboptimalalignment score)这两项，所以即使有些reads没有被Uniquely mapped，
+只要AS的值和XS的值相差足够大，也有一定价值。
+
+**Bowtie2**
+
+由于bowtie2产生的sam文件并没有NH标签，所以提取uniqueread可能比较麻烦。首先提取“AS”标签表示能比对上的read（>=1 time），
+然后利用grep反正则表达式过滤掉XS标签得到我们需要的unique read。
+
+`单端`: grep "AS:" aligned.sam | grep –v "XS:" > unique_alignments.sam
+
+`双端`：grep "AS:" aligned.sam | grep –v "XS:" > unique_alignments.sam | grep "YT:Z:CP" unique.sam > pair-end_unique.sam
+  ("Filter out the reads that aligned concordantly using grep YT:Z:CP")
+
+
+
+## 双端测序中read1和read2的关系
+
+[双端测序中read1和read2的关系](https://www.jianshu.com/p/b18ee79a0285)
+
+原始reads如下：
+
+XXX.R1.fastq
+
+```
+@NS500832:569:HNN3VAFXY:3:21405:22082:10749 1:N:0:AATAAGC
+GGTAAATTTAAAATAAAACAAGCGGGAGTCACAGATACACTGTCTGGGAAAGTGAAACTTAAGAGCTTTGTGAGTCCTGTTGTAATGCTTTTAGATGCATTTATATACCAACAGGCCAAAGTCACATTTTTTAC
++
+EEEEEEEEEEEEEEEEAEEEEEAAEEEEEEEEEEEAE/AEEEA/AE<<E<AEEEEAEEEE/<AEEAEE<<EE<AEE/EAEEEEEEEEEAEEA<EEE<EE/<EEE<E<//</AEAE6//AEEEAE/<EAAEAAA<
+```
+
+XXX.R2.fastq
+
+```
+@NS500832:569:HNN3VAFXY:3:21405:22082:10749 2:N:0:AATAAGC
+AACCTTGGTAACCCCTGAATGATCAGGAATCTAATCGGTAAAAAATGTGACTTTGGCCTGTTGGTATATAAATGCATCTAAAAGCATTACAACAGGACTCACAAAGCTCTTAAGTTTCACTTTCCCAGACAGTGTA
++
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE/EEEE/EEAEEEEEEEEEE<EAEEEEA6/EAAEAA<EEE<<EEEE<EEEEEEEEEEEAEEE/EEEEEEEEEE<AEEE/EEEAEAEEEA</</AEEEEEE/AE
+```
+
+经过bowtie2比对后的sam文件中的记录如下：
+
+```
+NS500832:569:HNN3VAFXY:3:21405:22082:10749   99    chr6  29794821 27 134M  =  29794856 171   GGTAAATTTAAAATAAAACAAGCGGGAGTCACAGATACACTGTCTGGGAAAGTGAAACTTAAGAGCTTTGTGAGTCCTGTTGTAATGCTTTTAGATGCATTTATATACCAACAGGCCAAAGTCACATTTTTTAC    EEEEEEEEEEEEEEEEAEEEEEAAEEEEEEEEEEEAE/AEEEA/AE<<E<AEEEEAEEEE/<AEEAEE<<EE<AEE/EAEEEEEEEEEAEEA<EEE<EE/<EEE<E<//</AEAE6//AEEEAE/<EAAEAAA<    AS:i:-3  XS:i:-65 XN:i:0   XM:i:1   XO:i:0   XG:i:0   NM:i:1   MD:Z:76G57  YS:i:-5  YT:Z:CP
+NS500832:569:HNN3VAFXY:3:21405:22082:10749   147   chr6  29794856 27 136M  =  29794821 -171  TACACTGTCTGGGAAAGTGAAACTTAAGAGCTTTGTGAGTCCTGTTGTAATGCTTTTAGATGCATTTATATACCAACAGGCCAAAGTCACATTTTTTACCGATTAGATTCCTGATCATTCAGGGGTTACCAAGGTT  EA/EEEEEEA/</<AEEEAEAEEE/EEEA<EEEEEEEEEE/EEEAEEEEEEEEEEE<EEEE<<EEE<AAEAAE/6AEEEEAE<EEEEEEEEEEAEE/EEEE/EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE  AS:i:-5  XS:i:-75 XN:i:0   XM:i:1   XO:i:0   XG:i:0   NM:i:1   MD:Z:41G94  YS:i:-3  YT:Z:CP
+```
+
+可见，双端测序下机数据中得到的read1和read2是两条互补链insertsize中方向相对的两条序列，再比对到单链的参考基因组之前会先将其中一条read转义，
+然后进行比对，所以比对得到的SAM和BAM文件中read1和read2有一条是被转了的。
+
+
+----
 
 # 概念
 
@@ -291,6 +358,46 @@ ABO血型的基因已定位于第9号染色体上的9q4.2位点，在这一基�
 原A的产生，这种个体为A型血，基因型BB和BO都决定红细胞膜上抗原B的产生，这种个体为B型血，基因型OO
 则只有H物质的产生面而不产生抗原A和抗原B，这种个体为O型血，基因型AB决定红细胞膜上有抗原A和抗原B，
 故为AB型血，为共显性遗传。
+
+
+**DiGeorge综合征(22q11.2缺失)**
+
+DiGeorge综合征(DiGeorge syndrome, DGS)是一组与咽囊系统发育缺陷有关的体征和症状。DGS的典型三联征表
+现为心脏圆锥动脉干畸形、胸腺发育不全和低钙血症(由甲状旁腺发育不全造成)。大多数DGS患者以及诸如腭心
+面综合征(velocardiofacial syndrome，VCFS，也称为Shprintzen综合征)的其他类似综合征患者都存在染色体
+22q11.2的缺失。这些疾病都属于染色体22q11.2缺失综合征(22q11.2 deletion syndrome, 22qDS)的范畴。
+
+对于疑似DGS或22qDS的新生儿的紧急治疗主要着重于评估和治疗可能的低钙血症和严重先天性心脏缺陷，以及识
+别和治疗患有完全DGS[一种严重的联合免疫缺陷病(severe combined immunodeficiency, SCID)]的新生儿
+
+**猫叫综合征**
+
+患者第5号染色体短臂缺失，故又名5p—综合征，为最常见的缺失综合征，因婴儿时有猫叫样啼哭而
+得名，其原因在于患儿的喉部发育不良或未分化所致，发病率约为1/50000，女患者多于男患者。
+
+头小，圆月脸不对称，呈惊恐状；眼距增宽，内眦赘皮，眼角下斜，斜视，白内障，视神经萎缩；
+鼻梁宽，小下颌，偶见唇腭裂，错咬合，耳位低，发育不良，颈短。新生儿期肌力低下，明显的智力低下、
+智力发育迟缓，如2岁后才能坐稳，4岁后才能独立走路，成人期后多动及破坏性行为。生长发育落后，
+先天性心脏病（50%）；掌骨短，并指，通贯掌纹，髋关节脱位，半椎体，脊柱侧凸；肾脾缺如，尿道下裂，
+隐睾，腹股沟疝等。
+
+死亡率较低，很多患者存活至成年，但他们的身高及体重低于正常人。
+
+
+
+**猫眼综合征**
+
+猫眼症候群（英语：Cat eye syndrome）是一种遗传病，其会导致眼睛虹膜的缺损，使眼睛看起来像猫眼一样。
+其在瑞士的发生率约为1/50000至1/150000。
+
+遗传方面，其遗传方式为无家族史的偶发案例。最常原因为最常是因为第22对染色体长臂11位置发生了重复及
+180度反转所致，而带有2个染色体的著丝点及双卫星区域。
+
+眼睑裂下斜(down-slanting palpebral fissures)和眼间距过宽(ocular hypertelorism)等若干眼部缺陷、
+耳前窝/耳前赘(preauricular pits/tags)、肾脏问题(缺肾、多肾、肾发育不良)、个子矮小、疝气、智力
+缺陷(只有一小部分猫眼综合征患者智力正常)、骨骼缺陷、大量其它器官问题
+
+
 
 
 
@@ -744,7 +851,7 @@ ClinGen评估了Loss of fucntion和triplosensitivity（基因发生duplicate）�
 量证据表明与表型相关，此外，针对剂量不敏感的基因，给40的score，引起AR疾病的基因，评分为30的
 score。
 
-**ExAC的pLI**
+**[ExAC的pLI score](https://decipher.sanger.ac.uk/info/loss-intolerance)**
 
 我们还得聊一聊另一个预测值pLI，它指的是基因对于LOF突变的不可忍受的可能性。
 The Exome Aggregation Consortium (ExAC) 通过分析60,706 不同族群的个体外显子数据，
@@ -752,13 +859,19 @@ The Exome Aggregation Consortium (ExAC) 通过分析60,706 不同族群的个体
 的罕见突变和期望的罕见突变数据，通过Z score量化这种偏离。编码区的长度来减少混杂因素，对于蛋白
 截断突变（Protein Truncating Variants (PTV) ），通过比较PTV在观察和期望中的数据，将基因分成3类。
 
-* `Null`, 观察约等于期望，对LoF突变耐受 where observed ≈ expected (LoF variation is tolerated)
+* `Null`, 观察约等于期望，对LoF突变耐受 where observed ≈ expected (LoF variation is tolerated) 
+【即使纯合缺失，也不会引起表型变化】
 * `Recessive`, 观察得到的小于期望的50%，杂合LoF耐受 where observed ≤ 50% of expected (heterozygous LoFs are tolerated)
+【杂合缺失，不会引起表型变化，但纯合缺失会引起变化】
 * `Haploinsufficient`, 观察得到的小于期望的10%，杂合LoF不耐受where observed < 10% of expected (heterozygous LoFs are not tolerated) 
+【杂合缺失，会引起表型变化】
 
 pLI分值是一个给定基因归类到Haploinsufficient 类别中的概率，也就是对LoF不耐受的分值。分值越高，
 越不耐受（intolerant），分值越低，越耐受（tolerant）。当然，具体运用中，不能仅根据pLI值就判定
 一个LOF突变的致病性，我们还要同时考虑如疾病发病年龄，外显率，Haploinsufficiency score等。
+【高pLI(>=0.9), 基因对LoF极度不耐受，也就是杂合缺失会引起表型变化；低pLI(<=0.1),基因对LoF极度耐受，
+也就是纯合缺失也不会引起表型变化】
+
 
 
 ## 基因组变异检测
@@ -1383,6 +1496,19 @@ Experiment, MIAME)兼容数据提交的公共功能基因组数据存储库。�
 
 
 
+## 在线资源
+
+**UCSC**
+
+hg19相关资源：http://hgdownload.cse.ucsc.edu/goldenpath/hg19/database/。
+可以下到 `cytoBand`, `Affy相关芯片` 等等很多很多信息。
+
+UCSC使用介绍：https://wenku.baidu.com/view/55edd1be3868011ca300a6c30c2259010302f338.html
+
+
+
+
+
 
 ----
 
@@ -1427,7 +1553,8 @@ filter
 
 * [pysam: htslib interface for python](https://pysam.readthedocs.io/en/latest/index.html)
 * [pysam - 多种格式基因组数据（sam/bam/vcf/bcf/cram/…）读写与处理模块（python)](https://www.cnblogs.com/nkwy2012/p/6558069.html)
-
+* [如何使用Python处理BAM](https://zhuanlan.zhihu.com/p/31625187)
+* [用python做生物信息数据分析（2-pysam）](https://www.jianshu.com/p/0a6eaed4d5e5)
 
 在开发基因组相关流程或工具时，经常需要读取、处理和创建bam、vcf、bcf文件。
 目前已经有一些主流的处理此类格式文件的工具，如samtools、picard、vcftools、bcftools，
@@ -1544,14 +1671,15 @@ pysam模块非常实用,有了pysam模块,我们就可以非常灵活的操纵ba
 
 >pysam.AlignedSegment(AlignmentHeader header=None)
 
-**aend**: 参考序列结束位置(抛弃，用reference_end代替)
-**alen**: 参考序列长度(抛弃，用reference_length代替)
-**aligned_pairs**: 查询序列和参考序列一一对应的比对位点(抛弃，用get_aligned_pairs()代替)
-**bin**: 
-**blocks**: 参考序列的起始和终止位点(抛弃，用get_blocks()代替)
-**cigar**: cigar属性，简要比对信息表达式(抛弃，用cigar代替)
-**cigarstring**: 简要比对信息表达式，比如：'3S6M1P1I4M'
-**cigartuples**: 简要比对信息表达式, 返回列表，如： (operation, length)
+* **aend**: 参考序列结束位置(抛弃，用reference_end代替)
+* **alen**: 参考序列长度(抛弃，用reference_length代替)
+* **aligned_pairs**: 查询序列和参考序列一一对应的比对位点(抛弃，用get_aligned_pairs()代替)
+* **bin**: 
+* **blocks**: 参考序列的起始和终止位点(抛弃，用get_blocks()代替)
+* **cigar**: cigar属性，简要比对信息表达式(抛弃，用cigar代替)
+* **cigarstring**: 简要比对信息表达式，比如：'3S6M1P1I4M'
+* **cigartuples**: 简要比对信息表达式, 返回列表，如： (operation, length)
+
 operation的类型：
 | 简写 | 类型 | 数字 |
 | ----- | ----:|:---- |
@@ -1565,88 +1693,89 @@ operation的类型：
 |=|BAM_CEQUAL|7|
 |X|BAM_CDIFF|8|
 |B|BAM_CBACK|9|
-**compare(self, AlignedSegment other)**: return -1,0,1, if contents in this are binary <,=,> to other
-**flag**: flag属性
-**from_dict(type cls, sam_dict, AlignmentHeader header)**: 解析代表aligned segment的字典
-**fromstring(type cls, sam, AlignmentHeader header)**: 
-**get_aligned_pairs(self, matches_only=False, with_seq=False)**: 查询序列和参考序列一一对应的比对位点
-**get_blocks(self)**: a list of start and end positions of aligned gapless blocks
-**get_cigar_stats(self)**: 
-**get_forward_qualities(self)**: 原始reads的碱基质量(map到负链上的reads将是反的)
-**get_forward_sequence(self)**: 原始reads的碱基序列(map到负链上的reads将是反的)
-**get_overlap(self, uint32_t start, uint32_t end)**: 
-**get_reference_positions(self, full_length=False)**: reads比对到参考基因组的位置列表
-**get_reference_sequence(self)**: 参考序列
-**get_tag(self, tag, with_value_type=False)**: 
-**get_tags(self, with_value_type=False)**: 可选字段 [('XT', 'U'), ('NM', 1), ('X0', 1), ('MD', '24G11')]
-**has_tag(self, tag)**: 
-**infer_query_length(self, always=False)**: 从CIGAR字段推断查询序列长度
-**infer_read_length(self)**: 从CIGAR字段推断read长度
-**inferred_length**: 抛弃，用 infer_query_length()代替
-**is_duplicate**: 是否是 optical 或者PCR重复
-**is_paired**: 是否是paired序列
-**is_proper_pair**: 是否是适当、正确的pair？
-**is_qcfail**: 是否质控失败
-**is_read1**: 
-**is_read2**: 
-**is_reverse**: 是否map到负链
-**is_secondary**: 是否不是主要的比对(有更好的比对位置)
-**is_supplementary**: 是否是补充对齐
-**is_unmapped**: 是否没有比对上
-**isize**: 抛弃，使用template_length代替
-**mapping_quality**: mapping的质量
-**mapq**: 抛弃，用mapping_quality代替
-**mate_is_reverse**: 是否mate比对到了负链
-**mate_is_unmapped**: mate是否没有比对上
-**mpos**: 抛弃，用next_reference_start代替
-**mrnm**: 抛弃， 用next_reference_id代替
-**next_reference_id**:  mate/next read的reference id
-**next_reference_name**: 
-**next_reference_start**: 
-**opt(self, tag)**: 抛弃，用get_tag()代替
-**overlap(self)**: 抛弃，用get_overlap() 代替
-**pnext**: 抛弃，用next_reference_start 代替
-**pos**: 抛弃，用reference_start代替
-**positions**: 抛弃，用 get_reference_positions()代替
-**qend**: 抛弃，用query_alignment_end代替
-**qlen**: 抛弃，用query_alignment_length代替
-**qname**: 抛弃，用query_name代替
-**qqual**: 抛弃，用query_alignment_qualities代替
-**qstart**: 抛弃，用query_alignment_start代替
-**qual**: 抛弃，用query_qualities 代替
-**query**: 抛弃，用query_alignment_sequence 代替
-**query_alignment_end**: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****: 
-****:
+
+* **compare(self, AlignedSegment other)**: return -1,0,1, if contents in this are binary <,=,> to other
+* **flag**: flag属性
+* **from_dict(type cls, sam_dict, AlignmentHeader header)**: 解析代表aligned segment的字典
+* **fromstring(type cls, sam, AlignmentHeader header)**: 
+* **get_aligned_pairs(self, matches_only=False, with_seq=False)**: 查询序列和参考序列一一对应的比对位点
+* **get_blocks(self)**: a list of start and end positions of aligned gapless blocks
+* **get_cigar_stats(self)**: 
+* **get_forward_qualities(self)**: 原始reads的碱基质量(map到负链上的reads将是反的)
+* **get_forward_sequence(self)**: 原始reads的碱基序列(map到负链上的reads将是反的)
+* **get_overlap(self, uint32_t start, uint32_t end)**: 
+* **get_reference_positions(self, full_length=False)**: reads比对到参考基因组的位置列表
+* **get_reference_sequence(self)**: 参考序列
+* **get_tag(self, tag, with_value_type=False)**: 
+* **get_tags(self, with_value_type=False)**: 可选字段 [('XT', 'U'), ('NM', 1), ('X0', 1), ('MD', '24G11')]
+* **has_tag(self, tag)**: 
+* **infer_query_length(self, always=False)**: 从CIGAR字段推断查询序列长度
+* **infer_read_length(self)**: 从CIGAR字段推断read长度
+* **inferred_length**: 抛弃，用 infer_query_length()代替
+* **is_duplicate**: 是否是 optical 或者PCR重复
+* **is_paired**: 是否是paired序列
+* **is_proper_pair**: 是否是适当、正确的pair？
+* **is_qcfail**: 是否质控失败
+* **is_read1**: 
+* **is_read2**: 
+* **is_reverse**: 是否map到负链
+* **is_secondary**: 是否不是主要的比对(有更好的比对位置)
+* **is_supplementary**: 是否是补充对齐
+* **is_unmapped**: 是否没有比对上
+* **isize**: 抛弃，使用template_length代替
+* **mapping_quality**: mapping的质量
+* **mapq**: 抛弃，用mapping_quality代替
+* **mate_is_reverse**: 是否mate比对到了负链
+* **mate_is_unmapped**: mate是否没有比对上
+* **mpos**: 抛弃，用next_reference_start代替
+* **mrnm**: 抛弃， 用next_reference_id代替
+* **next_reference_id**:  mate/next read的reference id
+* **next_reference_name**: 
+* **next_reference_start**: 
+* **opt(self, tag)**: 抛弃，用get_tag()代替
+* **overlap(self)**: 抛弃，用get_overlap() 代替
+* **pnext**: 抛弃，用next_reference_start 代替
+* **pos**: 抛弃，用reference_start代替
+* **positions**: 抛弃，用 get_reference_positions()代替
+* **qend**: 抛弃，用query_alignment_end代替
+* **qlen**: 抛弃，用query_alignment_length代替
+* **qname**: 抛弃，用query_name代替
+* **qqual**: 抛弃，用query_alignment_qualities代替
+* **qstart**: 抛弃，用query_alignment_start代替
+* **qual**: 抛弃，用query_qualities 代替
+* **query**: 抛弃，用query_alignment_sequence 代替
+* **query_alignment_end**: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****: 
+* ****:
 
 
 >class pysam.PileupColumn
@@ -1655,6 +1784,59 @@ operation的类型：
 
 >class pysam.IndexedReads(AlignmentFile samfile, int multiple_iterators=True)
 
+
+#### 实例
+
+**统计指定SNP位点各碱基的数目**
+
+```
+import pysam
+
+def get_snp_count(samf, chrom, snp):
+    data = {"ref": "", "A": 0, "T": 0, "C": 0, "G": 0}
+    reads = samf.fetch(chrom, snp-1, snp)
+    firstline = True
+    for read in reads:
+        snp_pos, _, ref_base = [i for i in read.get_aligned_pairs(with_seq=True) if i[1] == snp-1][0]
+        query_base = read.query[snp_pos].upper()
+        data[query_base] += 1
+        if firstline:
+            data["ref"] = ref_base.upper()
+            firstline = False
+    return data
+```
+
+**提取比对到某SNP位点的非uniq reads**
+
+```
+import pysam
+
+# 获得比对到指定位点的非uniq reads的ID
+def get_reads_id(bamfile, chrom, pos):
+    samf = pysam.AlignmentFile(bamfile)
+    ids = []
+    reads = samf.fetch(chrom, pos-1, pos)
+    for read in reads:
+        try:
+            read.get_tag("XS")
+        except:
+            continue
+        name = read.to_dict()["name"]
+        if name not in ids:
+            ids.append(name)
+    samf.close()
+    return ids
+
+# 根据reads ID提取比对结果
+def get_reads(bamfile, outsamfile, ids):
+    samf = pysam.AlignmentFile(bamfile)
+    outfile = pysam.AlignmentFile(outsamfile, mode="w", template=samf)
+    for read in samf:
+        if read.query_name in ids:
+            outfile.write(read)
+    samf.close()
+    outfile.close()
+```
 
 
 ## BWA & Bowtie2
@@ -1674,6 +1856,68 @@ bowtie就成了不二选择。bowtie被广泛地应用于ChIP-seq, RNA-seq的分
 因为它快速，下游结合cufflinks等结果验证率很高。
 
 对于SNP， Indels, methylation分析，使用BWA，下游结合GATK可能会好一点。
+
+
+
+**[bowtie2比对后产生的Alignment summary解读](https://www.cnblogs.com/leezx/p/8540862.html)**
+
+Hisat2和bowtie2比对后产生的Alignment summary的格式是一样的，如下：
+
+单端数据比对的结果如下：
+
+```
+20000 reads; of these:
+  20000 (100.00%) were unpaired; of these:
+    1247 (6.24%) aligned 0 times
+    18739 (93.69%) aligned exactly 1 time
+    14 (0.07%) aligned >1 times
+93.77% overall alignment rate
+```
+
+双端数据比对的结果如下：
+
+```
+10000 reads; of these:
+  10000 (100.00%) were paired; of these:
+    650 (6.50%) aligned concordantly 0 times
+    8823 (88.23%) aligned concordantly exactly 1 time
+    527 (5.27%) aligned concordantly >1 times
+    ----
+    650 pairs aligned concordantly 0 times; of these:
+      34 (5.23%) aligned discordantly 1 time
+    ----
+    616 pairs aligned 0 times concordantly or discordantly; of these:
+      1232 mates make up the pairs; of these:
+        660 (53.57%) aligned 0 times
+        571 (46.35%) aligned exactly 1 time
+        1 (0.08%) aligned >1 times
+96.70% overall alignment rate
+```
+
+解读双端模式：
+
+第一部分：
+
+`aligned concordantly`就是read1和read2同时合理的比对到了基因组/转录组上。 `exactly 1 time` 就是只有一种比对结果。
+`>1 times` 就是read1和read2可以同时比对到多个地方。
+
+第二部分：
+
+`concordantly 0 times`就是read1和read2不能同时合理的同时比对到基因组/转录组上
+
+`aligned discordantly`就是read1和read2都能比对上，但是不合理，1. 比对方向不对，pair-end测序的方向是固定的；
+2.read1和read2的插入片段长度是有限的
+
+第三部分：
+
+对剩余reads（既不能concordantly，也不能discordantly 1 time）的单端模式的比对
+
+
+
+
+## IGV
+
+* [学IGV必看的初级教程](https://tiramisutes.github.io/2018/02/05/IGV.html)
 
 
 
@@ -1763,6 +2007,30 @@ def get_seq(self, fbuffer, start, end, offset, line, size):
 这样直接返回的就是序列了。为了确认查询的是否正确，
 我一般会用同样的坐标在用samtools查一遍。确认没问题。
 
+
+## sam
+
+**各标签含义**
+
+***tophat/hisat2***
+
+* `NH:i:<N>`: N=1时 为unique。常用于tophat/hisat2产生的sam文件unique read筛选。
+* `CC:Z`: 当为‘=’为map到同一条基因上，一般在map基因组时由于内含子存在而容易出现，他只代表两种不同的方式，计数时应记为1。此处一般为其他基因的名字。CP:i 和HI：i标签为map到第i条基因及起始位置。
+* `YT:Z:<S>`:代表的含义与bowtie产生的sam也不同。具体还未知！其他标签AS，XN,XM,XO,XG,NM,MD等如下图可以看出都相同。
+
+***bowtie2***
+
+* `AS:i:<N>` Alignment score.可以为负的，在local下可以为正的。 只有当Align≥1 time才出现
+* `XS:i:<N>` Alignment score for second-best alignment. 当Align>1 time出现
+* `YS:i:<N>` Alignment score for opposite mate in the paired-end alignment. 当该read是双末端测序中的另一条时出现
+* `XN:i:<N>` Thenumber of ambiguous bases in the reference covering this alignment.（推测是指不知道错配发生在哪个位置，推测是针对于插入和缺失，待查证）
+* `XM:i:<N>` 错配碱基的数目
+* `XO:i:<N>` Thenumberof gap opens(针对于比对中的插入和缺失)
+* `XG:i:<N>` Thenumberof gap extensions(针对于比对中的插入和缺失延伸数目)
+* `NM:i:<N>` Theeditdistance。（edits:插入/缺失/替换数目)
+* `YF:Z:<S>` 该reads被过滤掉的原因。可能为LN(错配数太多，待查证)、NS(read中包含N或者．)、SC(match bonus低于设定的阈值)、QC(failing quality control，待证)
+* `YT:Z:<S>` 值为UU表示不是pair中一部分、CP是pair且可以完美匹配、DP是pair但不能很好的匹配、UP是pair但是无法比对到参考序列上。
+* `MD:Z:<S>` 比对上的错配碱基的字符串表示。
 
 
 ----

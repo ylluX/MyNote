@@ -4,7 +4,7 @@
 <!--ts-->
 * [目录](#目录)
 * [基本概念](#基本概念)
-   * [灵敏度/特异度](#灵敏度特异度)
+   * [分类模型评价指标](#分类模型评价指标)
    * [损失函数(Loss function)/代价函数(成本函数)(Cost function)](#损失函数loss-function代价函数成本函数cost-function)
    * [分类/回归](#分类回归)
    * [哑变量](#哑变量)
@@ -37,23 +37,33 @@
 
 # 基本概念
 
-## 灵敏度/特异度
+## 分类模型评价指标
 
 [Sensitivity and specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity)
 
-* 真阳性率(true positive rate, TPR)，又称为灵敏度(sensitivity)，即有病诊断阳性的概率   TPR = TP/(TP+FN)
-* 真阴性率(true negative rate)，又称为特异度(specificity, SPC), 即无病诊断阴性的概率   SPC = TN/(TN+FP)
+* 真阳性率(true positive rate, TPR)，又称为灵敏度(sensitivity)，又或称为阳性符合率(positive percentage agreement, PPA)，
+即有病诊断阳性的概率   TPR = TP/(TP+FN)
+* 真阴性率(true negative rate)，又称为特异度(specificity, SPC), 又或称为阴性符合率(negative percentage agreement, NPA), 
+即无病诊断阴性的概率   SPC = TN/(TN+FP)
 * 假阳性率(false positive rate, FPR)，又称为"误诊率"   FPR = FP/(FP+TN) = 1 - SPC
 * 假阴性率(false negative rate, FNR)，又称为"漏诊率"   FNR = FN/(TP+FN) = 1 - TPR
 * 阳性预测值(positive predictive value, PPV), 即诊断为阳性中有病的概率    PPV = TP/(TP+FP)
-* 隐性预测值(negative predictive value, NPV), 即诊断为阴性中无病的概率    NPV = TN/(TN+FN)
-* 准确率(accuracy)  = (TP+TN) / (TP+TN+FP+FN)
+* 阴性预测值(negative predictive value, NPV), 即诊断为阴性中无病的概率    NPV = TN/(TN+FN)
+* 准确率(accuracy), 又称为诊断符合率  acc = (TP+TN) / (TP+TN+FP+FN)
 * 精确率(precision): P = TP / (TP+FP)
-* 召回率(recall): R = TP / (TP+FN)
+* 召回率(recall): R = TP / (TP+FN), 也就是真阳性率
+* [KAPPA值](https://zhuanlan.zhihu.com/p/67844308)：kappa = (Po-Pe) / (1-Pe)  [Po=对角线元素之和/整个矩阵元素之和, 其实就是Acc；
+Pe=(第i行元素之和*第i列元素之和的和)/矩阵所有元素之和的平方]
+* 正确指数 = 灵敏度 + 特异度 - 1
 
 灵敏度：实际有病的人正确判断为真阳性的比例
 
 特异度：实际无病的人正确判断为真阴性的比例
+
+**为什么要使用kappa**: 分类问题中，最常见的评价指标是acc，它能够直接反映分正确的比例，同时计算非常简单。但是实际的分类问题种，
+各个类别的样本数量往往不太平衡。在这种不平衡数据集上如不加以调整，模型很容易偏向大类别而放弃小类别(eg: 正负样本比例1:9，
+直接全部预测为负，acc也有90%。但正样本就完全被“抛弃”了)。此时整体acc挺高，但是部分类别完全不能被召回。这时需要一种能够惩罚模
+型的“偏向性”的指标来代替acc。而根据kappa的计算公式，越不平衡的混淆矩阵， Pe越高，kappa值就越低，正好能够给“偏向性”强的模型打低分。
 
 
 ## 损失函数(Loss function)/代价函数(成本函数)(Cost function)

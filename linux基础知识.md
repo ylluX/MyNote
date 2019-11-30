@@ -9,6 +9,8 @@
    * [特殊的内置参数($#/$?/$n/$@/$$/$!)](#特殊的内置参数n)
    * [生成连续的数](#生成连续的数)
    * [vim,less中文乱码](#vimless中文乱码)
+   * [Shell脚本并发及并发数的控制](#shell脚本并发及并发数的控制)
+   * [比较两个文件是否相同](#比较两个文件是否相同)
 * [基础命令](#基础命令)
    * [查看图片信息`identify`](#查看图片信息identify)
    * [转换图片格式`convert`](#转换图片格式convert)
@@ -72,6 +74,70 @@ export PS1="\[\e[32;1m\][\[\e[34m\]\u\[\e[32m\]@\[\e[31m\]\h \[\e[33m\]\`pwd\`\[
 ## vim,less中文乱码
 
 在.bashrc中添加：`export LC_ALL="zh_CN.UTF-8"`
+
+
+## Shell脚本并发及并发数的控制
+
+[Shell脚本并发及并发数的控制](https://www.jianshu.com/p/701952ffb755)
+
+shell 并发时，可以在每条命令后边添加 `&` 符号；如果需要等待上边并发命令执行完后，
+再执行后续命令，可以使用 `wait` 命令。
+
+但是如果并发命令很多时，可能会占用过多系统资源，此时，可以使用管道和令牌原理实现并发控制。
+
+```
+#!/bin/bash
+
+# Step1 创建有名管道
+[ -e ./fd1 ] || mkfifo ./fd1
+
+# 创建文件描述符，以可读（<）可写（>）的方式关联管道文件，这时候文件描述符3就有了有名管道文件的所有特性
+exec 3<> ./fd1   
+
+# 关联后的文件描述符拥有管道文件的所有特性,所以这时候管道文件可以删除，我们留下文件描述符来用就可以了
+rm -rf ./fd1                    
+
+# Step2 创建令牌 
+for i in `seq 1 2`;
+do
+    # echo 每次输出一个换行符,也就是一个令牌
+    echo >&3                   
+done
+
+# Step3 拿出令牌，进行并发操作
+for line in `seq 1 10`;
+do
+    read -u3      # read 命令每次读取一行，也就是拿到一个令牌   
+    {
+        echo $line
+        sleep 1
+        echo >&3  # 执行完一条命令会将令牌放回管道
+    }&
+done
+
+wait
+
+exec 3<&-                       # 关闭文件描述符的读
+exec 3>&-                       # 关闭文件描述符的写
+```
+
+
+## 比较两个文件是否相同
+
+* 使用diff : `diff -q file1 file2 > /dev/null && echo "same" || echo "diff"`
+* 使用cmp : `cmp --silent file1 file2 && echo "same" || echo "diff"`
+
+或者和`$?`一起使用
+
+```
+diff file1 file2 > /dev/null
+if [ $? != 0 ]; then
+  echo "diff"
+else
+  echo "same"
+fi
+```
+
 
 
 ----
@@ -147,5 +213,4 @@ export PS1="\[\e[32;1m\][\[\e[34m\]\u\[\e[32m\]@\[\e[31m\]\h \[\e[33m\]\`pwd\`\[
 * 查看所有节点正在运行的任务: `qhost -j`
 * 查看某队列中正在运行的任务: `qhost –j | grep "xxx.q"`
 * 查看提交过的历史任务：`qacct -o luyl -b YYYYMMDDHHmm -j`
-
 

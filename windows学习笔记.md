@@ -8,6 +8,9 @@
 * [Office](#office)
    * [Excel](#excel)
       * [基本函数](#基本函数)
+* [浏览器](#浏览器)
+   * [chrome](#chrome)
+      * [常见问题](#常见问题)
 <!--te-->
 
 ----
@@ -153,3 +156,14 @@ ISNONTEXT(value)，ISNUMBER(value)，ISREF(value)，ISTEXT(value)
 * `Rouddown`: RANDDOWN语法同RAND，只是采用的是将数字向下舍去而非四舍五入。
 * `Rept`: 将文本重复指定次数，一般用于在单元格填充文本字符串。
 * `Fixed`: 将数字舍入到指定的小数位数，使用句点和逗号，以十进制数格式对该数进行格式设置，并以文本形式返回结果。
+
+
+----
+
+# 浏览器
+
+## chrome
+
+### 常见问题
+
+* [Google Chrome如何将网页保存为mhtml 单文件](https://www.cnblogs.com/hutuchong/articles/8555919.html) ，或者使用插件，如SingleFile

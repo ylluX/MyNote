@@ -2531,6 +2531,35 @@ END
 * [Python：使用threading模块实现多线程编程一[综述]](https://blog.csdn.net/bravezhe/article/details/8585437)
 * [Python-threading并发操作](http://blog.csdn.net/y2701310012/article/details/40863145)
 
+**控制线程数**
+
+Semaphore 是 Python 内置模块 threading 中的一个类
+
+Semaphore 管理一个计数器，每调用一次 `acquire()` 方法，计数器就减一，
+每调用一次 `release()` 方法，计数器就加一。计时器的值默认为 1 ，
+计数器的值不能小于 0，当计数器的值为 0 时，调用 `acquire()` 的线程就会等待，
+直到 `release()` 被调用。 因此，可以利用这个特性来控制线程数量
+
+```Python
+from threading import Thread, Semaphore
+import time
+
+def test(i, sem):
+    #打印线程的名字
+    print(i)
+    time.sleep(2)
+    #释放 semaphore
+    sem.release()
+    
+#设置计数器的值为 5
+sem = Semaphore(5)
+for i in range(10):
+    #获取一个 semaphore
+    sem.acquire()
+    t = Thread(target=test, args=(i, sem))
+    t.start()
+
+```
 
 ### 协程
 
@@ -5226,10 +5255,25 @@ area,error = quad(func, a, b)
 
 
 
-
-
-
 ### 2. pandas
+
+** 常见问题 **
+
+***修改每行显示的列数***
+
+[Python pandas，如何加宽输出显示以查看更多列？](https://www.itranslater.com/qa/details/2110843837240312832)
+
+pd.set_option('display.expand_frame_repr', False)
+
+如果要临时设置选项以显示一个大型DataFrame，可以使用option_context：
+
+with pd.option_context('display.max_rows', -1, 'display.max_columns', 5):
+    print df
+
+退出with块时，将自动恢复选项值。
+
+* ******：
+
 
 **1. 基本操作**
 
@@ -5771,19 +5815,14 @@ np.savetxt(outfile, x, delimiter="\t", header=title, comments="# ", fmt="%s")
 
 ### 4. click
 
-[官网](http://click.pocoo.org/6/)
-
-[命令行神器 Click 简明笔记](http://python.jobbole.com/87111/)
-
-[Python Click 学习笔记](https://isudox.com/2016/09/03/learning-python-package-click/)
-
-[pyspider源代码-run.py click模块](https://www.jianshu.com/p/fb75bcacaaa0)
-
-[Python click.pass_context() Examples](https://www.programcreek.com/python/example/86569/click.pass_context)
-
-[使用 Flask 开发 Web 应用（二）](https://segmentfault.com/a/1190000008426273)
-
-[怎样定制help或epilog格式--format_epilog()](https://stackoverflow.com/questions/42446923/python-click-help-formatting-newline#)
+* [官网](http://click.pocoo.org/6/)
+* [中文文档](https://click-docs-zh-cn.readthedocs.io/zh/latest/)
+* [命令行神器 Click 简明笔记](http://python.jobbole.com/87111/)
+* [Python Click 学习笔记](https://isudox.com/2016/09/03/learning-python-package-click/)
+* [pyspider源代码-run.py click模块](https://www.jianshu.com/p/fb75bcacaaa0)
+* [Python click.pass_context() Examples](https://www.programcreek.com/python/example/86569/click.pass_context)
+* [使用 Flask 开发 Web 应用（二）](https://segmentfault.com/a/1190000008426273)
+* [怎样定制help或epilog格式--format_epilog()](https://stackoverflow.com/questions/42446923/python-click-help-formatting-newline#)
 
 
 * `click.group` : 命令可以通过group添加其他的命令.可以在脚本中随意嵌套

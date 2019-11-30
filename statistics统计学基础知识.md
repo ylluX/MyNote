@@ -27,6 +27,7 @@
    * [3. 参数检验和非参数检验](#3-参数检验和非参数检验)
 * [5. 回归](#5-回归)
    * [1. 线性回归](#1-线性回归)
+* [6. 各种定理](#6-各种定理)
 * [python实现](#python实现)
 * [疑问](#疑问)
 * [中英文对照](#中英文对照)
@@ -596,6 +597,8 @@ kendall：  等级相关   计算分类变量间的秩相关，适用于合并�
 * [概念](https://blog.csdn.net/hhtnan/article/details/62045872)
 * [泊松分布的期望和方差](https://baike.baidu.com/item/%E6%B3%8A%E6%9D%BE%E5%88%86%E5%B8%83/1442110?fr=aladdin)
 * [近似高斯分布](https://www.ppkao.com/tiku/shiti/5520985.html)
+* **[从二项分布推导泊松分布](https://blog.csdn.net/hustqb/article/details/85217313)**
+* [不同分布之间的关系图](https://www.zhihu.com/question/21756860)
 
 
 泊松分布当总体均值lambda值小于5时为偏锋，lambda愈小分布愈偏，随着lambda增大，分布趋向对称。
@@ -773,6 +776,13 @@ r:失败的次数，k:成功的次数，p:成功的概率
 
 [Python环境下的8种简单线性回归算法](https://baijiahao.baidu.com/s?id=1588370178690958985&wfr=spider&for=pc)
 
+
+----
+
+# 6. 各种定理
+
+* 大数定律：样本数量越多，则其算术平均值就有越高的概率接近期望值。
+* 中心极限定理：在适当的条件下，大量相互独立随机变量的均值经适当标准化后依分布收敛于正态分布。
 
 ----
 
