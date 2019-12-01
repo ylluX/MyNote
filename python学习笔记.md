@@ -55,7 +55,9 @@
       * [6. 多线程](#6-多线程)
       * [协程](#协程)
       * [7. 字符编码](#7-字符编码)
+      * [7. 字符编码(自我总结)](#7-字符编码自我总结)
       * [8. 内建函数](#8-内建函数)
+      * [9. 可迭代对象,迭代器,生成器](#9-可迭代对象迭代器生成器)
    * [python3新特性](#python3新特性)
       * [1. pathlib](#1-pathlib)
       * [2. f-string](#2-f-string)
@@ -71,6 +73,7 @@
       * [8. itertools](#8-itertools)
       * [9. str](#9-str)
       * [10. collections](#10-collections)
+      * [10. collections.abc](#10-collectionsabc)
       * [11. logging](#11-logging)
       * [12. `time` 和 `datetime`](#12-time-和-datetime)
       * [13. `inspect`](#13-inspect)
@@ -79,6 +82,7 @@
       * [16. PIL](#16-pil)
       * [17. re](#17-re)
       * [18. struct 解析二进制或socket数据](#18-struct-解析二进制或socket数据)
+      * [19. stat](#19-stat)
    * [第三方模块](#第三方模块)
       * [1. `scipy.stats`](#1-scipystats)
       * [scipy](#scipy)
@@ -253,31 +257,31 @@ Thread2在获得GIL与lock后才可对data进行修改
 
 使用`"%(key1)s" % Dict`格式
 
-```
+```python
 >>> d = {'a':'ABC', 'b':'DEF','c':'GHI', 'd':'JKL'}
 >>> x = '%(a)s <=> %(b)s <=> %(c)s'
 >>> print x %d
-'ABC <=> DEF <=> GHI'
+# 'ABC <=> DEF <=> GHI'
 ```
 
 使用`str.format`方法
 
-```
+```python
 >>> d = {'a':'ABC', 'b':'DEF','c':'GHI', 'd':'JKL'}
 >>> print '{a} <=> {b} <=> {c}'.format(**d)
-'ABC <=> DEF <=> GHI'
+# 'ABC <=> DEF <=> GHI'
 ```
 
 ### 2. `str.split('\\n')`与`str.splitlines`区别
 
 `str.splitlines()`效果类似与`str.split('\n')`，不过不用在末尾加' '
 
-```
+```python
 >>> a='abc\ndef\nghi\n'
 >>> a.split('\n')
-['abc', 'def', 'ghi', '']
+# ['abc', 'def', 'ghi', '']
 >>> a.splitlines()
-['abc', 'def', 'ghi']
+# ['abc', 'def', 'ghi']
 ```
 ### 3. `exec`, `eval`和`repr`区别
 
@@ -285,24 +289,25 @@ Thread2在获得GIL与lock后才可对data进行修改
 `eval`：用来执行存储在字符串或文件中的python语句
 `repr`：来取得对象的规范字符串表示。反引号（也称转换符）可以完成相同的功能。注意，在大多数时候有eval（repr（object））==object
 将字符串转换为整形
-```
+
+```python
 >>> exec 'a = 1'
 >>> a
-1
+# 1
 >>> eval('3+4*7+2**-2')
-31.25
+# 31.25
 >>> i = ['item']
 >>> repr(i)
-"['item']"
+# "['item']"
 ```
 ### 4. 查看内建函数
 
 使用`__builtins__`或`__builtin__`
 
-```
+```python
 >>> dir(__builtins__)
 ```
-```
+```python
 >>> import __builtin__
 >>> dir()
 ```
@@ -316,20 +321,20 @@ Thread2在获得GIL与lock后才可对data进行修改
 
 ### 6. `input`的新特性
 
-```
+```python
 #可以接受两端带有空白的数字
 >>> int(" 123    ")
-123
+# 123
 #可以处理\n, \t
 >>> int(" 123 \t \n ")
-123
+# 123
 ```
 
 ### 7. python的标准流与shell的管道联用
 
 `sorter.py` <font color="gray"> # 一次性从stdin中读取所有输入 </font>
 
-```
+```python
 import os
 lines = sys.stdin.readlines()
 lines.sort()
@@ -338,7 +343,7 @@ for line in lines: print(line, end="")
 
 `sorter2.py` <font color="gray"> # 一次性从stdin读取一行 </font>
 
-```
+```python
 import sys
 lines = []
 while True:
@@ -350,7 +355,7 @@ for line in lines: print(line, end="")
 
 `adder.py`   <font color="gray"> # 每次只读取一行 </font>
 
-```
+```python
 sum = 0
 while True:
     try:
@@ -373,40 +378,40 @@ print(sum)
 
 和shell的管道联用
 
-```
+```python
 > cat data.txt | sorter.py | adder.py
-1164
+# 1164
 ```
 
 实际上，这两个脚本可以更精简，使用内部的sorted函数生成器表达式、文件迭代器 :
 
 `sorterSmall.py`
 
-```
+```python
 import sys
 for line in sorted(sys.stdin): print(line, end="")
 ```
 
 `adderSmall.py`
 
-```
+```python
 import sys
 print(sum(int(line) for line in sys.stdin))
 ```
 
 ### 8. 列表推导式中使用多个for
 
-```
+```python
 >>> a=['A','B','C','D']
 >>> [(i,ii) for i in a for ii in a if i<ii]
-[('A', 'B'), ('A', 'C'), ('A', 'D'), ('B', 'C'), ('B', 'D'), ('C', 'D')]
+# [('A', 'B'), ('A', 'C'), ('A', 'D'), ('B', 'C'), ('B', 'D'), ('C', 'D')]
 ```
 
 ### 9. 智能排序
 
 [根据字符串中的数字排序，如f10应该在f2后面](https://blog.csdn.net/houyj1986/article/details/22966799)
 
-```
+```python
 # 排序后效果：['M1','M2','M3','M10','M11']
 # 如果使用sorted函数或sort方法，排序后结果为：['M1','M10','M11','M2','M3']，不是我们希望的
 import re
@@ -422,7 +427,7 @@ print sorted(x, key=strnum) # ['M1','M2','M3','M10','M11']
 
 **根据某个列表对另一个列表排序**
 
-```
+```python
 import numpy as np
 a=['b','d','a','c']
 b=[2,4,1,3]
@@ -433,7 +438,7 @@ print [a[i] for i in ind] #['a', 'b', 'c', 'd']
 
 **根据字典的值排序**
 
-```
+```python
 sorted(dict.items(), key=lambda e:e[1], reverse=True)
 ```
 
@@ -446,17 +451,17 @@ $$A_2^3=6,  \binom{3}{2}=3$$
 
 * 调用scipy计算排列组和的具体数值
 
-```
+```python
 >>> from scipy.special import comb.perm
 >>> perm(3, 2)
-6.0
+# 6.0
 >>> comb(3, 2)
-3.0
+# 3.0
 ```
 
 * 调用itertools获取排列组合的全部情况数
 
-```
+```python
 >>> from itertools import combinations, permutations
 >>> permutations([1, 2, 3], 2)
 <itertools.permutations at 0x7febfd880fc0>
@@ -474,17 +479,17 @@ $$A_2^3=6,  \binom{3}{2}=3$$
 
 本文介绍 python module 的动态加载，我们有时希望从配置文件等地获取要被动态加载的 module，但是所读取的配置项通常为字符串类型，无法用 import 加载，例如：
 
-```
+```python
 >>> import 'os'
- File "<stdin>", line 1
- import 'os'
- ^
-SyntaxError: invalid syntax
+# File "<stdin>", line 1
+# import 'os'
+# ^
+# SyntaxError: invalid syntax
 ```
 
 Python 提供内建函数 \_\_import\_\_ 动态加载 module，\_\_import\_\_ 的用法如下：
 
-```
+```python
 __import__ (name[, globals[, locals[, fromlist[, level]]]])
 ```
 
@@ -494,15 +499,15 @@ __import__ (name[, globals[, locals[, fromlist[, level]]]])
 * fromlist (Optional): 被导入的 submodule 名称
 * level (Optional): 导入路径选项，默认为 -1，表示同时支持 absolute import 和 relative import
 
-```
+```python
 >>> os_module = __import__('os')
 >>> print os_module.path
-<module 'posixpath' from '/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/posixpath.pyc'>
+# <module 'posixpath' from '/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/posixpath.pyc'>
 ```
 
 事实上，import 本质上是调用 \_\_import\_\_ 加载 module 的，比如：
 
-```
+```python
 import foo
 
 最终调用如下函数实现
@@ -524,17 +529,17 @@ foo = __import__('foo', globals(), locals(), [], -1)
 
 但如果使用不善，也容易踩坑：
 
-```
+```python
 >>> __import__("os")
-<module 'os' from '/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/os.pyc'>
+# <module 'os' from '/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/os.pyc'>
 
 >>> __import__("os.path")
-<module 'os' from '/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/os.pyc'>
+# <module 'os' from '/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/os.pyc'>
 ```
 
 如果输入的参数如果带有 “.”，采用 \_\_import\_\_ 直接导入 module 容易造成意想不到的结果。 OpenStack 的 oslo.utils 封装了 \_\_import\_\_，支持动态导入 class, object 等。
 
-```
+```python
 import sys
 import traceback
 
@@ -572,59 +577,59 @@ def import_module(import_str):
 
 如果print带汉字的变量，显示的就是汉字，但是，如果print带汉字的字典或列表，显示的却是字节码。
 
-```
+```python
 >>> x = "中国"
 >>> x
-\xe4\xb8\xad\xe5\x9b\xbd    #字节码
+# \xe4\xb8\xad\xe5\x9b\xbd    #字节码
 >>> print x
-中国
+# 中国
 ```
 为什么 `x` 和 `print x`显示的结果不同呢？在查看print官方文档时发现，在python里面print是一个非常厉害的小家伙：它能把几乎任何常见类型的对象打印成一串文字，甚至包括列表、字典、元组等等。这在别的语言里是不可理解的，所以给从其他语言转过来的人埋了个大坑。总之：Python中出现的任何中文，虽然我们在编辑器里看到的是中文，但是背地里全是一串编码。千万不要轻易信任print！print xx给你显示出来的，其实并不是xx的真实面貌！
 具体可查看[Python中文字符的理解：str()、repr()、print](https://www.cnblogs.com/omg24/p/5048319.html)
 但是，字典和列表就不同了：
-```
+```python
 >>> y = {"lang": "汉字", "country":"中国"}
 >>> y
-{'country': '\xe4\xb8\xad\xe5\x9b\xbd', 'lang': '\xe6\xb1\x89\xe5\xad\x97'}
+# {'country': '\xe4\xb8\xad\xe5\x9b\xbd', 'lang': '\xe6\xb1\x89\xe5\xad\x97'}
 >>> print y
-{'lang': '\xe6\xb1\x89\xe5\xad\x97', 'country': '\xe4\xb8\xad\xe5\x9b\xbd'}
+# {'lang': '\xe6\xb1\x89\xe5\xad\x97', 'country': '\xe4\xb8\xad\xe5\x9b\xbd'}
 ```
 
 为什么字典和列表中的汉字没有被print正确显示出来呢？
 个人理解为：print会将所有对象都转化为字符串，然后在打印出来，及 `print obj = print str(obj)`  或者说`print obj = print obj.__str__()`。那么我们来看看str函数或者__str__方法是什么吧。
 
-```
+```python 
 >>> x = "中国"
 >>> y = {"lang": "汉字", "country":"中国"}
 >>> x
-'\xe4\xb8\xad\xe5\x9b\xbd'
+# '\xe4\xb8\xad\xe5\x9b\xbd'
 >>> str(x)
-'\xe4\xb8\xad\xe5\x9b\xbd'
+# '\xe4\xb8\xad\xe5\x9b\xbd'
 >>> x.__str__()
-'\xe4\xb8\xad\xe5\x9b\xbd'
+# '\xe4\xb8\xad\xe5\x9b\xbd'
 >>> y
-{'country': '\xe4\xb8\xad\xe5\x9b\xbd', 'lang': '\xe6\xb1\x89\xe5\xad\x97'}
+# {'country': '\xe4\xb8\xad\xe5\x9b\xbd', 'lang': '\xe6\xb1\x89\xe5\xad\x97'}
 >>> str(y)
-"{'lang': '\\xe6\\xb1\\x89\\xe5\\xad\\x97', 'country': '\\xe4\\xb8\\xad\\xe5\\x9b\\xbd'}"
+# "{'lang': '\\xe6\\xb1\\x89\\xe5\\xad\\x97', 'country': '\\xe4\\xb8\\xad\\xe5\\x9b\\xbd'}"
 >>> y.__str__()
-"{'lang': '\\xe6\\xb1\\x89\\xe5\\xad\\x97', 'country': '\\xe4\\xb8\\xad\\xe5\\x9b\\xbd'}"
+# "{'lang': '\\xe6\\xb1\\x89\\xe5\\xad\\x97', 'country': '\\xe4\\xb8\\xad\\xe5\\x9b\\xbd'}"
 ```
 
 可以看到str(字符串)还是它本身，但是str(字典或列表)被转化为了标准化的字符串，即"\x"转义成了"\\\x"，所以再调用print时，看到的还是"\x"。那么如果不让"\x"转义为"\\\x"时，是否就能正常使用print了呢？让我们验证一下
 
-```
+```python
 >>> print "{'country': '\xe4\xb8\xad\xe5\x9b\xbd', 'lang': '\xe6\xb1\x89\xe5\xad\x97'}"
-{'country': '中国', 'lang': '汉字'}
+# {'country': '中国', 'lang': '汉字'}
 ```
 bingo! 但接下来又有一个问题，怎么阻止转义呢？可以使用<font color="red">**`str.decode("string_escape")`**</font>来实现
 参考：[python：print含有中文的list](http://blog.csdn.net/poinsettia/article/details/52021845)
-```
+```python
 >>> y = {"lang": "汉字", "country":"中国"}
 >>> z = str(y).decode("string_escape")
 >>> z
-"{'lang': '\xe6\xb1\x89\xe5\xad\x97', 'country': '\xe4\xb8\xad\xe5\x9b\xbd'}"
+# "{'lang': '\xe6\xb1\x89\xe5\xad\x97', 'country': '\xe4\xb8\xad\xe5\x9b\xbd'}"
 >>> print z
-{'lang': '汉字', 'country': '中国'}
+# {'lang': '汉字', 'country': '中国'}
 ```
 
 ### 13. 通过配置文件共享全局变量
@@ -640,7 +645,7 @@ bingo! 但接下来又有一个问题，怎么阻止转义呢？可以使用<fon
 在使用Python编写的应用的过程中，有时会遇到多个文件之间传递同一个全局变量的情况，此时通过配置文件定义全局变量是一个比较好的选择。
 首先配置config.py模块，config需要设置get_xxx和set_xxx的方法提供对外的接口。
 
-```
+```python
 class global_var:
     '''需要定义全局变量的放在这里，最好定义一个初始值'''
     name = 'my_name'
@@ -654,7 +659,7 @@ def get_name():
 然后在其他模块引用：
 test.py
 
-```
+```python
 import config 
 # 引用全局变量 
 name = config.get_name() 
@@ -716,7 +721,7 @@ print(config.get_name())
 Linux下，修改 ~/.pip/pip.conf (没有就创建一个文件夹及文件。文件夹要加“.”，表示是隐藏文件夹)
 内容如下：
 
-```
+```sh
 [global] 
 index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 [install] 
@@ -732,7 +737,7 @@ windows下，直接在user目录中创建一个pip目录，如：C:\Users\xx\pip
 
 保存变量:
 
-```
+```python
 import numpy as np
 import dill
 
@@ -746,7 +751,7 @@ dill.dump_session(filename)
 
 读取变量:
 
-```
+```python
 import numpy as np
 import dill
 
@@ -757,7 +762,7 @@ dill.load_session(filename)
 
 ### 17. 查看内存汇总的所有变量
 
-```
+```python
 In [3]: who
 In Out abund abund1 abund2 abund3 abund_file dill filename  
 groups i mpl np pd x y z
@@ -774,7 +779,7 @@ python搜索包是会从几个地方来查找路径：
 
 ### 18.1 python的环境变量
 
-```
+```sh
 export PATH=/share/public/software/python/2.7.14/bin:$PATH
 export LD_LIBRARY_PATH=/share/public/software/python/2.7.14/lib:$LD_LIBRARY_PATH
 ```
@@ -794,7 +799,7 @@ export LD_LIBRARY_PATH=/share/public/software/python/2.7.14/lib:$LD_LIBRARY_PATH
 
 1. 使用sklearn.preprocessing.scale()函数，可以直接将给定数据进行标准化。
 
-```
+```python
 >>> from sklearn import preprocessing
 >>> import numpy as np
 >>> X = np.array([[ 1., -1.,  2.],
@@ -803,40 +808,40 @@ export LD_LIBRARY_PATH=/share/public/software/python/2.7.14/lib:$LD_LIBRARY_PATH
 >>> X_scaled = preprocessing.scale(X)
  
 >>> X_scaled                                          
-array([[ 0.  ..., -1.22...,  1.33...],
-       [ 1.22...,  0.  ..., -0.26...],
-       [-1.22...,  1.22..., -1.06...]])
+# array([[ 0.  ..., -1.22...,  1.33...],
+#        [ 1.22...,  0.  ..., -0.26...],
+#        [-1.22...,  1.22..., -1.06...]])
  
 >>>#处理后数据的均值和方差
 >>> X_scaled.mean(axis=0)
-array([ 0.,  0.,  0.])
+# array([ 0.,  0.,  0.])
  
 >>> X_scaled.std(axis=0)
-array([ 1.,  1.,  1.])
+# array([ 1.,  1.,  1.])
 ```
 
 2. 使用sklearn.preprocessing.StandardScaler类，使用该类的好处在于可以保存训练集中的参数（均值、方差）直接使用其对象转换测试集数据。
 
-```
+```python
 >>> scaler = preprocessing.StandardScaler().fit(X)
 >>> scaler
-StandardScaler(copy=True, with_mean=True, with_std=True)
+# StandardScaler(copy=True, with_mean=True, with_std=True)
  
 >>> scaler.mean_                                      
-array([ 1. ...,  0. ...,  0.33...])
+# array([ 1. ...,  0. ...,  0.33...])
  
 >>> scaler.std_                                       
-array([ 0.81...,  0.81...,  1.24...])
+# array([ 0.81...,  0.81...,  1.24...])
  
 >>> scaler.transform(X)                               
-array([[ 0.  ..., -1.22...,  1.33...],
-       [ 1.22...,  0.  ..., -0.26...],
-       [-1.22...,  1.22..., -1.06...]])
+# array([[ 0.  ..., -1.22...,  1.33...],
+#        [ 1.22...,  0.  ..., -0.26...],
+#        [-1.22...,  1.22..., -1.06...]])
  
  
->>>#可以直接使用训练集对测试集数据进行转换
+#可以直接使用训练集对测试集数据进行转换
 >>> scaler.transform([[-1.,  1., 0.]])                
-array([[-2.44...,  1.22..., -0.26...]])
+# array([[-2.44...,  1.22..., -0.26...]])
 ```
 
 **将属性缩放到一个指定范围**
@@ -846,7 +851,7 @@ array([[-2.44...,  1.22..., -0.26...]])
 1、对于方差非常小的属性可以增强其稳定性。
 2、维持稀疏矩阵中为0的条目。
 
-```
+```python
 >>> X_train = np.array([[ 1., -1.,  2.],
 ...                     [ 2.,  0.,  0.],
 ...                     [ 0.,  1., -1.]])
@@ -854,27 +859,26 @@ array([[-2.44...,  1.22..., -0.26...]])
 >>> min_max_scaler = preprocessing.MinMaxScaler()
 >>> X_train_minmax = min_max_scaler.fit_transform(X_train)
 >>> X_train_minmax
-array([[ 0.5       ,  0.        ,  1.        ],
-       [ 1.        ,  0.5       ,  0.33333333],
-       [ 0.        ,  1.        ,  0.        ]])
+# array([[ 0.5       ,  0.        ,  1.        ],
+#        [ 1.        ,  0.5       ,  0.33333333],
+#        [ 0.        ,  1.        ,  0.        ]])
  
 >>> #将相同的缩放应用到测试集数据中
 >>> X_test = np.array([[ -3., -1.,  4.]])
 >>> X_test_minmax = min_max_scaler.transform(X_test)
 >>> X_test_minmax
-array([[-1.5       ,  0.        ,  1.66666667]])
- 
+# array([[-1.5       ,  0.        ,  1.66666667]])
  
 >>> #缩放因子等属性
 >>> min_max_scaler.scale_                             
-array([ 0.5       ,  0.5       ,  0.33...])
+# array([ 0.5       ,  0.5       ,  0.33...])
  
 >>> min_max_scaler.min_                               
-array([ 0.        ,  0.5       ,  0.33...])
+# array([ 0.        ,  0.5       ,  0.33...])
 ```
 
 当然，在构造类对象的时候也可以直接指定最大最小值的范围：feature_range=(min, max)，此时应用的公式变为：
-```
+```python
 X_std=(X-X.min(axis=0))/(X.max(axis=0)-X.min(axis=0))
 
 X_scaled=X_std/(max-min)+min
@@ -889,33 +893,33 @@ Normalization主要思想是对每个样本计算其p-范数，然后对该样�
 
 1. 可以使用preprocessing.normalize()函数对指定数据进行转换：
 
-```
+```python
 >>> X = [[ 1., -1.,  2.],
 ...      [ 2.,  0.,  0.],
 ...      [ 0.,  1., -1.]]
 >>> X_normalized = preprocessing.normalize(X, norm='l2')
  
 >>> X_normalized                                      
-array([[ 0.40..., -0.40...,  0.81...],
-       [ 1.  ...,  0.  ...,  0.  ...],
-       [ 0.  ...,  0.70..., -0.70...]])
+# array([[ 0.40..., -0.40...,  0.81...],
+#        [ 1.  ...,  0.  ...,  0.  ...],
+#        [ 0.  ...,  0.70..., -0.70...]])
 ```
 
 2. 可以使用processing.Normalizer()类实现对训练集和测试集的拟合和转换：
 
-```
+```python
 >>> normalizer = preprocessing.Normalizer().fit(X)  # fit does nothing
 >>> normalizer
-Normalizer(copy=True, norm='l2')
+# Normalizer(copy=True, norm='l2')
  
 >>>
 >>> normalizer.transform(X)                            
-array([[ 0.40..., -0.40...,  0.81...],
-       [ 1.  ...,  0.  ...,  0.  ...],
-       [ 0.  ...,  0.70..., -0.70...]])
+# array([[ 0.40..., -0.40...,  0.81...],
+#        [ 1.  ...,  0.  ...,  0.  ...],
+#        [ 0.  ...,  0.70..., -0.70...]])
  
 >>> normalizer.transform([[-1.,  1., 0.]])             
-array([[-0.70...,  0.70...,  0.  ...]])
+# array([[-0.70...,  0.70...,  0.  ...]])
 ```
 
 
@@ -923,7 +927,7 @@ array([[-0.70...,  0.70...,  0.  ...]])
 
 [Python循环语句中else的用法总结](http://www.jb51.net/article/92440.htm)
 
-```
+```python
 #coding:utf-8
 
 def findn(n):
@@ -956,7 +960,7 @@ findn(3)
 
 demo
 
-```
+```python
 #!/bin/python3
 
 import imageio
@@ -991,7 +995,7 @@ if __name__ == '__main__':
 
 [python捕获警告的方法](https://blog.csdn.net/YMD8005/article/details/77980718)
 
-```
+```python
  import warnings
  warnings.filterwarnings('error')
 
@@ -1021,7 +1025,7 @@ ghostscript 需要先安装 [Ghostscript](https://www.ghostscript.com/download/g
 
 `pip`
 
-```
+```python
 pip install six --target="/usr/lib/python2.7/dist-packages"
 ```
 
@@ -1037,7 +1041,7 @@ pip install six --target="/usr/lib/python2.7/dist-packages"
 
 最近有个需求就是页面上执行shell命令，第一想到的就是`os.system`，
 
- ```
+ ```python
  os.system('cat /proc/cpuinfo')
  ```
 
@@ -1046,7 +1050,7 @@ pip install six --target="/usr/lib/python2.7/dist-packages"
  
 尝试第二种方案 `os.popen()`
 
-```
+```python
 output = os.popen('cat /proc/cpuinfo')
 print output.read()
 ```
@@ -1059,14 +1063,14 @@ print output.read()
 
 python3中为`subprocess.getstatusoutput()`
 
-```
+```python
 (status, output) = commands.getstatusoutput('cat /proc/cpuinfo')
 print status, output
 ```
 
 Python Document 中给的一个例子，
 
-```
+```python
 >>> import commands
 >>> commands.getstatusoutput('ls /bin/ls')
 (0, '/bin/ls')
@@ -1087,7 +1091,7 @@ Python Document 中给的一个例子，
 
 第四种方法`subprocess.call`
 
-```
+```python
 import subprocess
 subprocess.call(['ls','-a','/'])
 subprocess.Popen('ls -a /',shell=True)
@@ -1095,7 +1099,7 @@ subprocess.Popen('ls -a /',shell=True)
 
 如果通过subrpocess利用nohup向后台提交一个任务，怎么获得后台运行任务的pid：
 
-```
+```python
 a=subprocess.Popen('nohup python a.py >nohup.out & echo $!', shell=True,stdout=subprocess.PIPE)
 a.communicate()   【缺点：只有等待后台任务运行完毕，才能获得pid】，记得要加参数：stdout=subprocess.PIPE
 a.pid()  【注意：返回的是当前脚本的pid，而不是后台任务的pid】
@@ -1103,7 +1107,7 @@ a.pid()  【注意：返回的是当前脚本的pid，而不是后台任务的pi
 
 更好的方法，还没有想到！，有个折中的方法：
 
-```
+```python
 a=subprocess.Popen('nohup python a.py >nohup.out & echo "$!\ta.py">>run.pid', shell=True)
 ```
 
@@ -1112,7 +1116,7 @@ a=subprocess.Popen('nohup python a.py >nohup.out & echo "$!\ta.py">>run.pid', sh
 
 法1：
 
-```
+```python
 >>> "{:,}".format(56381779049)
 '56,381,779,049'
 >>> "{:,}".format(56381779049.1)
@@ -1121,7 +1125,7 @@ a=subprocess.Popen('nohup python a.py >nohup.out & echo "$!\ta.py">>run.pid', sh
 
 法2：
 
-```
+```python
 >>> import re
 >>> subject = '1234567'
 >>> result = re.sub(r"(?<=\d)(?=(?:\d\d\d)+$)", ",", subject)
@@ -1131,7 +1135,7 @@ a=subprocess.Popen('nohup python a.py >nohup.out & echo "$!\ta.py">>run.pid', sh
 
 法3：
 
-```
+```python
 >>> import re
 >>> subject = '1234567'
 >>> result = re.sub(r"(\d)(?=(\d\d\d)+(?!\d))", r"\1,", subject)
@@ -1160,7 +1164,7 @@ LRESULT SendMessage(
 
 那么加入我们只知道lParam的值，怎么推导出鼠标坐标呢? 直接上代码：
 
-```
+```python
 lParam = 26214900
 x = (lParam & 0x0000FFFF)           # 500
 y = (lParam & 0xFFFF0000) >> 16     # 400
@@ -1168,7 +1172,7 @@ y = (lParam & 0xFFFF0000) >> 16     # 400
 
 上面运用的就是按位与运算，下面我们再来看看其它按位运算：
 
-```
+```python
 a = 26214900
 hex(a)            # a的16进制表示法: '0xC0FFEE'
 oct(a)            # a的8进制表示法: '0o144000764'
@@ -1188,7 +1192,7 @@ a >> 2            # 右移          6553725
 
 **进制间的相互转化**
 
-```
+```python
 a10 = 100
 a2 = bin(a10)      # '0b1100100'
 a8 = oct(a10)      # '0o144'
@@ -1209,7 +1213,7 @@ a2 = int(a2, 2)
 
 **字符串 - 字节 - 二进制 - 十六进制 间的相互转换**
 
-```
+```python
 def encode(s):
     return ' '.join([bin(ord(c)).replace('0b', '') for c in s])
  
@@ -1217,9 +1221,9 @@ def decode(s):
     return ''.join([chr(i) for i in [int(b, 2) for b in s.split(' ')]])
 
 >>>encode('hello')
-'1101000 1100101 1101100 1101100 1101111'
+# '1101000 1100101 1101100 1101100 1101111'
 >>>decode('1101000 1100101 1101100 1101100 1101111')
-'hello'
+# 'hello'
 
 ### 将字符串转换成字节 (str to bytes)
 # py2没有encoding参数，返回的是用字符表示的字节
@@ -1230,23 +1234,23 @@ str.encode(s)
 
 # 以python3为例
 >>> bytes("abc",encoding="ASCII")
-b'abc'
+# b'abc'
 >>> bytes("中国", encoding="utf-8")
-b'\xe4\xb8\xad\xe5\x9b\xbd'
+# b'\xe4\xb8\xad\xe5\x9b\xbd'
 >>> bytes("中国", encoding="gbk")
-b'\xd6\xd0\xb9\xfa'
+# b'\xd6\xd0\xb9\xfa'
 >>> str.encode("中国", encoding="gbk")
 
 ### 将字节转成二进制
 >>> bt = bytes("中国", encoding="gbk") # b'\xd6\xd0\xb9\xfa'
 >>> [i for i in bt]
-[214, 208, 185, 250]
+# [214, 208, 185, 250]
 >>> [bin(i) for i in bt]
-['0b11010110', '0b11010000', '0b10111001', '0b11111010']
+# ['0b11010110', '0b11010000', '0b10111001', '0b11111010']
 
 ### 将ints(0<=n<256)列表转成bytes
 >>> bt = bytes([214, 208, 185, 250])
-b'\xd6\xd0\xb9\xfa'
+# b'\xd6\xd0\xb9\xfa'
 
 
 # 将字节转成字符串(bytes to str)
@@ -1255,7 +1259,7 @@ str(b, encoding = "utf-8")
 bytes.decode(b)
 
 >>> str(bt, encoding="gbk")
-'中国'
+# '中国'
 >>> bytes.decode(bt, encoding="gbk")
 
 
@@ -1295,7 +1299,7 @@ pip install scpclient
 
 实际实现也就几行代码：
 
-```
+```python
 #创建ssh访问
 ssh = paramiko.SSHClient()
 ssh.load_system_host_keys()
@@ -1322,7 +1326,7 @@ scpclient模块的主要函数：
 
 当需要从远程服务器下载文件或文件夹时，可以使用paramiko模块的SFTPClient.from_transport函数：
 
-```
+```python
 # FTP下载
 # sftp = paramiko.SFTPClient.from_transport(ssh.get_transport())
 def sftp_backdir(sftp, remote_dir, local_dir):                                                                                      
@@ -1342,7 +1346,7 @@ def sftp_backdir(sftp, remote_dir, local_dir):
 
 ### 31. 获得本机IP
 
-```
+```python
 import socket
 
 def get_host_ip():
@@ -1375,7 +1379,7 @@ if __name__ == '__main__':
 但核密度函数也不是完美的。除了核算法的选择外，带宽（bandwidth）也会影响密度估计，
 过大或过小的带宽值都会影响估计结果。
 
-```
+```python
 import seaborn as sns
 import matplotlib.pyplot as plt
 import statsmodels
@@ -1450,9 +1454,9 @@ cdf_inter = 1 - cdf1 + cdf2 # 交集的面积，及概率
 
 python 的 lxml 库的 etree 模块可以实现解析 HTML 代码并写入 html 文件。如下所示：
 
-```
+```python
 from lxml import etree
-root = """
+root = r"""
 <title>lxml example</title>
 <h1>Hello lxml!</h1>
 """
@@ -1474,7 +1478,7 @@ pandas 的 DataFrame 数据，可直接调用 df.to_html() 函数将 DataFrame �
 最终便可使用 python 实现将将 pandas 的 DataFrame 数据以及 matplotlib 绘图的图像保存为 HTML
  文件，代码如下。（以下代码基于 python 3.6 实现的。）
 
-```
+```python
 # 导入所需模块
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -1549,7 +1553,7 @@ python处理excel已经有大量包，主流代表有：
 * [python操作Excel模块openpyxl](https://www.cnblogs.com/zeke-python-road/p/8986318.html)
 * [python 读写 Excel文件](https://www.cnblogs.com/shaosks/p/6098282.html)
 
-```
+```python
 import openpyxl
 
 xlsxs = ["test"+str(i)+".xlsx" for i in range(1,4)]
@@ -1605,7 +1609,7 @@ xo.close()
 
 >使用函数来实现装饰器
 
-```
+```python
 def logger(func):
       def inner(*args, **kwargs): #1
             print "Arguments were: %s, %s" % (args, kwargs)
@@ -1646,7 +1650,7 @@ Arguments were: (), {}
 
 >分别使用对象和函数来实现带参数的装饰器
 
-```
+```python
 class qsub(object):
     def __init__(self, shfile, **kwargs):
         self.shfile = shfile
@@ -1677,7 +1681,7 @@ I will use the parameter {'reqsub': True, 'maxproc': 50, 'queue': 'general.q'} t
 
 还可以使用函数来实现：
 
-```
+```python
 def qsubOrDie(shfile, **kwargs):
     print "I will use the parameter {} to qsub the {}.".format(kwargs, shfile)
 
@@ -1706,13 +1710,13 @@ sleep(10)
 
 能否写出一个`@log`的decorator，使它既支持
 
-```
+```python
 @log 
 def f():
     pass
 ```
 又支持：
-```
+```python
 @log('execute') 
 def f():
     pass
@@ -1720,7 +1724,7 @@ def f():
 
 可以这样写：
 
-```
+```python
 import functools
 from types import FunctionType
 def log(*params, **kwparams):
@@ -1756,7 +1760,7 @@ def log(*params, **kwparams):
 
 **装饰器的深入理解**
 
-```
+```python
 def before(func):
     print "callback before"
     def decorator(*args, **kwargs):
@@ -1826,7 +1830,7 @@ python的一切数据都是对象，包括函数、基本数据类型、自定�
 
 如果以前有过Javascript的编程经验，初上Python肯定会对“.”运算符与“[]”之间的差异难以理解，它们不仅不能替换，而且完全不相关，如下：
 
-```
+```python
 mem = {'username': 'yiifaa'} 
 # 无法通过.运算符进行计算 
 mem.username 
@@ -1842,7 +1846,7 @@ name['upper']
 1. <font color="red">“_ getattribute_”只适用于所有的“.”运算符； </font>
 2. <font color="red"> “_ getitem_”只适用于所有的“[]”运算符；</font>
 
-```
+```python
 class Employee(object):
 
     def __init__(self, username, age):
@@ -1874,7 +1878,7 @@ AttributeError: 'str' object has no attribute 'length'
 
 通过覆盖实现“_ getattr_”回调接口可以解决此问题，如下：
 
-```
+```python
 #   直接返回空对象，将此方法添加到类Employee的声明中 
 def __getattr__(self, attr):
     return None 
@@ -1891,7 +1895,7 @@ print em.company
 
 这就是“_ get_”的作用了，将整个对象都作为数据描述符，但是请记住，要想““_ get_””作为数据描述符，那么此对象只能作为类属性，作为实例属性则无效，如下：
 
-```
+```python
 class Dept(object):
 
       def __init__(self, name):
@@ -1928,7 +1932,7 @@ print getattr(yiifaa, 'name')
 
 ***pyspider实例***
 
-```
+```python
 class ObjectDict(dict):
     """ 
     Object like dict, every dict[key] can visite by dict.key
@@ -1982,7 +1986,7 @@ class ObjectDict(dict):
 
 示例：
 
-```
+```python
 #test2.py 
 class A(object):
     def __str__(self):
@@ -1993,16 +1997,16 @@ class A(object):
  a = A() 
 b = A
 ```
-```
+```python
 >>> import test2 
 >>> test2.a 
-__repr__ 
+# __repr__ 
 >>> print(test2.a) 
-__str__ 
+# __str__ 
 >>> test2.b 
-<class 'test2.A'> 
+# <class 'test2.A'> 
 >>> print(test2.b) 
-<class 'test2.A'>
+# <class 'test2.A'>
 ```
 
 **python 将对象设置为可迭代有两种实现方式**
@@ -2011,7 +2015,7 @@ python 将对象设置为可迭代有两种实现方式：
 
 1. 实现  __getitem__(self)
 
-```
+```python
 class Library(object):
     def __init__(self):
         self.value=['a','b','c','d','e']
@@ -2027,7 +2031,7 @@ class Library(object):
 
 2. 实现 __iter__(self),next(self)
 
-```
+```python
 class Library2(object):
     def __init__(self):
         self.value=['a','b','c','d','e']
@@ -2055,7 +2059,7 @@ print test.next()
 今天在学习python时看到了一段代码甚是震惊. 大家都说python 是一门动态语言,刚开始我还没有很深刻的认识到什么叫
 动态语言,但是看到这段代码后终于明白了,废话不多说,上代码:
 
-```
+```python
 def maker(N):
     def action(X):
         return X ** N
@@ -2064,7 +2068,7 @@ def maker(N):
 
 这是一段很简单的代码, 看看运行后的结果:
 
-```
+```python
 def maker(N):
     def action(X):
         return X ** N
@@ -2102,7 +2106,7 @@ Unix/Linux操作系统提供了一个`fork()`系统调用，它非常特殊。�
 
 Python的os模块封装了常见的系统调用，其中就包括`fork`，可以在Python程序中轻松创建子进程：
 
-```
+```python
 import os 
 print('Process (%s) start...' % os.getpid()) 
 # Only works on Unix/Linux/Mac: 
@@ -2133,7 +2137,7 @@ I am child process (877) and my parent is 876.
 
 `multiprocessing`模块提供了一个`Process`类来代表一个进程对象，下面的例子演示了启动一个子进程并等待其结束：
 
-```
+```python
 from multiprocessing import Process
 import os
 
@@ -2170,7 +2174,7 @@ Process end.
 
 如果要启动大量的子进程，可以用进程池的方式批量创建子进程：
 
-```
+```python
 from multiprocessing import Pool
 import os, time, random
 
@@ -2229,7 +2233,7 @@ p = Pool(5)
 
 下面的例子演示了如何在Python代码中运行命令nslookup www.python.org，这和命令行直接运行的效果是一样的：
 
-```
+```python
 import subprocess 
 
 print('$ nslookup www.python.org')
@@ -2254,7 +2258,7 @@ Exit code: 0
 
 如果子进程还需要输入，则可以通过`communicate()`方法输入：
 
-```
+```python
 import subprocess
 
 print('$ nslookup')
@@ -2295,7 +2299,7 @@ Process之间肯定是需要通信的，操作系统提供了很多机制来实�
 
 我们以`Queue`为例，在父进程中创建两个子进程，一个往`Queue`里写数据，一个从`Queue`里读数据：
 
-```
+```python
 from multiprocessing import Process, Queue
 import os, time, random
 
@@ -2356,7 +2360,7 @@ Get C from queue.
 
 可以使用get()方法，或者使用logger捕捉。下面我们先看简单方法get：
 
-```
+```python
 from multiprocessing import Pool
 
 def test(x):
@@ -2392,7 +2396,7 @@ ZeroDivisionError: integer division or modulo by zero
 
 我们再看看logger捕捉异常：
 
-```
+```python
 import sys
 import logging
 from multiprocessing import Pool
@@ -2439,7 +2443,7 @@ END
 
 请注意最后的"END", 这说明logging捕获到异常时，并不会使程序中断。我们可以对上述代码进行优化：
 
-```
+```python
 import sys
 import logging
 from multiprocessing import Pool
@@ -2495,7 +2499,7 @@ END
 
 **小心exit**
 
-```
+```python
 1  from multiprocessing import Pool
 2
 3  def test(i):
@@ -2540,7 +2544,7 @@ Semaphore 管理一个计数器，每调用一次 `acquire()` 方法，计数器
 计数器的值不能小于 0，当计数器的值为 0 时，调用 `acquire()` 的线程就会等待，
 直到 `release()` 被调用。 因此，可以利用这个特性来控制线程数量
 
-```Python
+```python
 from threading import Thread, Semaphore
 import time
 
@@ -2601,7 +2605,7 @@ python2.x中处理中文，是一件头疼的事情。网上写这方面的文�
 
 **str与字节码**
 
-```
+```python
 s = "人生苦短"
 ```
 s是个字符串，它本身存储的就是字节码。那么这个字节码是什么格式的？
@@ -2616,7 +2620,7 @@ python 在内部使用两个字节来存储一个unicode，使用unicode对象�
 
 你可以用如下两种方式定义一个unicode:
 
-```
+```python
 s1 = u"人生苦短"
 s2 = unicode("人生苦短", "utf-8")
 ```
@@ -2627,7 +2631,7 @@ encode与decode
 
 所以我们可以写这样的代码：
 
-```
+```python
 # -*- coding:utf-8 -*-
 su = "人生苦短"
 # ： su是一个utf-8格式的字节串
@@ -2641,7 +2645,7 @@ print sg
 
 但是事实情况要比这个复杂，比如看如下代码：
 
-```
+```python
 s = "人生苦短"
 s.encode('gbk')
 ```
@@ -2654,7 +2658,7 @@ s.encode('gbk')
 
 看这个例子：
 
-```
+```python
 # -*- coding: utf-8 -*-
 s = "人生苦短"
 s.encode('gbk')
@@ -2664,7 +2668,7 @@ s.encode('gbk')
 
 因为你没有指定defaultencoding,所以它其实在做这样的事情:
 
-```
+```python
 # -*- coding: utf-8 -*-
 s = "人生苦短"
 s.decode('ascii').encode('gbk')
@@ -2674,7 +2678,7 @@ s.decode('ascii').encode('gbk')
 
 设置defaultencoding的代码如下：
 
-```
+```python
 reload(sys)
 sys.setdefaultencoding('utf-8')
 ```
@@ -2683,13 +2687,13 @@ sys.setdefaultencoding('utf-8')
 
 比如上一节例子中将str编码为另一种格式，就会使用defaultencoding。
 
-```
+```python
 s.encode("utf-8") 等价于 s.decode(defaultencoding).encode("utf-8")
 ```
 
 再比如你使用str创建unicode对象时，如果不说明这个str的编码格式，那么程序也会使用defaultencoding。
 
-```
+```python
 u = unicode("人生苦短") 等价于 u = unicode("人生苦短",defaultencoding)
 ```
 
@@ -2720,7 +2724,7 @@ requests是一个很实用的Python HTTP客户端库，编写爬虫和测试服�
 
 所以要么你直接使用content(字节码)，要么记得把encoding设置正确，比如我获取了一段gbk编码的网页,就需要以下方法才能得到正确的unicode。
 
-```
+```python
 import requests
 url = "http://xxx.xxx.xxx"
 response = requests.get(url)
@@ -2748,7 +2752,7 @@ print response.text
 
 如果说程序内部要保证只用unicode，那么在从外部读如字节流的时候，一定要将这些字节流转化为unicode，在后面的代码中去处理unicode，而不是str。
 
-```
+```python
 with open("test") as f:
     for i in f:
         # 将读入的utf-8字节流进行解码
@@ -2758,7 +2762,7 @@ with open("test") as f:
 
 如果把连接程序内外的这段数据流比喻成通道的的话，那么与其将通道开为字节流，读入后进行解码，不如直接将通道开为unicode的。
 
-```
+```python
 # 使用codecs直接开unicode通道
 file = codecs.open("test", "r", "utf-8")
 for i in file:
@@ -2770,34 +2774,34 @@ for i in file:
 
 **自我总结**
 
-```
+```python
 >>> x = u"汉字"
 >>> y = "汉字"
 >>> x
-u'\u6c49\u5b57'  # unicode编码标准
+# u'\u6c49\u5b57'  # unicode编码标准
 >>> y
-'\xe6\xb1\x89\xe5\xad\x97'  # 字节码
+# '\xe6\xb1\x89\xe5\xad\x97'  # 字节码
 >>> type(x)
-unicode
+# unicode
 >>> type(y)
-str
+# str
 >>> y.decode("utf-8")
-u'\u6c49\u5b57'
+# u'\u6c49\u5b57'
 >>> x.encode("utf-8")
-'\xe6\xb1\x89\xe5\xad\x97'
+# '\xe6\xb1\x89\xe5\xad\x97'
 
 >>> z = "\u6c49\u5b57"
 >>> z
-'\\u6c49\\u5b57'
+# '\\u6c49\\u5b57'
 >>> type(z)
-str
+# str
 >>> z.decode("unicode_escape")
-u'\u6c49\u5b57'
+# u'\u6c49\u5b57'
 >>> a = u'\xe6\x8a\xa5\xe8\xa1\xa8'
 >>> print a
-æ<8a>¥è¡¨ 
+# æ<8a>¥è¡¨ 
 >>> print a.encode("raw_unicode_escape")
-报表 
+# 报表 
 
 # 将字符串转成二进制
 bytes(s, encoding = "utf8") # 法1
@@ -2811,25 +2815,31 @@ str.encode(s)               # 法2
 
 <font color="blue">**将字节码类字符串转化为正确的输出**</font>
 
-```
+```python
 >>> x = "\xe4\xb8\xad\xe5\x9b\xbd"
 >>> print unicode(x, "gbk")
+"""
 拒绝访问。
+"""
 >>> print unicode(x, "utf-8")
+r"""
 UnicodeDecodeError                        Traceback (most recent call last)
 <ipython-input-428-8770cff73855> in <module>()
 ----> 1 print unicode('\xbe\xdc\xbe\xf8\xb7\xc3\xce\xca\xa1\xa3','utf-8')
 
 UnicodeDecodeError: 'utf8' codec can't decode byte 0xbe in position 0: invalid start byte
+"""
 >>>
 >>> y = "\\u8bc4\\u4ef7\\u7ebf\\u6027\\u6a21\\u578b"
 >>> print y.decode("unicode-escape")
+"""
 评价线性模型
+"""
 ```
 
 **将8进制转换成中文字符**
 
-```
+```python
 import chardet
 
 a = b"\345\260\274\345\217\244\346\213\211\346\226\257\350\265\265\345\233\233"
@@ -2857,31 +2867,35 @@ print(a)
 
 请将其翻译成中文。我们可以先用chardet试试
 
-```
+```python
 >>> import chardet
 
->>> a = b"\xe4\xbd\xa0\xe5\xa5\xbd\xef\xbc\x8c\xe9\xba\xbb\xe7\x83\xa6\xe6\x8e\xa7\xe5\x88
+>>> a = b"""\xe4\xbd\xa0\xe5\xa5\xbd\xef\xbc\x8c\xe9\xba\xbb\xe7\x83\xa6\xe6\x8e\xa7\xe5\x88
 \xb6\xe4\xb8\x80\xe4\xb8\x8b\xe4\xbd\xa0\xe5\x9c\xa80\xe5\x8f\xb7\xe8\x8a\x82\xe7\x82
 \xb9\xe8\xbf\x90\xe8\xa1\x8c\xe7\x9a\x84\xe7\xba\xbf\xe7\xa8\x8b\xe6\x95\xb0\xef\xbc
 \x8c0\xe5\x8f\xb7\xe8\x8a\x82\xe7\x82\xb9\xe6\x9c\x89\xe5\x95\x86\xe4\xb8\x9a\xe6\xa0
 \xb7\xe6\x9c\xac\xe5\x9c\xa8\xe8\xbf\x90\xe8\xa1\x8c\xef\xbc\x8c\xe5\xa6\x82\xe6\x9e
 \x9c\xe5\x8f\xaf\xe4\xbb\xa5\xe7\x9a\x84\xe8\xaf\x9d\xef\xbc\x8c\xe8\xaf\xb7\xe6\x8d
 \xa2\xe4\xb8\xaa\xe8\xae\xa1\xe7\xe5\x85\xb6\xe4\xbb\x96\xe7\x9a\x84\xe8\xae\xa1\xe7
-\xae\x97\xe8\x8a\x82\xe7\x82\xb9"
+\xae\x97\xe8\x8a\x82\xe7\x82\xb9"""
 
 >>> chardet.detect(a)
+"""
 {'confidence': 0.3597696002270644,
  'encoding': 'windows-1251',
  'language': 'Russian'}
-
+"""
 >>> a.decode("windows-1251")
-'дЅ\xa0еҐЅпјЊйє»зѓ¦жЋ§е€¶дёЂдё‹дЅ\xa0ењЁ0еЏ·иЉ‚з‚№иїђиЎЊзљ„зєїзЁ‹ж•°пјЊ0еЏ·иЉ‚з‚
+r"""
+'дЅ\xa0еҐЅпјЊйє»зѓ¦жЋ§е€¶дёЂдё‹дЅ\xa0ењЁ0еЏ·иЉ‚з‚№иїђиЎЊзљ„зєїзЁ‹ж•°пјЊ0еЏ·иЉ‚з‚\
 №жњ‰е•†дёљж\xa0·жњ¬ењЁиїђиЎЊпјЊе¦‚жћњеЏЇд»Ґзљ„иЇќпјЊиЇ·жЌўдёЄи®Ўзе…¶д»–зљ„и®Ўз®—иЉ‚з‚№'
+"""
 
 # 发现为乱码，说明chardet识别的不对，其置信度也只有0.35
 # 怎么办呢，我们可以试试常见的编码格式
 # 先试试gbk
 >>> a.decode("gbk")
+"""
 ---------------------------------------------------------------------------
 UnicodeDecodeError                        Traceback (most recent call last)
 <ipython-input-28-a12a1ac95270> in <module>()
@@ -2889,25 +2903,37 @@ UnicodeDecodeError                        Traceback (most recent call last)
 UnicodeDecodeError: 'gbk' codec can't decode byte 0xa8 in position 32: illegal multibyte sequence
 
 # gbk编码不对，再试试utf-8
+"""
 >>> a.decode("utf-8")
+"""
 ---------------------------------------------------------------------------
 UnicodeDecodeError                        Traceback (most recent call last)
 <ipython-input-29-2643b56e8e14> in <module>()
 ----> 1 b.decode("utf-8")
 UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe7 in position 134: invalid continuation byte
+"""
 
 # 看来还不对，那接下来怎么办呢？别急，我们发现decode有error参数，再试试它：
 >>> a.decode("gbk", error="ignore")
+"""
 '浣犲ソ锛岄夯鐑︽帶鍒朵竴涓嬩綘鍦0鍙疯妭鐐硅繍琛岀殑绾跨▼鏁帮紝0鍙疯妭鐐规湁鍟
 嗕笟鏍锋湰鍦ㄨ繍琛岋紝濡傛灉鍙浠ョ殑璇濓紝璇锋崲涓璁＄鍏朵粬鐨勮＄畻鑺傜偣'
+"""
 
 # 没报错了，但是还是不对，我们再试试utf-8
 >>> a.decode("utf-8", error="ignore")
+"""
 '你好，麻烦控制一下你在0号节点运行的线程数，0号节点有商业样本在运行，如果可以的话，
 请换个计其他的计算节点'
+"""
 
 # 哈哈，这下正确了吧。
 ```
+
+### 7. 字符编码(自我总结)
+
+
+
 
 
 ### 8. 内建函数
@@ -2919,14 +2945,14 @@ UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe7 in position 134: invali
 * `chr(i)`: chr()函数返回与ASCII码i相匹配的一个单一字符串，如下例所示：`>>>print chr(72)+chr(101)+chr(108)+chr(111)`结果为`hello`.
 chr()函数是ord()函数的反函数，其中ord()函数将字符串转换回ASCII整数码，参数i的取值应在0~255范围内。如果参数i的取值在此范围之外，将引发ValueError异常。
 * `cmp(x,y)`: cmp()函数比较x和y这两个对象，且根据比较结果返回一个整数。如果xy，则返回正数。请注意，此函数特别用来比较数值大小，而不是任何引用关系，因而有下面的结果：
-```
+```python
 >>>a=99
 >>>b=int('99')
 >>>cmp(a,b)
 0
 ```
 * `coerce(x,y)`: coerce()函数返回一个元组，该元组由两个数值型参数组成。此函数将两个数值型参数转换为同一类型数字，其转换规则与算术转换规则一样。一下是两个例子：
-```
+```python
 >>>a=1
 >>>b=1.2
 >>>coerce(a,b)
@@ -2937,7 +2963,7 @@ chr()函数是ord()函数的反函数，其中ord()函数将字符串转换回AS
 ((1+2j),(43000000000+0j))
 ```
 * `compile(string,filename,kind)`: compile()函数将string编译为代码对象，编译生成的代码对象接下来被exec语句执行，接着能利用eval()函数对其进行求值。filename参数应是代码从其中读出的文件名。如果内部生成文件名，filename参数值应是相应的标识符。kind参数指定string参数中所含代码的类别，有关kind可能取值的详细信息，请参见表8-1,举例如下： 
-```
+```python
 >>>a=compile(‘print “Hello World”’,’’,’single’)
 >>>exec(a)
 Hello World
@@ -2954,17 +2980,17 @@ Single 简单交互语句
 * `complex(real,[image])`: Complex()函数返回一个复数，其实部为real参数值。如果给出image参数的值，则虚部就为image；如果默认image参数，则虚部为0j。
 * `delattr(object,name)`: delattr()函数在object对象许可时，删除object对象的name属性，此函数等价于如下语句: `del object.attr`,而delattr()函数允许利用编程方法定义来定义object和name参数，并不是在代码中显示指定。
 * `dir([object])`: 当没有提供参数时，dir()函数列出在当前局部符号表中保存的名字，如下例所示：
-```
+```python
 >>>import sys
 >>>dir(sys)
 ``` 
 * `divmod(a,b)`: devmod()函数返回一个元组，该元组包含a除以b的商和余数，如下例所示：
-```
+```python
 >>>divmod(7,4)
 (1,3)
 ``` 
 对整数而言，返回值与a/b和a%b相同。如果给出的参数值是浮点数，则结果就是（q,a%b），其中：q通常是math.floor(a/b)，但是也可能比这小1，不管在什么情况下，q*b+a%b都非常逼近a；如果a%b是个非零值，则其正负号与b相同，并且有0<=abs(a%b) 
-```
+```python
 >>>divmod(3.75,1.125)
 (3.0,0.375)
 >>>divmod(4.99,1.001)
@@ -2973,7 +2999,7 @@ Single 简单交互语句
 (-4.0,0.90000000000000036)
 ```
 * `eval(expression[,global[,locals]])`: eval()函数将expression字符串作为python标准表达式进行分析并求值，返回expression字符串的值，当不可调用其他可选参数时，expression访问调用该函数的程序段的全局和局部对象。另一个选择是：以字典形式给出全局和局部符号表（参见后面部分对global()和local()函数的论述）。Eval()函数的返回值是被求职表达式的值，如下例所示： 
-```
+```python
 >>>a=99
 >>>eval(‘divmod(a,7)’)
 (14,1)
@@ -2981,7 +3007,7 @@ Single 简单交互语句
 任何求职操作的语法错误，都将引发成异常. eval()函数还能用来编译诸如由complie()函数创建的代码对象，但仅当该代码对象用“eval”模式编译过后才可用eval()函数编译。要执行混合了语句和表达式的python任意代码，请使用exec语句或使用execfile()函数来动态地执行含有任意代码的文件。
 * `execfile(file[,globals[,locals]])`: execfile()函数与exec语句等价，不同之处在于：execfile()函数执行文件中的语句，而exec语句处理字符串。其中globals和locals参数应是字典，该字典包含文件在执行期间有效的符号表；如果locals参数省略，则所有的引用都使用globals名称空间。如果两个可选参数都省略，文件就访问运行期间的当前符号表。
 * `filter(function,list)`: filter()函数根据function参数返回的结果是否为真(true)来过滤list参数中的项，最后返回一个新列表，如下例所示：
-```
+```python
 a=[1,2,3, 4, 5,6,,7,8,9]
 b=filter(lambda x:x>6,a)
 print b
@@ -3005,23 +3031,22 @@ print b
 * `locals()`: locals()函数返回表示当前局部符号表的字典
 * `long(x)`: long()函数将字符串或数字转换为长整型数，对浮点数的转换遵循与int()相同的规则
 * `map(function,list,…)`: map()函数将function运用到list中的每一项上，并返回新的列表，如下例所示：
-```
+```python
 >>>a=[1,2,3,4]
 >>>map(lambda x:pow(x,2),a)
 [1,4,9,16]
 ```
 若提供附加的列表，则它们就被并行地提供给function。在后续无元素的列表增加None，直到所有参数列表达到相同的长度为止。如果function参数值为None，则假定为identify函数，将使map()函数返回删除所有为假的参数的list。如果function参数值为None，且给定多个列表参数，返回的列表由一个个元组组成，这些元组由函数中的每一个参数列表内相同对应位置上的参数组成，如下例所示：
-``` 
+``` python
 >>>map(None,[1,2,3,4],[4,5,6,7])
 [(1,4),(2,5),(3,6),(4,7)]
 ``` 
 上例的结果与zip()函数产生的结果等价
 * `max(s,[,args…])`: 当仅给定一个参数时，max()函数返回序列s的最大值。当给定一列参数时，max()函数返回给定参数的最大参数
 * `min(s[,args…])`: 当仅给定一个参数时，min()函数返回序列s的最小值。当给定一列参数时，min()函数返回给定参数中的最小值。记住：多参数调用的序列不被遍历，每个列表参数作为一个整体进行比较，如：
-``` 
+```python
 min([1,2,3],[4,5,6])
-返回
-[1,2,3]
+#返回[1,2,3]
 ```
 而不是通常所想的结果为1，要得到一个或多个列表中元素的最小值，可将所有列表连成一串，如下所示：
 ``` 
@@ -3053,13 +3078,13 @@ open()函数的bufsize选项参数决定从文件中读取数据时所使用的�
 * `reduce(function,sequence[,initializer])`: 该函数一次应用function（支持两个函数）到sequence中的每个元素上，逐渐缩短整个语句直到为一个单一的值。举例，下面的语句模拟了算术运算符“！”：`reduce(lambda x,y:x*y,[1,2,3,4,5])`, 其结果如同执行以下计算一样：`（（（（1*2）*3）*4）*5）`, 结果等于120. 如果给出initializer参数值，则initializer参数值就被用作序列的第一个元素，如下列所示：`>>>reduce(lambda x,y:x*y,[1,2,3,4,5],10)`结果等于1200
 * `reload(module)`: reload()函数将以前导入过的模块再加载一次。重新加载(reload)包括最初导入模块是应用的分析过程和初始化过程。这样就允许在不退出解释器的情况重新加载已更改的python模块。使用reload()函数的若干注意事项如下： 1.如果模块在语法上是正确的，但在初始化过程中失败，则导入过程不能正确地将模块的名字绑定到符号表中，这时，必须在模块能被重新加载之前使用import()函数加载该模块。2.重新加载的模块不删除最初旧版本在符号表中的登记项。对于有恒定名字的对象和函数，这当然不是问题；但是，若对一模块实体更改了名字，模块名在重新加载后仍保持在符号表中. 3.支持扩展模块(它依赖与内置的或所支持的动态加载的函数库)的重新加载，但可能是无目标的，并且确定可能导致失败，这完全依赖于动态加载的函数库的行为. 4.如果以模块利用from…import…方式从另一个模块导入对象，reload()函数不重定义导入的对象，可利用import…形式避免这个问题. 5.提供类的重新加载模块不影响所提供类的任何已存实例——已存实例将继续使用原来的方法定义；只有该类的新实例使用新格式。这个原则对派生类同样适用.
 * `repr(object)`: repr()函数返回对象的字符串表示。这与将对象或属性适用单反引号(‘)的结果是一致的。返回的字符串产生一个对象，该对象的值与将object传递给eval()函数产生的值一样，如下例所示：
-```
+```python
 >>>dict={‘One’:1,’Two:2’,’Many’:{‘Many’:4,’ManyMany’:8}}
 >>>repr(dict)
 “{‘One’:1,’Many’:{‘Many’:4,’ManyMany’:8},’Two’:2}”
 ```
 * `round(x[,n])`: round()函数返回浮点型参数x舍入到十进制小数点后n位的值，如下例所示：
-```
+```python
 >>>round(0.4)
 0.0
 >>>round(0.5)
@@ -3082,6 +3107,252 @@ open()函数的bufsize选项参数决定从文件中读取数据时所使用的�
 * `exec`: exec语句被设计为执行能使用函数和语句的任意组合的python的任何代码片段。执行的代码访问相同的全局定义和局部定义的对象、类和方法或函数。以下是使用exec语句的简单例子：`exec “print ‘Hello World’”` 也能通过提供一个包含对象及其取值的列表的字典来限定对exec语句有效的资源，如下例这样：`exec “print message”in myglobals,mylocals` 能用globals()和locals()函数来获得当前的字典. 请注意，exec语句执行表达式和语句、或者对表达式和语句求值，但是exec语句不返回任何值。因为exec是语句不是函数，所以任何获取返回值的试图都将导致语法错误
 * `execfile()函数`: 该函数执行与exec语句同样的操作，正如前面所描述的那样，它们的不同之处在于：execfile()函数从问几十年中读取被执行的语句，执行的对象不是字符串，不是代码对象；execfile()函数的其他所有方面都与exec语句等价
 * `eval()函数`: 该函数不允许执行任意的python语句。eval()函数被设计为：执行一个python表达式，并返回值，如下例中一样：`result=eval(userexpression)` 或者在语句中更显式地给出表达式，如下例所示：`result=eval(“3+6”)` 不能使用eval()函数去执行语句，根据经验，通常使用eval()函数开将一表达式求值并返回一个值，而在其他所有情况下则使用exec语句`exec()`
+
+
+
+### 9. 可迭代对象,迭代器,生成器
+
+三者的关系为：
+
+```
+             --> 迭代器 --> 生成器 
+            /
+可迭代对象 -|---> 序列(包括字符串，列表和元组)
+            \
+             --> 字典
+```
+
+**可迭代对象与迭代器**
+
+* 可迭代对象包含迭代器
+* 如果一个对象拥有__iter__方法，其是可迭代对象；如果一个对象拥有__next__方法，其是迭代器。
+* 定义可迭代对象，必须实现__iter__方法；定义迭代器，必须实现__iter__和__next__方法。
+
+```python
+#!/usr/bin/env python  
+# coding=utf-8  
+
+
+# 定义可迭代对象类 
+class MyList(object):
+
+    def __init__(self, num):  
+        self.data = num     # 上边界  
+  
+    # 返回该可迭代对象的迭代器类的实例 
+    def __iter__(self):  
+        return MyListIterator(self.data) 
+
+
+# 定义迭代器类，其是MyList可迭代对象的迭代器类  
+class MyListIterator(object):
+
+    def __init__(self, data):  
+        self.data = data         # 上边界  
+        self.now = 0             # 当前迭代值，初始为0  
+  
+    # 返回该对象的迭代器类的实例；因为自己就是迭代器，所以返回self
+    def __iter__(self):
+        return self
+  
+    # 迭代器类必须实现的方法 
+    def __next__(self):
+        if self.now >= self.data:  
+        	raise StopIteration      # 超出上边界，抛出异常 
+        self.now += 1  
+        return self.now - 1  # 返回当前迭代值  
+         
+  
+my_list = MyList(5)              # 得到一个可迭代对象  
+print type(my_list)              # 返回该对象的类型  
+  
+my_list_iter = iter(my_list)     # 得到该对象的迭代器实例，iter函数在下面会详细解释  
+print type(my_list_iter)  
+  
+for i in my_list:                # 迭代  
+    print i  
+```
+
+其实，`MyList`可以继承`collections.abc.Iterable`， `MyListIterator`可以继承`collections.abc.Iterator`
+
+`iter(collection)`: 用于返回collection对象的迭代器实例，这里的collection我认为表示的是可迭代对象，
+即该对象必须实现__iter__方法；事实上iter函数与__iter__方法联系非常紧密，
+iter()是直接调用该对象的__iter__()，
+并把__iter__()的返回结果作为自己的返回值，故该用法常被称为“创建迭代器”。
+
+for循环执行过程：
+
+* 调用可迭代对象的__iter__方法返回一个迭代器对象（iterator）
+* 不断调用迭代器的__next__方法返回元素
+* 直到迭代完成后，处理StopIteration异常
+
+
+另外，迭代器和可迭代对象的另一个重大不同之处在于：
+
+```python
+a = MyList(5)   # 可迭代对象
+b = MyListIterator(5)  # 迭代器
+list(iter(a)) # [0, 1, 2, 3, 4]
+list(iter(a)) # 第二次执行，结果还是 [0, 1, 2, 3, 4]
+list(iter(b)) # [0, 1, 2, 3, 4]
+list(iter(b)) # 第二次执行，结果是 []
+```
+
+
+
+**生成器**
+
+生成器是一种特殊的迭代器，生成器自动实现了“迭代器协议”（即__iter__和next方法），不需要再手动实现两方法。
+
+生成器在迭代的过程中可以改变当前迭代值，而修改普通迭代器的当前迭代值往往会发生异常，影响程序的执行。
+
+```python
+#!/usr/bin/env python  
+# coding=utf-8  
+  
+
+# 定义生成器
+def myList(num): 
+    now = 0           # 当前迭代值，初始为0  
+    while now < num:  
+        val = (yield now)                      # 返回当前迭代值，并接受可能的send发送值；yield在下面会解释  
+        now = now + 1 if val is None else val  # val为None，迭代值自增1，否则重新设定当前迭代值为val  
+  
+my_list = myList(5)   # 得到一个生成器对象  
+  
+print next(my_list)  # 返回当前迭代值  (python2中可以使用my_list.next())
+print next(my_list) 
+  
+my_list.send(3)       # 重新设定当前的迭代值  
+print next(my_list)  
+  
+print dir(my_list)    # 返回该对象所拥有的方法名，可以看到__iter__与__next__在其中 
+```
+
+
+求指定范围内的所有素数：
+
+```python
+import math
+
+class PrimeNumbers(object):
+
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+
+    # 利用定理：如果一个数是合数，那么它的最小质因数肯定小于等于它的平方根。
+    # 所以判断一个数是否是质数，只需判断它是否能被小于它开根后的所有数整除。
+    # 这样做的运算会少很多。
+    def isPrimeNum(self, k):
+        if k < 2:
+            return False
+        for i in range(2, int(math.sqrt(k)+1)):
+            if k % i == 0:
+                return False
+        return True
+
+    def __iter__(self):
+        for i in range(self.start, self.end+1):
+            if self.isPrimeNum(i):
+                yield(i)
+
+
+for i in PrimeNumbers(0, 100):
+	print(i)
+# 结果为： 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 
+# 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97
+
+```
+
+**正向迭代和反向迭代**
+
+1. 使用iter和reversed
+
+```python
+a = [1, 2, 3, 4, 5]   # 列表是一个可迭代对象
+b = iter(a)           # 列表的正向迭代器 <list_iterator at 0x20a71a25668>
+c = reversed(a)       # 列表的反向迭代器 <list_reverseiterator at 0x20a719f0780>
+
+a = range(5)     # range也是一个可迭代对象
+b = iter(a)      # range的正向迭代器 <range_iterator at 0x20a719ede50>
+c = reversed(a)  # range的反向迭代器 <range_iterator at 0x20a71acc0f0>
+```
+
+2. 实现`__iter__`方法和`__reversed__`
+
+```python
+
+class FloatRange(object):
+
+	def __init__(self, start, end, step=0.1):
+		self.start = start
+		self.end = end
+		self.step = step
+
+	# 实现正向迭代
+	def __iter__(self):
+		t = self.start
+		while t <= self.end:
+			yield t
+			t += self.step
+
+	# 实现反向迭代
+	def __reversed__(self):
+		t = self.end
+		while t >= self.start:
+			yield t
+			t -= self.step
+
+for i in FloatRange(1.0, 4.0, 0.5):
+	print(i)
+
+for i in reversed(FloatRange(1.0, 4.0, 0.5)):
+	print(i)
+```
+
+
+**对迭代器做切片操作**
+
+使用islice时，都要重新生成可迭代对象使用itertools.islice
+
+读取10G的log文件中第100-200行的数据：
+
+```python
+from itertools import islice
+f = open("test.log", "r")
+for line in islice(f, 100, 200):
+	print(line)
+f.close()
+
+# islice(f, 100)  生成前100行数据的可迭代对象的切片
+# islice(f, 100, None)  生成第100行到末尾数据的可迭代对象的切片
+# 
+# islice 会消耗原来的迭代对象，所以每次使用islice时，都要重新生成可迭代对象
+```
+
+**同时迭代多个可迭代对象**
+
+1. 使用zip(并行)
+
+```python
+chinese = iter([randint(60, 100) for i in range(20)])
+math = iter([randint(60, 100) for i in range(20)])
+english = iter([randint(60, 100) for i in range(20)])
+for c, m, e in zip(chinese, math, englist):
+	print(c + m + e)
+```
+
+2. 使用itertools.chain(串行)
+
+```python
+from itertools import chain
+class1 = iter([randint(60, 100) for i in range(20)])
+class2 = iter([randint(60, 100) for i in range(20)])
+class3 = iter([randint(60, 100) for i in range(20)])
+for i in chain(class1, class2, class3):
+	print(i)
+```
 
 
 
@@ -3144,7 +3415,7 @@ open()函数的bufsize选项参数决定从文件中读取数据时所使用的�
 * `os.mkfifo` : 创建新的命名管道
 * `os.stat` : 获取文件底层信息
 * `os.walk` : 将函数或循环应用于整个目录树的各部分
-*`os.symlink`: 符号链接
+* `os.symlink`: 符号链接
 
 ### 3. `os.path`
 
@@ -3166,7 +3437,7 @@ functools，用于高阶函数：指那些作用于函数或者返回其它函�
 将老式的比较函数（comparison function）转换为关键字函数（key function），与接受key function的工具一同使用（例如sorted，min，max，heapq.nlargest，itertools.groupby），该函数主要用于将程序转换成Python 3格式的，因为Python 3中不支持比较函数。
 比较函数是可调用的，接受两个参数，比较这两个参数并根据他们的大小关系返回负值、零或者正值中的一个。关键字函数也是可调用的，接受一个参数，同时返回一个可以用作排序关键字的值。
 
-```
+```python
 from functools import cmp_to_key 
  def compare(ele1,ele2):
 
@@ -3179,11 +3450,11 @@ print sorted(a, key = cmp_to_key(compare))
 
 **`partial`**
 
-functools.partial(func, *args, **keywords)，函数装饰器，返回一个新的partial对象。调用partial对象和调用被修饰的函数func相同，只不过调用partial对象时传入的参数个数通常要少于调用func时传入的参数个数。当一个函数func可以接收很多参数，而某一次使用只需要更改其中的一部分参数，其他的参数都保持不变时，partial对象就可以将这些不变的对象冻结起来，这样调用partial对象时传入未冻结的参数，partial对象调用func时连同已经被冻结的参数一同传给func函数，从而可以简化调用过程。
+functools.partial(func, \*args, \*\*keywords)，函数装饰器，返回一个新的partial对象。调用partial对象和调用被修饰的函数func相同，只不过调用partial对象时传入的参数个数通常要少于调用func时传入的参数个数。当一个函数func可以接收很多参数，而某一次使用只需要更改其中的一部分参数，其他的参数都保持不变时，partial对象就可以将这些不变的对象冻结起来，这样调用partial对象时传入未冻结的参数，partial对象调用func时连同已经被冻结的参数一同传给func函数，从而可以简化调用过程。
 如果调用partial对象时提供了更多的参数，那么他们会被添加到args的后面，如果提供了更多的关键字参数，那么它们将扩展或者覆盖已经冻结的关键字参数。
 partial对象的调用如下，
 
-```
+```python
 import functools 
  def add(a,b):
 
@@ -3206,7 +3477,7 @@ add5 = functools.partial(add,5)
 
 与Python内置的reduce函数一样，为了向Python3过渡；
 
-```
+```python
 import functools 
  a = range(1,6) 
 print functools.reduce(lambda x,y:x+y,a)
@@ -3220,7 +3491,7 @@ print functools.reduce(lambda x,y:x+y,a)
 
 被修饰的类必须至少定义 `__lt__()`， `__le__()`，`__gt__()`，`__ge__()`中的一个，同时，被修饰的类还应该提供 `__eq__()`方法。
 
-```
+```python
 from functools import total_ordering 
  class Person:
 
@@ -3266,7 +3537,7 @@ False
 
 这个函数可用作一个装饰器，简化调用update_wrapper的过程，调用这个函数等价于调用`partial(update_wrapper, wrapped = wrapped, assigned = assigned,updated = updated)`。
 
-```
+```python
 from functools import wraps 
  def my_decorator(f):
 
@@ -3345,7 +3616,7 @@ None
 |  math.isinf(x) | 若x为无穷大，返回True；否则，返回False | math.isinf(1.0e+308) #False math.isinf(1.0e+309) #True |
 |  math.isnan(x) | 若x不是数字，返回True；否则，返回False | math.isnan(1.2e3) #False |
 |  math.hypot(x, y) | 返回以x和y为直角边的斜边长 | math.hypot(3,4) #5.0 |
-|  math.copysign(x, y) | 若y<0，返回-1乘以x的绝对值； 否则，返回x的绝对值 | math.copysign(5.2, -1) #-5.2 |
+|  math.copysign(x, y) | 若y&lt;0，返回-1乘以x的绝对值； 否则，返回x的绝对值 | math.copysign(5.2, -1) #-5.2 |
 |  math.frexp(x) | 返回m和i，满足m乘以2的i次方 | math.frexp(3) #(0.75, 2) |
 |  math.ldexp(m, i) | 返回m乘以2的i次方 | math.ldexp(0.75, 2) #3.0 |
 |  math.sin(x) | 返回x（弧度）的三角正弦值 | math.sin(math.radians(30)) #0.49999999999999994 |
@@ -3384,7 +3655,7 @@ None
 |  math.isinf(x) | 若x为无穷大，返回True；否则，返回False | math.isinf(1.0e+308) #False math.isinf(1.0e+309) #True |
 |  math.isnan(x) | 若x不是数字，返回True；否则，返回False | math.isnan(1.2e3) #False |
 |  math.hypot(x, y) | 返回以x和y为直角边的斜边长 | math.hypot(3,4) #5.0 |
-|  math.copysign(x, y) | 若y<0，返回-1乘以x的绝对值； 否则，返回x的绝对值 | math.copysign(5.2, -1) #-5.2 |
+|  math.copysign(x, y) | 若y&lt;0，返回-1乘以x的绝对值； 否则，返回x的绝对值 | math.copysign(5.2, -1) #-5.2 |
 |  math.frexp(x) | 返回m和i，满足m乘以2的i次方 | math.frexp(3) #(0.75, 2) |
 |  math.ldexp(m, i) | 返回m乘以2的i次方 | math.ldexp(0.75, 2) #3.0 |
 |  math.sin(x) | 返回x（弧度）的三角正弦值 | math.sin(math.radians(30)) #0.49999999999999994 |
@@ -3403,7 +3674,9 @@ None
 |  math.erf(x) | 返回x的误差函数 |  |
 |  math.erfc(x) | 返回x的余误差函数 |  |
 |  math.gamma(x) | 返回x的伽玛函数 |  |
-|  math.lgamma(x) | 返回x的绝对值的自然对数的伽玛函数 | =ath.lgamma(x) | 返回x的绝对值的自然对数的伽玛函数 |  |
+|  math.lgamma(x) | 返回x的绝对值的自然对数的伽玛函数 | =math.lgamma(x) | 返回x的绝对值的自然对数的伽玛函数 |  |
+
+
 
 
 ### 8. itertools
@@ -3429,15 +3702,36 @@ itertools模块可创建的迭代器一般分为三类:
 
 2. **终止于最短输入序列的迭代器**
 
-`chain` : itertools.chain(*iterables)  # chain([1, 2, 3], [4, 5, 7]): 连接两个迭代器成为一个。1, 2, 3, 4, 5, 7
+`chain` : itertools.chain(\*iterables)  # chain([1, 2, 3], [4, 5, 7]): 连接两个迭代器成为一个。1, 2, 3, 4, 5, 7
 
 `compress` : itertools.compress(data, selectors)  # data为数据对象, selectors为选择器(规则), compress([1,2,3], True,False,True]): 返回数据对象中对应规则为True的元素 1,3
 
+
+
 ### 9. str
 
-`str.partition` : 根据指定的分隔符将字符串进行分割。 "os.path.abspath".partition(".")   # ('os', '.', 'path.abspath')
+* `str.partition` : 根据指定的分隔符将字符串进行分割。 "os.path.abspath".partition(".")   # ('os', '.', 'path.abspath')
+* `str.rpartition` : 类似`str.partiton`。 "os.path.baspath".rpartition(".") # ('os.path', '.', 'abspath')
+* `str.ljust` : 左对齐。 "abc".ljust(5): "abc  "; "abc.ljust(5,'=')": "abc=="
+* `str.rjust` : 右对齐
+* `str.center` : 居中对齐
+* `str.tanslate(table, [,deletechars])`: 根据参数table给出的表(包含 256 个字符)转换字符串的字符, 要过滤掉的字符放到 del 参数中。
 
-`str.rpartition` : 类似`str.partiton`。 "os.path.baspath".rpartition(".") # ('os.path', '.', 'abspath')
+```python
+# tanslate可以用作字符串简单加密
+from string import maketrans   # 引用 maketrans 函数。
+ 
+intab = "aeiou"
+outtab = "12345"
+trantab = maketrans(intab, outtab)
+ 
+str = "this is string example....wow!!!";
+print str.translate(trantab);
+# th3s 3s str3ng 2x1mpl2....w4w!!!
+
+print str.translate(trantab, 'xm');
+# th3s 3s str3ng 21pl2....w4w!!!
+```
 
 
 ### 10. collections
@@ -3448,7 +3742,7 @@ itertools模块可创建的迭代器一般分为三类:
 
 我们知道`tuple`可以表示不变集合，例如，一个点的二维坐标就可以表示成：
 
-```
+```python
 >>> p = (1, 2)
 ```
 
@@ -3456,7 +3750,7 @@ itertools模块可创建的迭代器一般分为三类:
 
 定义一个`class`又小题大做了，这时，`namedtuple`就派上了用场：
 
-```
+```python
 >>> from collections import namedtuple
 >>> Point = namedtuple('Point', ['x', 'y'])  # 或者Point=namedtuple('Point', 'x y')
 >>> p = Point(1, 2)
@@ -3472,7 +3766,7 @@ itertools模块可创建的迭代器一般分为三类:
 
 可以验证创建的Point对象是`tuple`的一种子类：
 
-```
+```python
 >>> isinstance(p, Point)
 True
 >>> isinstance(p, tuple)
@@ -3481,7 +3775,7 @@ True
 
 类似的，如果要用坐标和半径表示一个圆，也可以用`namedtuple`定义：
 
-```
+```python
 # namedtuple('名称', [属性list]):
 Circle = namedtuple('Circle', ['x', 'y', 'r'])
 ```
@@ -3492,7 +3786,7 @@ Circle = namedtuple('Circle', ['x', 'y', 'r'])
 
 `deque`是为了高效实现插入和删除操作的双向列表，适合用于队列和栈：
 
-```
+```python
 >>> from collections import deque
 >>> q = deque(['a', 'b', 'c'])
 >>> q.append('x')
@@ -3507,7 +3801,7 @@ deque(['y', 'a', 'b', 'c', 'x'])
 
 使用`dict`时，如果引用的`Key`不存在，就会抛出`KeyError`。如果希望`key`不存在时，返回一个默认值，就可以用`defaultdict`：
 
-```
+```python
 >>> from collections import defaultdict
 >>> dd = defaultdict(lambda: 'N/A')
 >>> dd['key1'] = 'abc'
@@ -3527,7 +3821,7 @@ deque(['y', 'a', 'b', 'c', 'x'])
 
 如果要保持`Key`的顺序，可以用`OrderedDict`：
 
-```
+```python
 >>> from collections import OrderedDict
 >>> d = dict([('a', 1), ('b', 2), ('c', 3)])
 >>> d # dict的Key是无序的
@@ -3539,7 +3833,7 @@ OrderedDict([('a', 1), ('b', 2), ('c', 3)])
 
 注意，`OrderedDict`的`Key`会按照插入的顺序排列，不是`Key`本身排序：
 
-```
+```python
 >>> od = OrderedDict()
 >>> od['z'] = 1
 >>> od['y'] = 2
@@ -3547,8 +3841,10 @@ OrderedDict([('a', 1), ('b', 2), ('c', 3)])
 >>> od.keys() # 按照插入的Key的顺序返回
 ['z', 'y', 'x']
 ```
+
 `OrderedDict`可以实现一个`FIFO`（先进先出）的`dict`，当容量超出限制时，先删除最早添加的`Key`：
-```
+
+```python
 from collections import OrderedDict
 
 class LastUpdatedOrderedDict(OrderedDict):
@@ -3574,7 +3870,7 @@ class LastUpdatedOrderedDict(OrderedDict):
 
 `Counter`是一个简单的计数器，例如，统计字符出现的个数：
 
-```
+```python
 >>> from collections import Counter
 >>> c = Counter()
 >>> for ch in 'programming':
@@ -3589,6 +3885,40 @@ Counter({'g': 2, 'm': 2, 'r': 2, 'a': 1, 'i': 1, 'o': 1, 'n': 1, 'p': 1})
 **小结**
 
 `collections`模块提供了一些有用的集合类，可以根据需要选用。
+
+
+
+### 10. collections.abc
+
+Collections.abc模块包含一些抽象基类，其为python内置容器数据结构以及collections模块定义的容器数据结构定义了API。表2-1给出了这些基类及其用途的一个列表。
+
+|类|基类|API用途|
+|----|----|----|
+|Container||基本容器特性，如in操作符|
+|Hashable||增加了散列支持，可以为容器实例提供散列值|
+|Iterable||可以在容器内容上创建一个迭代器|
+|Iterator|Iterable|这是容器内容上的一个迭代器|
+|Generator|Iterator|为迭代器宽展了PEP342的生成器协议|
+|Sized||为知道自己大小的容器增加方法|
+|Callable||可以作为函数来调用的容器|
+|Sequence|Sized, Iterable, Container|支持获取单个元素以及迭代和改变元素顺序|
+|MutableSequence|Sequence|支持创建一个实例之后增加和删除元素|
+|ByteString|Sequence|合并bytes和bytearray的API|
+|Set|Sized, Iterable, Container|支持集合操作，如交集和并集|
+|MutableSet|Set|增加了创建集合后管理集合内容的方法|
+|Mapping|Sized,Iterable,Container|定义dict使用的只读API|
+|MutableMapping|Mapping|定义创建映射后管理映射内容的方法|
+|MappingView|Sized|定义冲迭代器访问映射的视图API|
+|ItemsView|MappingView,Set|视图API的一部分|
+|KeysView|MappingView,Set|视图API的一部分|
+|ValuesView|MappingView|视图API的一部分|
+|Awaitable|Await|表达式中可用的对象的API，如协程|
+|Coroutine|Awaitable|实现协程协议的类的API|
+|AsyncIterable||与async for(PEP492中定义)兼容的iterable的API|
+|AsyncIterator|AsyncIterable|异步迭代器的API|
+
+除了明确地定义不同容器的API，这些抽象基类还可以在调用对象前用isinstance()测试一个对象是否支持一个API。有些类还提供了方法实现，它们可以作为“混入类”（mix-in）构造定制容器类型，而不必从头实现每一个方法。
+
 
 
 ### 11. logging
@@ -3609,7 +3939,7 @@ Counter({'g': 2, 'm': 2, 'r': 2, 'a': 1, 'i': 1, 'o': 1, 'n': 1, 'p': 1})
 
 下面的代码展示了logging最基本的用法。
 
-```
+```python
 # -*- coding: utf-8 -*-
 
 import logging
@@ -3658,7 +3988,7 @@ logger.removeHandler(file_handler)
 
 **格式化输出日志**
 
-```
+```python
 # 格式化输出
 
 service_name = "Booking"
@@ -3674,7 +4004,7 @@ logger.error('{} service is {}'.format(service_name, 'down')) # 使用format函�
 
 当你使用logging模块记录异常信息时，不需要传入该异常对象，只要你直接调用logger.error() 或者 logger.exception()就可以将当前异常记录下来。
 
-```
+```python
 # 记录异常信息
 
 try:
@@ -3696,7 +4026,7 @@ except:
 
 这是最基本的入口，该方法参数可以为空，默认的logger名称是root，如果在同一个程序中一直都使用同名的logger，其实会拿到同一个实例，使用这个技巧就可以跨模块调用同样的logger来记录日志。
 另外你也可以通过日志名称来区分同一程序的不同模块，比如这个例子。
-```
+```python
 logger = logging.getLogger("App.UI")
 logger = logging.getLogger("App.Service")
 ```
@@ -3734,7 +4064,7 @@ Logging有如下级别: `DEBUG`，`INFO`，`WARNING`，`ERROR`，`CRITICAL` .默
 
 大多数的情况下，你都不想阅读日志中的太多细节。因此，只有你在调试过程中才会使用 `DEBUG` 等级。我只使用 `DEBUG` 获取详细的调试信息，特别是当数据量很大或者频率很高的时候，比如算法内部每个循环的中间状态。
 
-```
+```python
 def complex_algorithm(items):
     for i, item in enumerate(items):
         # do some complex algorithm computation
@@ -3744,7 +4074,7 @@ def complex_algorithm(items):
 
 在处理请求或者服务器状态变化等日常事务中，我会使用 `INFO` 等级。
 
-```
+```python
 def handle_request(request):
     logger.info('Handling request %s', request)
     # handle request here
@@ -3760,7 +4090,7 @@ def start_service():
 
 当发生很重要的事件，但是并不是错误时，我会使用 `WARNING` 。比如，当用户登录密码错误时，或者连接变慢时。
 
-```
+```python
 def authenticate(user_name, password, ip_address):
     if user_name != USER_NAME and password != PASSWORD:
         logger.warn('Login attempt to %s from IP %s', user_name, ip_address)
@@ -3770,7 +4100,7 @@ def authenticate(user_name, password, ip_address):
 
 有错误发生时肯定会使用 `ERROR` 等级了。比如抛出异常，IO 操作失败或者连接问题等。
 
-```
+```pytthon
 def get_user_by_id(user_id):
     user = db.read_user(user_id)
     if user is None:
@@ -3862,7 +4192,7 @@ logging的配置大致有下面几种方式。
 
 basicConfig()提供了非常便捷的方式让你配置logging模块并马上开始使用，可以参考下面的例子。具体可以配置的项目请查阅官方文档。
 
-```
+```python
 import logging
 
 logging.basicConfig(filename='example.log',level=logging.DEBUG)
@@ -3934,7 +4264,7 @@ datefmt=%Y-%m-%d %H:%M:%S
 
 假设以上的配置文件放在和模块相同的目录，代码中的调用如下。
 
-```
+```python
 import os
 filepath = os.path.join(os.path.dirname(__file__), 'logging.conf')
 logging.config.fileConfig(filepath)
@@ -3985,7 +4315,7 @@ logging模块保证在同一个python解释器内，多次调用logging.getLogge
 
 主模块main.py：
 
-```
+```python
  import logging 
  import logging.config 
 
@@ -4006,7 +4336,7 @@ logging模块保证在同一个python解释器内，多次调用logging.getLogge
 
 子模块mod.py：
 
-```
+```python
  import logging 
  import submod 
 
@@ -4022,7 +4352,7 @@ logging模块保证在同一个python解释器内，多次调用logging.getLogge
 
 子子模块submod.py：
 
-```
+```python
  import logging 
  logger = logging.getLogger('main.mod.submod') 
  logger.info('logger of submod say something...') 
@@ -4122,7 +4452,7 @@ tst.log中没有root logger输出的信息，因为logging.conf中配置了只�
 
 代码演示:
 
-```
+```python
 >>> import time
 
 # 获得时间截
@@ -4168,7 +4498,7 @@ time.struct_time(tm_year=2018, tm_mon=3, tm_mday=20, tm_hour=0, tm_min=27, tm_se
 
 常见问题:
 
-```
+```python
 # 今天在这周是星期几
 >>> print t.strftime('%w')
 4
@@ -4199,7 +4529,7 @@ datetime主要有4种时间类型
 
 代码演示:
 
-```
+```python
 # 获得datetime.date类型
 >>> datetime.date.today()
 datetime.date(2018, 3, 20)   # type: datetime.date
@@ -4213,7 +4543,7 @@ datetime.date(2018, 1, 1)
 
 代码演示:
 
-```
+```python
 >>> datetime.time(12,30,59,99)
 datetime.time(12,30,59,99)
 ```
@@ -4224,7 +4554,7 @@ datetime.time(12,30,59,99)
 
 代码演示:
 
-```
+```python
 >>> datetime.datetime.now()
 datetime.datetime(2018, 3, 20, 9, 11, 2, 94777)
 >>> datetime.datetime.today()
@@ -4241,7 +4571,7 @@ timedelta([days[, seconds[, microseconds[, milliseconds[, minutes[, hours[, week
 
 代码演示:
 
-```
+```python
 >>> datetime.datetime.now()
 datetime.datetime(2018, 3, 20, 9, 15, 26, 809166)
 >>> datetime.datetime.now() + datetime.timedelta(days=10, hours=5)
@@ -4262,7 +4592,7 @@ datetime.datetime(2017, 5, 28, 20, 1, 11, 805686)
 
 date.fromtimestamp(timestamp)：根据给定的时间戮，返回一个date对象
 
-```
+```python
 >>> datetime.datetime.fromtimestamp(time.time()) 
 datetime.datetime(2013, 8, 10, 11, 14, 50, 842812)
 ```
@@ -4317,7 +4647,7 @@ stack(), trace() – get info about frames on the stack or in a traceback
 
 首先定义一些函数
 
-```
+```python
 def t1():
   pass
 
@@ -4340,7 +4670,7 @@ def t6(a,b=1,*c,**d):
 
 `python2`：
 
-```
+```python
 >>> inspect.getargspec(t1)
 ArgSpec(args=[], varargs=None, keywords=None, defaults=None)
 
@@ -4368,7 +4698,7 @@ python3与python2有所不同，比如定义函数：`def x(a, b=0, *c, d, e=1, 
 
 python3中`inspect.getargspec`函数已经被舍弃，所以可以使用`inspect.getfullargspec`或者`inspect.signature`
 
-```
+```python
 >>> inspect.getfullargspec(t1)
 FullArgSpec(args=[], varargs=None, varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={})
 
@@ -4418,7 +4748,7 @@ f.kind: 4 (VAR_KEYWORD)
 
 对比python2和python3的结果，我们发现python2中参数有3种类型：`args`(位置参数或关键字参数), `varargs`(可变位置参数), `keywords`(可变关键字参数)；而python3中的参数有4种(其实是5种)类型：`args`(位置参数或关键字参数), `varargs`(可变位置参数), `varkw`(可变关键字参数), `kwonlyargs`(关键字参数)，而且python3还专门为这几种参数类型设置了数据类型：
 
-```
+```python
 >>> inspect._ParameterKind.__members__
 mappingproxy({'KEYWORD_ONLY': <_ParameterKind.KEYWORD_ONLY: 3>,
               'POSITIONAL_ONLY': <_ParameterKind.POSITIONAL_ONLY: 0>,
@@ -4470,7 +4800,7 @@ operator 模块也为属性和项目的查找提供了一些工具。这些工�
 
 相当于：
 
-```
+```python
 def itemgetter(*items):
     if len(items) == 1:
         item = items[0]
@@ -4484,7 +4814,7 @@ def itemgetter(*items):
  
 运算符的`__getitem__()`方法可接受任意类型的项目。字典接收任意的哈希值。列表、元组和字符串接收一个索引或字符片段。
 
-```
+```python
 >>> itemgetter(1)('ABCDEFG')
 'B'
 >>> itemgetter(1,3,5)('ABCDEFG')
@@ -4495,7 +4825,7 @@ def itemgetter(*items):
 
 使用 `itemgetter()` 从元组序列中获取指定的域值，比如：
 
-```
+```python
 >>> inventory = [('apple', 3), ('banana', 2), ('pear', 5), ('orange', 1)]
 >>> getcount = itemgetter(1)
 >>> map(getcount, inventory)
@@ -4569,7 +4899,7 @@ def itemgetter(*items):
 
 代码实战
 
-```
+```python
 from PIL import Image, ImageDraw, ImageFont
 
 p1 = "../callcnv/14E023-05.cnv.chr1.png"
@@ -4608,8 +4938,71 @@ i1.save("merge.png")
 
 [python3正则表达式的几个高级用法](https://blog.csdn.net/isscollege/article/details/80138158)
 
+**初级用法**
 
-**1. 数组分组**
+* `re.match(pattern, string, flags=0)`  尝试从字符串的起始位置匹配一个模式，如果不是起始位置匹配成功的话，match()就返回none。
+* `re.search(pattern, string, flags=0)`  扫描整个字符串并返回第一个成功的匹配。
+* `re.findall(pattern, string, flags=0)`  在字符串中找到正则表达式所匹配的所有子串，并返回一个列表，如果没有找到匹配的，则返回空列表。
+* `re.finditer(pattern, string, flags=0)` 和 findall 类似，在字符串中找到正则表达式所匹配的所有子串，并把它们作为一个迭代器返回。
+* `re.split(pattern, string, maxsplit=0, flags=0)` 按照能够匹配的子串将字符串分割后返回列表
+* `re.sub(pattern, repl, string, count=0, flags=0)` 替换字符串中的匹配项
+
+这里着重说一下`re.sub`的repl参数, 它不仅可以是替换的字符串，也可以是一个函数。
+
+```python
+# 将字符串中的匹配的数字乘以 2
+
+import re
+
+def double(matched):
+	value = int(matched.group("value"))
+	return str(value * 2)
+
+s = 'A23G4HFD567'
+print(re.sub('(?P<value>\d+)', double, s))
+# A46G8HFD1134
+```
+
+正则表达式修饰符-可选标志(flags)
+
+* `re.I` : 使匹配对大小写不敏感
+* `re.L` : 做本地化识别（locale-aware）匹配
+* `re.M` : 多行匹配，影响 ^ 和 $
+* `re.S` : 使 . 匹配包括换行符在内的所有字符
+* `re.U` : 根据Unicode字符集解析字符。这个标志影响 \w, \W, \b, \B.
+* `re.X` : 该标志通过给予你更灵活的格式以便你将正则表达式写得更易于理解。
+
+正则表达式模式
+
+* `(re)` : 对正则表达式分组并记住匹配的文本
+* `(?imx)` : 正则表达式包含三种可选标志：i, m, 或 x 。只影响括号中的区域。
+* `(?-imx)` : 正则表达式关闭 i, m, 或 x 可选标志。只影响括号中的区域。
+* `(?:re)` : 类似 (...), 但是不表示一个组
+* `(?imx:re)` : 在括号中使用i, m, 或 x 可选标志
+* `(?-imx:re)` : 在括号中不使用i, m, 或 x 可选标志
+* `(?#...)` : 	注释
+* `(?=re)` : 前向肯定界定符。如果所含正则表达式，以 ... 表示，在当前位置成功匹配时成功，否则失败。但一旦所含表达式已经尝试，匹配引擎根本没有提高；模式的剩余部分还要尝试界定符的右边。
+* `(?!re)` : 前向否定界定符。与肯定界定符相反；当所含表达式不能在字符串当前位置匹配时成功
+* `(?>re)` : 匹配的独立模式，省去回溯。
+* `\w` : 匹配字母数字及下划线
+* `\W` : 匹配非字母数字及下划线
+* `\s` : 匹配任意空白字符，等价于 [\t\n\r\f].
+* `\S` : 匹配任意非空字符
+* `\d` : 匹配任意数字，等价于 [0-9].
+* `\D` : 匹配任意非数字
+* `\A` : 匹配字符串开始
+* `\Z` : 匹配字符串结束，如果是存在换行，只匹配到换行前的结束字符串。
+* `\z` : 匹配字符串结束
+* `\G` : 匹配最后匹配完成的位置。
+* `\b` : 匹配一个单词边界，也就是指单词和空格间的位置。例如， 'er\b' 可以匹配"never" 中的 'er'，但不能匹配 "verb" 中的 'er'。
+* `\B` : 匹配非单词边界。'er\B' 能匹配 "verb" 中的 'er'，但不能匹配 "never" 中的 'er'。
+* `\1...\9` : 匹配第n个分组的内容。
+* `\10` : 匹配第n个分组的内容，如果它经匹配。否则指的是八进制字符码的表达式。
+
+
+**高级用法**
+
+***1. 数组分组(?P...)***
 
 每一段正则用一个加圆括起来时，便自动构成一个组，包括(?Ppattern)自定义命名组，也加入到分组序号中 
 如果后面有前面圆括中相同部分，则用数字序号表示匹配相同部分 
@@ -4617,9 +5010,255 @@ i1.save("merge.png")
 这里出现`\1`，表示匹配前面第1个圆括号正则内容， 
 这里出现`\2`，表示匹配前面第2个圆括号正则内容
 
+如，将"2019-10-11"改成"10/11/2019"
+
+```python
+t = "2019-10-11"
+re.sub(r"(\d{4})-(\d{2})-(\d{2})", r"\2/\3/\1", t)
 ```
-re.sub(r"(\d+) *(\d+)", r"\1,\2", "[34 22]")
-#结果为："[34,22]"
+
+还可以将每组命名(?P<group-name>...)：
+
+```python
+t = "2019-10-11"
+re.sub(r"(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})", r"\g<month>/\g<day>/\g<year>", t)
+```
+
+再或者
+
+```python
+s = '1102231990xxxxxxxx'
+res = re.search(r'(?P<province>\d{3})(?P<city>\d{3})(?P<born_year>\d{4})',s)
+print(res.groupdict())
+# 结果为： {'province': '110', 'city': '223', 'born_year': '1990'}
+```
+
+直接将匹配结果转为字典模式，方便使用。
+
+
+更加复杂的例子：
+
+```python
+str='''
+String s1="学习java";
+String s2=  " ";
+Float   价格=24000.89;
+String desc =  "用于找工作技能提升。。。" ;
+Integer num  =   12567   ;
+
+'''
+
+import re
+
+## 需求1，，分3组:<type>,<name>,<value>,求数据类型，变量名称，变量的值，下面3种求法，结果相同
+s1 = re.findall(r'(?=String|Float|Integer)(?P<type>\w+)\s+(?P<name>.*?)\s*?=\s*?(?=["\d])(?P<value>.*?)\s*?;',str,re.I|re.S);
+# 结果是：
+#   [('String', 's1', '"学习java"''), 
+#    ('String', 's2', '" "''), 
+#    ('Float', '价格', '24000.89'),
+#    ('String', 'desc', '"用于找工作技能提升。。。"'), 
+#    ('Integer', 'num', '12567')]
+
+## 需求2，分2组:<name>,<value>，求变量名称，变量的值
+s2 = re.findall(r'\s+?(?P<name>\S+?)\s*?=\s*?(?P<value>["\d].*?)\s*?;',str,re.I|re.S); 
+# 结果是：
+#   [('s1', '"学习java"'),
+#   ('s2', '" "'), 
+#   ('价格', '24000.89'), 
+#   ('desc', '"用于找工作技能提升。。。"'), 
+#   ('num', '12567')]
+
+## 需求3，分1组<value>,求每个变量的值，要清除首尾空格,给出2种求法
+s3 = re.findall(   r'=\s*?(?P<value>[\d"].*?)\s*?;',str,re.I|re.S);  
+s31 = re.findall(   r'=\s*?(?=[\d"])(?P<value>.*?)\s*?;',str,re.I|re.S); 
+# 结果是：['"学习java"', '" "', '24000.89', '"用于找工作技能提升。。。"', '12567']
+
+## 需求4，分1个<name>只取变量名称
+s4 = re.findall(r'.*?\s+(?P<name>\w+?)\s*?=.*?;',str,re.I|re.S); 
+# 结果是：['s1', 's2', '价格', 'desc', 'num']
+
+```
+
+***2. 引用前面定义的分组匹配(?P=)***
+
+当一个分组内容，重复出现2次或以上时，第2次起，可以引用前面定义的分组匹配，即
+
+`r'(P?pattern1)…(P?pattern2)…(P?pattern2)…(?P=name1)…(P=name2)…(?P=name3)'`
+
+即(?P=name1)重复匹配前面定义的(?Ppattern1),
+
+(?P=name2)重复匹配前面定义的(?Ppattern2)
+
+
+```python
+import re
+#假设下面的每门课的学费，例如oracle:500元，java:1550元
+str = r'''
+  oracle:500,
+  java:1550,
+  bigdata:2000,
+  php:500
+  <oracle>500</oracle>
+  <java>1550</java>
+  <bigdata>2000</bigdata>
+  <php>500</php>
+  '''
+
+#下面2行代码结果相同
+s1 = re.findall(r'oracle:(?P<name1>\d+),.*?java:(?P<name2>\d+),.*?bigdata:(?P<name3>\d+),.*?php:(?P<name4>\d+).*?<oracle>(?P=name1)</oracle>.*?<java>(?P=name2)</java>.*?<bigdata>(?P=name3)</bigdata>.*?<php>(?P=name4)</php>.*?',str,re.I|re.S)
+s2 = re.findall(r'oracle:(?P<name1>\d+),.*?java:(?P<name2>\d+),.*?bigdata:(?P<name3>\d+),.*?<oracle>(?P=name1)</oracle>.*?<java>(?P=name2)</java>.*?',str,re.I|re.S)
+#结果是:['500', '1550', '2000', '500']
+```
+
+***3. 前置肯定分组(?=pattern)***
+
+表示以...开头，不消耗匹配内容，而是加入后面正则表达式中，所以也称为前置不消耗分组
+
+`r'…(?=pattern1)(?Ppattern123)…'`等效于
+`r'… (?Ppattern1pattern123)…'`
+
+```python
+# 前置肯定(?=pattern)
+import re
+
+# 查询url是否以http://www.开头
+s1=re.findall(r'(?=http:\/\/www\.)(?P<name>.*)','http://www.baidu.com') #结果是：['http://www.baidu.com']
+s1=re.findall(r'(?=http:\/\/www\.)(?P<name>.*)','https://www.baidu.com') #结果是：[]
+
+```
+
+***4. 前置否定分组(?!pattern)***
+
+表示不包含...开头的其余部分，
+
+`r'…(!pattern1)(?Ppattern123)…'`等效于
+`r'… (?P!pattern1pattern123)…'`，pattern1的内容只是一个最小正则内容
+
+```python
+# 前置否定(?!pattern)
+import re
+
+#查询url不包含http://开头以外的其余部分
+s1=re.findall(r'(?!http:\/\/)(?P<name>www.*)','http://www.baidu.com') #结果是：['www.baidu.com']
+
+#查询所有非数字部分，即前面不包含数字，后面是字母
+s1=re.findall(r'(?!\d+)(?P<name>\D+)','123java456oracle367bigdata478') #结果是：['java', 'oracle', 'bigdata']
+```
+
+***5. 后置肯定分组(?<=pattern)***
+
+表示包含以...结尾的所有部分，不消耗匹配内容，而是加入前面分组中
+
+`r'… (?Ppattern123)(?<=pattern1)…'`等效于
+`r'… (?Ppattern123pattern1)…'`
+
+
+```python
+# 后置肯定(?<=pattern)
+
+import re
+
+# 下面匹配前面是数字一组，后面包含数字结尾的所有分组
+s = re.findall(r'(?P<name>\d+)(?<=\d)','987java678abc891abe2345stu2454dy')
+# 结果是:['987', '678', '891', '2345', '2454']
+
+#下面匹配前面是字母一组，后面包含字母的所有分组
+s = re.findall(r'(?P<name>\D+)(?<=\D)','java678abc891abe2345stu2454dy')
+# 结果是:['java', 'abc', 'abe', 'stu', 'dy']
+```
+
+
+***6. 后置否定分组(?<=pattern)***
+
+```python
+# 后置否定(?<=pattern)
+
+# 下面匹配前面是数字一组，后面不包含字母的所有分组
+s = re.findall(r'(?P<name>\d+)(?<!\D)','987java678abc891abe2345stu2454dy')
+#结果是:['987', '678', '891', '2345', '2454']
+
+# 下面匹配前面是字母一组，后面不包含数字的所有分组
+s = re.findall(r'(?P<name>\D+)(?<!\d)','java678abc891abe2345stu2454dy')
+#结果是:['java', 'abc', 'abe', 'stu', 'dy']
+```
+
+***7. 消耗—不捕获-不参与分组的圆括号(?:pattern)***
+
+参与匹配，不捕获，即不返回结果，不将匹配结果送给后面
+
+类比前置肯定匹配(?=pattern)也不捕获结果，但将匹配结果送给后面分组
+
+```python
+str='''
+      s=http://www-1.baidu.com
+      s=https://www-2.baidu.com
+      s=ftp://www-3.baidu.com
+'''
+#请注意，下面的str后面，没有re.S,否则操作有错，这里只对每一行进行正则匹配捕获
+s1=re.findall(r'(?:http|https|ftp):\/\/(?P<name>.*)',str)
+#结果是：['www-1.baidu.com', 'www-2.baidu.com', 'www-3.baidu.com']
+s1=re.findall(r'(?:http|https|ftp)(?P<name>:\/\/.*)',str)
+#结果是：['://www-1.baidu.com', '://www-2.baidu.com', '://www-3.baidu.com']
+
+s1=re.findall(r'(http|https|ftp):\/\/(?P<name>.*)',str)
+#结果是：[('http', 'www-1.baidu.com'), ('https', 'www-2.baidu.com'), ('ftp', 'www-3.baidu.com')]
+
+s1=re.findall(r'(?:https:)(?P<name>.*)',str,re.I)
+#结果是：['//www-2.baidu.com']
+
+```
+
+***8. 前置—后置位置颠倒及对比(?:pattern)***
+
+`r'…(?<=pattern1)mypattern(?=pattern2) …'`
+
+将后置放在前面，将前置放在后面，结果是
+
+(?<=pattern1)后置参与匹配、不捕获、消耗
+
+(?=pattern2)前置参与匹置、不捕获、消耗
+
+语法结果理解
+
+1. 将后置放在前面时, 因为他只参与后置前一个正则表达式的匹配、捕获、消耗，所以不参与
+2. 将前置放在后面时, 因为前置只参与他后面的一个前置，对后面的内容捕获，所以本段内容匹配、消耗、不捕获
+3. mypattern有无分组，即圆括号，结果是一样的
+4. 实际测试时，如果mypattern有圆括号，则此时的前置颠到效果与加入(?:pattern)一样
+
+```python
+# 前置肯定与后置肯定颠倒颠颠位置后，则匹配、不捕获、消耗
+import re
+
+str = r'<div class="test1"><h1><span>学习大数据bigData</span></h1></div>'
+
+s1 = re.findall(r"(?<=<h1>).+?(?=</h1>)",str)
+#前置与后置颠倒时，则只匹配、不捕获，可以理解为后置己经参与前面一个正则的捕获了，而前置放在后面，则对前面来说，不捕获结果
+#结果是：['<span>学习大数据bigData</span>']
+
+s2 = re.findall(r"(?:<h1>).+?(?=</h1>)",str)
+#结果是:['<h1><span>学习大数据bigData</span>']
+#说明(?:pattern)不参与分组，但后面无分组时，则参与消耗
+
+s3 = re.findall(r"(?:<h1>)(?P<id123>.+?)(?=</h1>)",str)
+#结果是:['<span>学习大数据bigData</span>']
+#说明(?:pattern)不参与分组，但后面有分组时，则不参与消耗
+
+s4 = re.findall(r"(?:<h1>)(?P<id123>.+?)(?:</h1>)",str)
+#结果是:['<span>学习大数据bigData</span>']
+#说明(?:pattern)不参与分组，前后有分组时，则不参与消耗
+
+s5 = re.findall(r"(?=<h1>).+?(?=</h1>)",str)
+#结果是：['<h1><span>学习大数据bigData</span>']
+#前置发挥正常作用，前置放在后面时，匹配，不对前面消耗
+
+s6 = re.findall(r"(?:<h1>).+?(?=</h1>)",str)
+#结果是：['<h1><span>学习大数据bigData</span>']
+#说明(?:pattern)对后面无分组时，参与捕获、消耗
+
+s7 = re.findall(r"(?:<h1>)(.+?)(?=</h1>)",str)
+#结果是：['<span>学习大数据bigData</span>']
+#说明(?:pattern)对后面有分组时，消耗、但不参与捕获
+
 ```
 
 
@@ -4629,6 +5268,61 @@ re.sub(r"(\d+) *(\d+)", r"\1,\2", "[34 22]")
 * [Python解析二进制文件](https://blog.csdn.net/lovelyaiq/article/details/81988185)
 
 
+### 19. stat
+
+`os.stat`将文件的相关属性读出来，然后用`stat`模块来处理。
+
+1. 可以对os.stat(myfile).st_mode做相关的判断，如是否是目录，是否是文件，是否是管道等
+
+* `stat.S_ISREG(mode)` : 判断是否是一般文件
+* `stat.S_ISLNK(mode)`: 判断是否是链接文件
+* `stat.S_ISSOCK(mode)` : 判断是否是套接字文件
+* `stat.S_ISFIFO(mode)` : 判断是否是命名管道
+* `stat.S_ISBLK(mode)` : 判断是否是块设备(指驱动发送/接受整块数据的设备,如512个字节为一个块。常见块设备：硬盘，USB摄像头，U盘)
+* `stat.S_ISCHR(mode)` : 判断是否是字符设备(指驱动发送/接受单个字符(如字节)的设备，常见字符设备： 串口，并口，声卡)
+* `stat.S_ISDIR(mode)` : 判断是否是目录
+* `stat.S_IMODE(mode)` : 返回文件权限的chmod格式
+* `stat.S_IFMT(mode)` : 返回文件的类型
+
+
+2. 还有一些是各种各样的标示符，这些标示符也可以在os.chmod中使用，下面附上这些标示符的说明：
+
+* `stat.S_ISUID` : 执行是设置用户ID
+* `stat.S_ISGID` : 执行时设置组ID
+* `stat.S_ENFMT` : Record locking enforced
+* `stat.S_ISVTX` : 执行后保存文字和图片
+* `stat.S_IREAD` : 拥有者读的权限
+* `stat.S_IWRITE` : 拥有者写的权限
+* `stat.S_IEXEC` : 拥有者执行的权限
+* `stat.S_IRWXU` : 拥有者读写执行的权限
+* `stat.S_IRUSR` : 拥有者读的权限
+* `stat.S_IWUSR` : 拥有者写的权限
+* `stat.S_IXUSR` : 拥有者执行的权限
+* `stat.S_IRWXG` : 同组读写执行的权限
+* `stat.S_IRGRP` : 同组读的权限
+* `stat.S_IWGRP` : 同组写的权限
+* `stat.S_IXGRP` : 同组执行的权限
+* `stat.S_IRWXO` : 其他组读写执行的权限
+* `stat.S_IROTH` : 其他组读的权限
+* `stat.S_IWOTH` : 其他组写的权限
+* `stat.S_IXOTH` : 其他组执行的权限
+
+
+改变文件的权限
+
+```python
+import os
+import stat
+
+st = os.stat("test.txt")
+# os.stat_result(st_mode=33206, st_ino=844424930139681, st_dev=2184797881, st_nlink=1, st_uid=0, st_gid=0, st_size=41, st_atime=1567864313, st_mtime=1567864313, st_ctime=1567864313)
+
+mode = st.st_mode  # 文件的权限
+print(oct(mode))   # 查看文件的权限(8进制)
+
+os.chmod("test.txt", mode | stat.S_IXUSR) # 为文件添加上可执行权限
+
+```
 
 
 </br>
