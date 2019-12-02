@@ -1597,6 +1597,36 @@ xo.close()
 [Unofficial Windows Binaries for Python Extension Packages](https://www.lfd.uci.edu/~gohlke/pythonlibs/)
 
 
+### 字符和字符值(ascii，unicode码值)转换方法
+
+**python2使用`ord`和`chr`、`unichr`函数**
+
+```python
+a = "A"
+ord(a)      # 65
+chr(65)     # 'A'
+unichr(65)  # u'A'
+
+a = "中"    # '\xe4\xb8\xad'
+b = a.decode("utf-8")   # u'\u4e2d'
+ord(b)      # 20013
+# chr(20013)     # 报错，数值超过了255
+unichr(20013)    # u'\u4e2d'
+```
+
+**python3使用`ord`和`chr`函数**
+
+```python
+a = "中"    # u'\u4e2d'
+ord(a)      # 20013
+chr(20013)  # u'\u4e2d'
+# unichr(20013)  # 报错，没有unichr函数
+```
+
+
+
+
+
 </br>
 
 ## 高级
@@ -3013,8 +3043,40 @@ s可以直接encode成任意编码格式。如`s1=s.encode('utf-8')`、`s2=s.enc
 此时s1和s2的类型就是bytes。
 
 
+下面的代码可以帮助我们理解：
 
+```python
+# python2
 
+a = "中"   # '\xe4\xb8\xad'  三个字节，utf-8, 我的终端默认编码方式为utf-8；
+type(a)    # str
+b = u"中"  # u'\u4e2d'  unicode编码
+type(b)    # unicode
+b.encode("gbk")  # '\xd6\xd0'
+ord(b)     # 20013
+# ord() 函数是 chr() 函数（对于8位的ASCII字符串）或 unichr() 函数
+# （对于Unicode对象）的配对函数，它以一个字符（长度为1的字符串）作为
+# 参数，返回对应的 ASCII 数值，或者 Unicode 数值
+hex(ord(b))  # '0x4e2d'
+bin(ord(b))  # '0b100111000101101'
+unichr(ord(b)) # '0x4e2d'  将unicode码值转成unicode
+```
+
+```python
+# python3
+
+a = "中"  # '中'
+type(a)   # str
+b = u"中" # '中'
+type(b)   # str
+a.encode("unicode_escape")  # b'\\u4e2d'
+a.encode("utf-8")  # b'\xe4\xb8\xad'
+a.encode("gbk")    # b'\xd6\xd0'
+ord(a)    # 20013
+hex(ord(a))  # '0x4e2d'
+bin(ord(a))  # '0b100111000101101'
+chr(ord(b))  # 将码值转成字符
+```
 
 
 ### 8. 内建函数
@@ -5347,6 +5409,27 @@ s7 = re.findall(r"(?:<h1>)(.+?)(?=</h1>)",str)
 
 * [Python使用struct处理二进制 解析二进制数据 解析socket数据](https://blog.csdn.net/a382486075/article/details/54973612)
 * [Python解析二进制文件](https://blog.csdn.net/lovelyaiq/article/details/81988185)
+
+python高效编程技巧中的一个例子： 读取wav格式的音频文件，并将数据减小一倍，保存为新的音频文件。
+
+```python
+import struct
+import array
+
+f = open("demo.wav", "rb")
+info = f.read(44)  # 前44个字节存储的是wav的文件信息，45字节以后都是wav的数据
+
+struct.unpack("h", info[22:24])  # (2,)  音频文件的声道数(NumChannels)
+struct.unpack("i", info[24:28])  # (44100,) 采样频率(SampleRate)
+struck.unpack("h", info[34:36])  # (16,)  采样宽度(BitsPerSample)
+
+# 将数据读入到数组中去，方便做数据运算
+# 
+# 计算数组长度
+f.seek(0, 2) 
+```
+
+
 
 
 ### 19. stat
