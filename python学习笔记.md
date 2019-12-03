@@ -1624,6 +1624,23 @@ chr(20013)  # u'\u4e2d'
 ```
 
 
+### 36. file文件对象
+
+file对象使用open函数来创建，下表列出file对象常用的函数：
+
+* `f.close()`
+* `f.flush()`     # 刷新文件内部缓冲，直接把内部缓冲区的数据立刻写入文件, 而不是被动的等待输出缓冲区写入。
+* `f.fileno()`    # 返回一个整型的文件描述符(file descriptor FD 整型), 可以用在如os模块的read方法等一些底层操作上。
+* `f.isatty()`    # 如果文件连接到一个终端设备返回 True，否则返回 False。
+* `f.next()`      # 返回文件下一行。
+* `f.read([size])`         # 从文件读取指定的字节数，如果未给定或为负则读取所有。
+* `f.readline([size])`     # 读取整行，包括 "\n" 字符。
+* `f.readlines([sizeint])`   # 读取所有行并返回列表，若给定sizeint>0，则是设置一次读多少字节，这是为了减轻读取压力。
+* `f.seek(offset[,whence])`  # 设置文件当前位置  f.seek(0,2):移动指针到末尾
+* `f.tell()`      # 返回文件当前位置。
+* `f.truncate([size])`     # 截取文件，截取的字节通过size指定，默认为当前文件位置。 
+* `f.write(str)`
+* `f.writelines(sequence)` # 向文件写入一个序列字符串列表，如果需要换行则要自己加入每行的换行符。
 
 
 
@@ -5423,10 +5440,25 @@ struct.unpack("h", info[22:24])  # (2,)  音频文件的声道数(NumChannels)
 struct.unpack("i", info[24:28])  # (44100,) 采样频率(SampleRate)
 struck.unpack("h", info[34:36])  # (16,)  采样宽度(BitsPerSample)
 
-# 将数据读入到数组中去，方便做数据运算
+# 将数据读入到数组中去，方便做数学运算
 # 
 # 计算数组长度
-f.seek(0, 2) 
+f.seek(0, 2)  # 将文件指针移到文件末尾
+total_byte_size = f.tell()  # 报告文件指针位置(也就是文件的大小)
+n = (total_byte_size - 44) / 2  # 数组的长度(每个数组元素占2个字节，所以除以2)
+#
+# 将数据读入缓存，并处理
+buffer = array.array('h', (0 for _ in arange(n)))
+f.seek(44)    # 将指重新针移动到第44个字节出
+f.readinto(buffer)
+for i in range(n):
+	buffer[i] /= 8
+#
+# 将处理后的数据保存到新文件
+f2 = open("demo2.wav", "wb")
+f2.write(info)
+buffer.tofile(f2)
+f2.close()
 ```
 
 
@@ -5487,6 +5519,11 @@ print(oct(mode))   # 查看文件的权限(8进制)
 os.chmod("test.txt", mode | stat.S_IXUSR) # 为文件添加上可执行权限
 
 ```
+
+
+### 20. array
+
+[Python3之数组（array）](https://blog.csdn.net/xc_zhou/article/details/88538793)
 
 
 </br>
