@@ -1643,6 +1643,156 @@ file对象使用open函数来创建，下表列出file对象常用的函数：
 * `f.writelines(sequence)` # 向文件写入一个序列字符串列表，如果需要换行则要自己加入每行的换行符。
 
 
+### 37. 文件缓冲模式
+
+将文件内容写入到硬件设备时，使用系统调用，这里I/O操作的时间很长。
+为了减少I/O操作的次数，文件通常使用缓冲区。
+
+如硬盘这样的块设备，它的读写不是一个字节一个字节完成的，而是按照块，假如一个块是4096
+个字节，也就是说，你写入1个字节或是4096个字节，都需要一次I/O操作，它们的用时都是相同的。
+为了提高效率，减少I/O操作，策略就是为文件设立一个缓冲区。
+
+open函数的buffering参数可以指定文件的缓冲模式：
+
+	* 全缓冲模式： buffering设置为大于1的整数n, n为缓冲区大小(一般为4096)
+	* 行缓存模式： buffering设置为1
+	* 无缓冲模式： buffering设置为0
+
+
+### 38. 如何将文件映射到内存
+
+实际案例：
+
+1. 在访问某些二进制文件时，希望把文件映射到内存中，可以实现随机访问。(framebuffer设备文件)
+2. 某些嵌入式设备，寄存器被编址到内存地址空间，我们可以映射/dev/mem某范围，去访问这些寄存器。
+3. 如果多个进程同一个文件，还能实现进程通信的目的。
+
+解决方案就是使用标准库mmap模块的mmap()函数，它需要一个代开的文件描述符作为参数。
+
+```python
+# 在linux下可以使用dd命令创建一个二进制文件
+# dd if=/dev/zeor of=demo.bin bs=1024 count=1024  # 大小为1M，每个字节都是0
+# 还可以使用od命令以十六进制的格式查看二进制文件
+# od -x demo.bin
+#
+# 下面我们将demo.bin文件映射到内存中
+
+import mmap
+
+# mmap.mmap(fileno, length[, flags[, prot[, access[, offset]]]])  linux和windows平台使用方法不同
+# fileno是文件描述符，并不是文件对象。文件描述符是有系统调用的open函数得到的：os.open()
+# length是映射区域的长度，0代表映射整个文件
+# access是访问权限，如mmap.ACCESS_WRITE是写权限
+# offset可以指定映射文件的某一区域，但必须以内存页的整数倍为单位，不能用于跳过文件的3个字节或5个字节等。
+#        我们可以用mmap.PAGESIZE得到内存页的大小
+# 这里呢，我们不使用系统的open函数，而是使用python的open函数
+f = open("demo.bin", "r+b")
+fileno = f.fileno()   # 调用文件对象的fileno()函数得到文件描述符
+
+m = mmap.mmap(fileno, 0, access=mmap.ACCESS_WRITE)  # 类型是mmap.mmap
+#可以对m进行类似数组的操作，如m[0], 切片等
+#下面进行写操作
+m[0] = '\x88'  # 写的时候也要是字节的形式
+# 通过od -x demo.bin查看文件，发现第一个字节已经被修改
+# >>>> 这其实达到了一个目的：【看着是修改内存，但实际上文件已经被修改了。】 <<<<
+
+m = mmap.mmap(fileno, mmap.PAGESIZE * 8, access=mmap.ACCESS_WRITE, offset=mmap.PAGESIZE * 4)  # 跳过4个内存页,并映射8页
+# 修改前0x1000个字节
+m[:0x1000] = '\xaa' * 0x1000
+# 通过od -x demo.bin查看文件，发现已经被修改
+```
+
+
+### 39. 如何访问文件的状态
+
+实际案例：
+
+在某些项目中，我们需要获得文件状态，例如：
+
+1. 文件的类型(普通文件，目录，符号链接，设备文件...)
+2. 文件的访问权限
+3. 文件的最后的访问/修改/节点状态更改实际
+4. 普通文件的大小(字节数)
+...
+
+解决方案：
+
+1. 使用系统调用：标准库os模块下的三个系统调用stat,fstat,lstat获取文件状态
+2. 快捷函数： 标准库os.path下一些函数，使用起来更加简洁
+
+
+`os.stat`、`os.lstat`、`os.fstat`区别：
+
+* `os.stat(path)`: 参数为文件
+* `os.lstat(path)`: 参数为文件，但不跟随符号链接，即获得的是符号链接文件的状态，而不是真实文件的状态
+* `os.fstat(fileno)`: 参数为打开的文件描述符。可以使用`os.open(file)`获得或者`open(file).fileno()`获得
+
+
+使用`os.stat`
+
+```python
+import stat
+import time
+
+s = os.stat("a.txt")
+# posix.stat_result(st_mode=33204, st_ino=4982715, st_dev=2054L, st_nlink=1, st_uid=1000, 
+# st_gid=1000, st_size=17, st_atime=1465711466, st_mtime=1465711466, st_ctime=1465711466)
+s.st_mode   # 33204
+bin(s.st_mode)  # '0b1000000110110100'
+
+stat.S_ISDIR(s.st_mode)  # 判断是否是文件夹
+stat.S_ISREG(s.st_mode)  # 判断是否是普通文件
+s.st_mode & stat.S_IRUSR  # 判断用户的读权限 (大于0，即为拥有该权限)
+
+time.localtime(s.st_atime)  # 获得文件最后访问时间
+s.st_size   # 普通文件的大小
+```
+
+使用`os.path`
+
+```python
+import os
+
+os.path.isdir('a.txt')
+os.path.islink('a.txt')
+os.path.isfile('a.txt')
+os.path.getatime('a.txt')
+os.path.getctime('a.txt')
+os.path.getmtime('a.txt')
+os.path.getsize('a.txt')
+```
+
+
+### 40. 如何使用临时文件
+
+实际案例：
+
+某项目中，我们从传感器采集数据，每收集到1G数据后，做数据分析， 最终只保存分析结果。这样很大的临时数据集
+如果常驻内存，将消耗大量内存资源，我们可以使用临时文件存储这些临时数据（外部存储）。临时文件不用命名，
+且关闭后会自动被删除。
+
+解决方案：
+
+使用标准库中tempfile下的TemporaryFile, NamedTemporaryFile。
+
+```python
+from tempfile import TemporaryFile, NamedTemporaryFile
+
+# TemporaryFile(mode='w+b', bufsize=-1, suffix='', prefix='tmp', dir=None)
+# TemporaryFile创建的临时文件，在文件系统中是找不到的。只能由文件对象f来访问。
+f = TemporaryFile()
+f.write('abcdef' * 100000)
+f.seek(0)
+f.read(100)
+
+# 要想找到文件路径，可以使用下面的函数：
+# NamedTemporaryFile(mode='w+b', bufsize=-1, suffix='', prefix='tmp', dir=None, delete=True)
+# delete：文件关闭后，是否删除临时文件。
+ntf = NamedTemporaryFile()
+ntf.name   # 可以显示文件的路径
+```
+
+
 
 </br>
 
