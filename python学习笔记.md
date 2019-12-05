@@ -1793,6 +1793,162 @@ ntf.name   # 可以显示文件的路径
 ```
 
 
+### 41. 如何派生内置不可变类型并修改其改实例化行为？
+
+实际案例：
+
+我们想自定义一种新类型的元祖，对于传入的可迭代对象，我们只保留其中int类型且值大于0的元素，例如：
+IntTuple([1, -1, 'abc', 6, ['x', 'y'], 3])  => (1, 6, 3), 要求IntTuple是内置tuple的子类，
+如何实现？
+
+解决方案：
+
+定义类IntTuple继承内置tuple，并实现__new__，修改实例化行为。
+
+```python
+class IntTuple(tuple):
+
+  @classmethod
+  def __new__(cls, iterable):
+    g = (x for x in iterable if isinstance(x, int) and x > 0)
+    return super(IntTuple, cls).__new__(cls, g)
+
+  def __init__(self, iterable):
+    # 在before或after出修改都没有用，因为此时self已经被创建，且
+    # self已经是元组(1, -1, 'abc', 6, ['x', 'y'], 3)，不可修改
+    # 了。
+    # 我们必须在创建self之前过来数据，那么是谁构建的self呢，其实
+    # 是__new__方法，它才是真正的构造器。
+    # __new__方法必须在__init__之前定义。
+    
+    # before
+    super(IntTuple, self).__int__(iterable)
+    # after
+
+t = IntTuple([1, -1, 'abc', 6, ['x', 'y'], 3])
+print(t)  # (1, 6, 3)
+```
+
+
+### 42. 如何为创建大量实例节省内存？
+
+实际案例：
+
+某网络游戏中， 定义了玩家类Player(id, name, status, ...)，每有一个在线玩家，在服务器程序内则有一个Player的实例，
+当在线人数很多时，将产生大量实例.(如百万级)。 那么如何降低这些大量实例的内存开销呢？
+
+解决方案：
+
+定义类的__slots__属性，它是用来生命实例属性名字的列表
+
+```python
+class Player(object):
+  def __init__(self, uid, name, status=0, level=1):
+    self.uid = uid
+    self.name = name
+    self.stat = status
+    self.level = level
+
+class Player2(object):
+  __slots__ = ["uid", "name", "stat", "level"]
+  def __init__(self, uid, name, status=0, level=1):
+    self.uid = uid
+    self.name = name
+    self.stat = status
+    self.level = level
+
+# 创建实例
+p1 = Player(1, "Jim")
+p2 = Player2(1, "Jim")
+
+# 查看p1比p2多处的属性
+set(dir(p1)) - set(dir(p2))  # {'__dict__', '__weakref__'}
+# 我们发现，p1比p2多了2个属性，其中__dict__比较占内存
+p1.__dict__
+# {'uid': 1, 'name': 'Jim', 'stat': 0, 'level': 1}
+# __dict__的存在就是为了为实例动态添加属性，如：
+p1.pos = (0, 0)
+del p1.stat
+p1.__dict__
+# {'uid': 1, 'name': 'Jim', 'level': 1, 'pos': (0, 0)}
+# p1被删除了stat属性，被添加了pos属性
+
+# 那么我们再试试看p2是否能够动态增删属性：
+p2.pos = (0, 0)
+# 报错：AttributeError: 'Player2' object has no attribute 'pos'
+# 这就是__slots__属性的功能
+```
+
+`__slots__`属性提前定义了类的属性，并且阻止了实例动态增删属性，同时实例
+没有了`__dict__`属性，也就达到了降低内存的作用。
+
+
+
+### 43. 如何让对象支持上下文管理？
+
+实际案例：
+
+我们实现了一个telnet客户端的类TelnetClient，调用实例的start()方法启动客户端与服务器交互，
+交互完毕后需调用cleanup()方法，关闭已连接的socket, 以及将操作历史记录写入文件并关闭。
+
+能否让TelnetClient的实例支持上下文管理协议，从而替代手工调用cleanup()方法。
+
+```python
+from telnetlib import telnet
+from sys import stdin, stdout
+from collections import deque
+
+class TelnetClient(object):
+
+  def __int__(self, addr, port=23):
+    self.addr = addr
+    self.port = port
+    self.tn = None
+
+  def start(self):
+    self.tn = Telnet(self.addr, self.port)
+    self.history = deque()
+
+    # user
+    t = self.tn.read_until("Login: ")
+    stdout.write(t)
+    user = stdin.readline()
+    self.tn.write(user)
+
+    # password
+    t = self.tn.read_until("Password: ")
+    if t.startswith(user[:-1]):
+      t = t[len(user) + 1:]
+    stdout.write(t)
+    self.tn.write(stdin.readline())
+
+    t = self.tn.read_until("$ ")
+    stdout.write(t)
+    while True:
+      uinput = stdin.readline()
+      if not uinput:
+        break
+      self.history.append(uinput)
+      self.tn.write(uinput)
+      t = self.tn.read_until("$ ")
+      stdout.write(t[len(uinput) + 1:])
+
+  def cleanup(self):
+    self.tn.close()
+    self.tn = None
+    with open(self.addr + "_history.txt", "w") as f:
+      f.writelines(self.history)
+
+
+client = TelnetClient("127.0.0.1")
+print("\nstart...")
+client.start()
+print("\ncleanup")
+client.cleanup()
+```
+
+
+
 
 </br>
 
