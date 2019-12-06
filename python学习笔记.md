@@ -1948,6 +1948,27 @@ client.cleanup()
 ```
 
 
+### 44. 如何快速搭建FTP或网络文件系统
+
+搭建FTP，或者是搭建网络文件系统，这些方法都能够实现Linux的目录共享。
+但是FTP和网络文件系统的功能都过于强大，因此它们都有一些不够方便的地方。
+比如你想快速共享Linux系统的某个目录给整个项目团队，还想在一分钟内做到，
+怎么办？
+
+* python2在服务器端执行：`python -m SimpleHTTPServer 端口号`
+* python3在服务器端执行：`python -m http.server 端口号`
+
+如果待共享的目录下有index.html，那么index.html文件会被视为默认主页；
+如果不存在index.html文件，那么就会显示整个目录列表。
+
+使用方法
+
+	1. 进入待分享的目录 
+	2. 执行命令`python -m SimpleHTTPServer 端口号` 注意：不填端口号则默认使用8000端口。 
+	3. 浏览器访问该主机的地址：http://IP:端口号/
+
+
+
 
 
 </br>
