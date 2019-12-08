@@ -1594,6 +1594,8 @@ xo.close()
 
 ### 35. 编译好的包
 
+可以从以下网站下载window上已经编译好的python包(whl格式)
+
 [Unofficial Windows Binaries for Python Extension Packages](https://www.lfd.uci.edu/~gohlke/pythonlibs/)
 
 
@@ -1661,13 +1663,13 @@ open函数的buffering参数可以指定文件的缓冲模式：
 
 ### 38. 如何将文件映射到内存
 
-实际案例：
+**实际案例：**
 
 1. 在访问某些二进制文件时，希望把文件映射到内存中，可以实现随机访问。(framebuffer设备文件)
 2. 某些嵌入式设备，寄存器被编址到内存地址空间，我们可以映射/dev/mem某范围，去访问这些寄存器。
 3. 如果多个进程同一个文件，还能实现进程通信的目的。
 
-解决方案就是使用标准库mmap模块的mmap()函数，它需要一个代开的文件描述符作为参数。
+**解决方案**就是使用标准库mmap模块的mmap()函数，它需要一个代开的文件描述符作为参数。
 
 ```python
 # 在linux下可以使用dd命令创建一个二进制文件
@@ -1705,7 +1707,7 @@ m[:0x1000] = '\xaa' * 0x1000
 
 ### 39. 如何访问文件的状态
 
-实际案例：
+**实际案例：**
 
 在某些项目中，我们需要获得文件状态，例如：
 
@@ -1715,7 +1717,7 @@ m[:0x1000] = '\xaa' * 0x1000
 4. 普通文件的大小(字节数)
 ...
 
-解决方案：
+**解决方案：**
 
 1. 使用系统调用：标准库os模块下的三个系统调用stat,fstat,lstat获取文件状态
 2. 快捷函数： 标准库os.path下一些函数，使用起来更加简洁
@@ -1765,13 +1767,13 @@ os.path.getsize('a.txt')
 
 ### 40. 如何使用临时文件
 
-实际案例：
+**实际案例：**
 
 某项目中，我们从传感器采集数据，每收集到1G数据后，做数据分析， 最终只保存分析结果。这样很大的临时数据集
 如果常驻内存，将消耗大量内存资源，我们可以使用临时文件存储这些临时数据（外部存储）。临时文件不用命名，
 且关闭后会自动被删除。
 
-解决方案：
+**解决方案：**
 
 使用标准库中tempfile下的TemporaryFile, NamedTemporaryFile。
 
@@ -1795,13 +1797,13 @@ ntf.name   # 可以显示文件的路径
 
 ### 41. 如何派生内置不可变类型并修改其改实例化行为？
 
-实际案例：
+**实际案例：**
 
 我们想自定义一种新类型的元祖，对于传入的可迭代对象，我们只保留其中int类型且值大于0的元素，例如：
 IntTuple([1, -1, 'abc', 6, ['x', 'y'], 3])  => (1, 6, 3), 要求IntTuple是内置tuple的子类，
 如何实现？
 
-解决方案：
+**解决方案：**
 
 定义类IntTuple继承内置tuple，并实现__new__，修改实例化行为。
 
@@ -1832,12 +1834,12 @@ print(t)  # (1, 6, 3)
 
 ### 42. 如何为创建大量实例节省内存？
 
-实际案例：
+**实际案例：**
 
 某网络游戏中， 定义了玩家类Player(id, name, status, ...)，每有一个在线玩家，在服务器程序内则有一个Player的实例，
 当在线人数很多时，将产生大量实例.(如百万级)。 那么如何降低这些大量实例的内存开销呢？
 
-解决方案：
+**解决方案：**
 
 定义类的__slots__属性，它是用来生命实例属性名字的列表
 
@@ -1886,12 +1888,13 @@ p2.pos = (0, 0)
 
 ### 43. 如何让对象支持上下文管理？
 
-实际案例：
+**实际案例：**
 
 我们实现了一个telnet客户端的类TelnetClient，调用实例的start()方法启动客户端与服务器交互，
 交互完毕后需调用cleanup()方法，关闭已连接的socket, 以及将操作历史记录写入文件并关闭。
 
 能否让TelnetClient的实例支持上下文管理协议，从而替代手工调用cleanup()方法。
+
 
 ```python
 from telnetlib import telnet
@@ -1900,7 +1903,7 @@ from collections import deque
 
 class TelnetClient(object):
 
-  def __int__(self, addr, port=23):
+  def __init__(self, addr, port=23):
     self.addr = addr
     self.port = port
     self.tn = None
@@ -1948,6 +1951,54 @@ client.cleanup()
 ```
 
 
+现在不想手动调用cleanup()方法了，我想像文件的操作一样，使用上下文管理，也就是使用
+with语句，让它自动完成cleanup()。
+
+**解决方案：**
+
+使用上下文管理协议，需要定义实力的`__enter__`, `__exit__`方法，他们分别在with开始和
+结束时被调用。
+
+
+```python
+from telnetlib import telnet
+from sys import stdin, stdout
+from collections import deque
+
+class TelnetClient(object):
+
+  def __init__(self, addr, port=23):
+    ...
+
+  def start(self):
+    #self.tn = Telnet(self.addr, self.port)
+    #self.history = deque()
+
+    # user
+    t = self.tn.read_until("Login: ")
+    stdout.write(t)
+    user = stdin.readline()
+    self.tn.write(user)
+    ...
+
+  def cleanup(self):
+    ...
+
+  def __enter__(self):
+    self.tn = Telnet(self.addr, self.port)
+    self.history = deque()
+    return self
+
+  def __exit__(self, exc_type, exc_val, exc_tb):
+    self.cleanup(self)
+    return True  # 阻止异常向上抛出。
+
+with TelnetClient("127.0.0.1") as client:
+  client.start()
+```
+
+
+
 ### 44. 如何快速搭建FTP或网络文件系统
 
 搭建FTP，或者是搭建网络文件系统，这些方法都能够实现Linux的目录共享。
@@ -1968,6 +2019,556 @@ client.cleanup()
 	3. 浏览器访问该主机的地址：http://IP:端口号/
 
 
+
+### 45. 如何创建可管理的对象属性
+
+**实际案例：**
+
+在面向对象编程中，我们把方法(函数)看作对象的接口。直接访问对象的属性可能是不安全的，或
+设计上不够灵活。但是使用调用方法在形式上不如访问属性简洁。如：
+
+```python
+# 这种比较繁琐
+circle.getRadius()
+circle.setRadius(5.0)
+```
+
+```python
+# 这种比较简单，但可能不安全
+circle.radius
+circle.radius = 5.0
+```
+
+能否在形式上是属性访问，但实际上调用方法？
+
+
+```python
+from math import pi
+
+class Circle(object):
+
+  def __init__(self, radius):
+    self.radius = radius
+
+  def getRadius(self):
+    return round(self.radius, 2)
+
+  def setRadius(self, value):
+    if not isinstance(value, (int, long, float)):
+      raise ValueError("wrong type.")
+    self.radius = float(value)
+
+  def getArea(self):
+    return self.radius ** 2 * pi
+
+c = Circle(3.2)
+c.radius = "abc"    # 逻辑上错误，但程序上正确
+c.setRadius("abc")  # 报错
+```
+
+由上例可知，如果用户直接修改属性，可能程序不会报错，但逻辑上是错误的。
+另外，如果想让用户看到两位小数的结果，直接访问属性做不到，但可以使用
+方法来间接访问。
+
+虽然方法调用更安全，更灵活，但也更繁琐。能不能在形式上是属性访问，
+但实际上调用方法？
+
+
+**解决方法：**
+
+使用`property`函数为类创建可管理属性，fget/fset/fdel队形相应属性访问。
+
+```python
+from math import pi
+
+class Circle(object):
+
+  def __init__(self, radius):
+    self.radius = radius
+
+  def getRadius(self):
+    return round(self.radius, 2)
+
+  def setRadius(self, value):
+    if not isinstance(value, (int, long, float)):
+      raise ValueError("wrong type.")
+    self.radius = float(value)
+
+  def getArea(self):
+    return self.radius ** 2 * pi
+
+  R = property(getRadius, setRadius)
+
+c = Circle(3.2)
+c.R             # 3.2
+c.R = 5.34      # 5.34
+
+```
+
+### 46. 如何让类支持比较操作
+
+**实际案例：**
+
+有时候我们希望自定义的类，实例间可以使用<, <=, >, >=, ==, != 符号进行比较，
+我们自定义比较的行为。例如，有一个矩形的类，我们希望比较两个矩形的实例时，比较
+的是它们的面积。
+
+```python
+class Rectangle(object):
+
+  def __init__(self, w, h):
+    self.w = w
+    self.h = h
+
+  def area(self):
+    return self.w * self.h
+
+rect1 = Rectangle(5, 3)
+rect2 = Rectangle(4, 4)
+rect1 > rect2  # => rect1.area() >rect2.area()
+```
+
+**解决方法：**
+
+1. 比较运算符重载，需要实现以下方法：`__lt__`, `__le__`, `__gt__`, `__ge__`,
+`__eq__`, `__ne__`。
+2. 使用标准库下的functools下的类装饰器total_ordering可以简化此过程。
+
+```python
+from math import pi
+from functools import total_ordering
+
+@total_ordering
+class Rectangle(object):
+
+  def __init__(self, w, h):
+    self.w = w
+    self.h = h
+
+  def area(self):
+    return self.w * self.h
+
+  def __lt__(self, obj):
+    return self.area() < obj.area()
+
+  def __eq__(self, obj):
+    return self.area() == obj.area()
+
+
+class Circle(object):
+
+  def __init__(self, r):
+    self.r = r
+
+  def area(self):
+    return self.r ** 2 * pi
+
+
+
+r1 = Rectangle(5, 3)
+r2 = Rectangle(4, 4)
+c1 = Circle(3)
+
+r1 >= r2  # False
+r1 > c1   # True
+c1 < r1   # 报错, Circle中没有实现__lt__等方法
+```
+
+案例说，所有图形对象之间，都应该能够比较才对，但如果每个图形对象都实现`__lt__`
+等方法，太过麻烦。 其实，我们可以定义一个公共的抽象基类.
+
+```python
+from functools import total_ordering
+from abc import ABCMeta, abstractmethod
+
+@total_ordering
+class Shape(object):
+
+  @abstractmethod
+  def area(self):
+      pass
+
+  def __lt__(self, obj):
+    if not isinstance(obj, Shape):
+      raise TypeError("obj is not Shape")
+    return self.area() < obj.area()
+
+  def __eq__(self, obj):
+    if not isinstance(obj, Shape):
+      raise TypeError("obj is not Shape")
+    return self.area() == obj.area()
+
+
+class Rectangle(Shape):
+
+  def __init__(self, w, h):
+    self.w = w
+    self.h = h
+
+  def area(self):
+    return self.w * self.h
+
+
+class Circle(Shape):
+
+  def __init__(self, r):
+    self.r = r
+
+  def area(self):
+    return self.r ** 2 * pi
+
+r1 = Rectangle(5, 3)
+r2 = Rectangle(4, 4)
+c1 = Circle(3)
+
+r1 >= r2  # False
+r1 > c1   # True
+c1 < r1   # True
+
+```
+
+
+### 47. 如何使用描述符对实例属性做类型检查？
+
+**实际案例：**
+
+在某项目中，我们实现了一些类，并希望能像静态类型语言(C, C++, Java)那样对它们的
+实例属性做类型检查。
+
+```python
+p = Person()
+p.name = "Bob"   # 必须是str
+p.age = 18       # 必须是int
+p.height = 1.83  # 必须是float
+```
+
+要求：
+
+1. 可以对实例变量名指定类型
+2. 赋予不正确类型时抛出异常
+
+
+**解决方案：**
+
+使用描述符来实现需要类型检查的属性：
+分别实现`__get__`, `__set__`, `__delete__`方法，
+在`__set__`内使用isinstance函数做类型检查。
+
+
+```python
+class Descriptor(object):
+
+  def __get__(self, instance, cls):
+    print("in __get__", instance, cls)
+
+  def __set__(self, instance, value):
+    print("in __set__")
+
+  def __delete__(self, instance):
+    print("in __del__")
+
+
+class A(object):
+  x = Descriptor()   # 类属性x是Descriptor的实例
+
+
+a = A()
+
+# A实例a对类属性x进行操作时，会被Descriptor中的相应方法所截获
+# 
+a.x      # in __get__ <__main__.A object at 0x000001DC0E0FB048> <class '__main__.A'>
+         # instance是访问Descriptor的实例，也就是a，
+         # cls是实例a的类，也就是A
+         # 从中可以看到实例a对类属性x的访问被__get__所捕获
+         
+A.x      # in __get__ None <class '__main__.A'>
+         # 从结果来看instance是None，所以我们可以通过它来区分到底是实例a访问的x，还是类A访问的x
+         
+a.x = 5  # in __set__
+         # 对类属性的修改会被__set__所捕获
+print(a.x)  # 5
+         
+del a.x  # in __del__
+         # 对类属性的删除会被__del__所捕获
+a.x      # in __get__ <__main__.A object at 0x000001DC0E0FB048> <class '__main__.A'>
+
+print(a.__dict__)  # {}
+                   # 意义下边会讲
+```
+
+通常来说，我们在描述符这些方法中访问的是`instance.__dict__`这个字典, 也就是对于instance的
+真正属性进行操作。真实情况如下：
+
+```python
+class Descriptor(object):
+
+  def __get__(self, instance, cls):
+    print("in __get__", instance, cls)
+    return instance.__dict__["x"]
+
+  def __set__(self, instance, value):
+    print("in __set__")
+    instance.__dict__["x"] = value
+
+  def __delete__(self, instance):
+    print("in __del__")
+    del instance.__dict__["x"]
+
+
+class A(object):
+  x = Descriptor() 
+
+
+a = A()
+a.x = 5
+print(a.x)          # 5
+print(a.__dict__)   # {'x': 5}
+```
+
+
+对于实际案例中提到的问题，我们就有了一个机会，来检测类型，也就是在`__set__`中对类型进行检查。
+
+```python
+class Attr(object):
+
+  def __init__(self, name, type_):
+    self.name = name
+    self.type_ = type_
+
+  def __get__(self, instance, cls):
+    return instance.__dict__[self.name]
+
+  def __set__(self, instance, value):
+    if not isinstance(value, self.type_):
+      raise TypeError("expected an {}".format(self.type_))
+    instance.__dict__[self.name] = value
+
+  def __delete__(self, instance):
+    del instance.__dict__[self.name]
+
+
+class Person(object):
+  name = Attr("name", str)
+  age = Attr("age", int) 
+  height = Attr("height", float)
+
+
+p = Person()
+p.name = "Bob"
+print(p.name)   # "Bob"
+p.age = '17'    # TypeError: expected an <class 'int'>
+```
+
+
+
+### 48. 如何在环装数据结构中管理内存
+
+**实例案例：**
+
+在python中，垃圾回收器通过引用计数来回收垃圾对象，但某些环装数据结构(树，图...)，
+存在对象间的循环引用，比如树的父节点引用子节点，子节点也同时引用父节点。此时同时
+del掉引用父子节点，两个对象不能被立即回收。
+
+如何解决此类的内存管理问题？
+
+**解决方案：**
+
+使用标准库weakref,它可以创建一种能够访问对象但不增加引用计数的对象。
+
+
+
+先来看看python的引用计数垃圾回收机制
+
+```python
+import sys
+
+class A(object):
+
+  # 析构函数
+  def __del__(self): 
+    print "in A.__del__"
+
+a = A()
+sys.getrefcount(a)   # 查看对象a的引用计数：2  总比想象的多1
+a = 5   # a的引用计数为0，析构函数被调用：in A.__del__  
+```
+
+现在来解决实际问题：
+
+```python
+class Data(object):
+
+  def __init__(self, value, owner):
+    self.owner = owner
+    self.value = value
+
+  def __str__(self):
+    print("{}'s data, value is {}".format(self.owner, self.value))
+
+  def __del__(self):
+    print("in Data.__del__")
+
+
+class Node(object):
+
+  def __init__(self, value):
+    self.data = Data(value, self)
+
+  def __del__(self):
+    print("in Node.__del__")
+
+
+node = Node(100)
+del node            # 循环引用对象不能被立即回收
+                    # 它可能在将来的未知时间点上被回收
+                    # 通常情况下，可以使用gc.collect()将其强制回收，
+                    # 但在我们这个例子，每个类都被定义了析构函数，
+                    # 所以强制回收也不起作用
+input("wait...")
+
+# 结果如下：
+# wait...
+```
+
+现在我们使用weakref来改写程序：
+
+```python
+import weakref
+
+class Data(object):
+
+  def __init__(self, value, owner):
+    # 把owner做成弱引用，不增加引用计数，此时就消除了循环引用的问题
+    # owner需要函数调用的方式来使用，也就是__str__中的self.owner()
+    self.owner = weakref.ref(owner)
+    self.value = value
+
+  def __str__(self):
+    print("{}'s data, value is {}".format(self.owner(), self.value))
+
+  def __del__(self):
+    print("in Data.__del__")
+
+
+class Node(object):
+
+  def __init__(self, value):
+    self.data = Data(value, self)
+
+  def __del__(self):
+    print("in Node.__del__")
+
+
+node = Node(100)
+del node
+input("wait...")
+
+# 结果如下：
+# in Node.__del__
+# in Data.__del__
+# wait...
+```
+
+
+### 49. 如何通过实例方法名字的字符串调用方法
+
+**实际案例：**
+
+某项目中，我们的代码使用了三个不同库中的图形类：Circle, Triangle, Rectangle。
+它们都有一个获取图形面积的接口(方法)，但接口名字不同。我们可以实现一个统一的获取面积的函数，
+使用每种方法名进行尝试，调用相应的接口。
+
+**解决方案：**
+
+1. 使用内置函数`getattr`, 通过名字在实例上获取方法对象，然后调用。
+2. 使用标准库operator下的`methodcaller`函数调用。
+
+如，下边有三个不同人定义的自定义库：
+
+lib1.py
+
+```python
+# lib1.py
+class Circle(object):
+
+  def __init__(self, r):
+    self.r = r
+
+  def area(self):
+    return self.r ** 2 * 3.14
+```
+
+lib2.py
+
+```python
+# lib2.py
+class Triangle(object):
+
+  def __init__(self, a, b, c):
+    self.a = a
+    self.b = b
+    self.c = c
+
+  def getArea(self):
+    a, b, c = self.a, self.b, self.c
+    p = (a + b + c) / 2
+    area = (p * (p - a) * (p - b) * (p - c)) ** 0.5
+    return area
+```
+
+lib3.py
+
+```python
+# lib3.py
+class Rectangle(object):
+
+  def __init__(self, w, h):
+    self.w = w
+    self.h = h
+
+  def get_area(self):
+    return self.w * self.h
+```
+
+主脚本：
+
+```python
+from lib1 import Circle
+from lib2 import Triangle
+from lib3 import Rectangle
+from operator import methodcaller
+
+# 使用getattr
+def getArea(shape):
+  for name in ("area", "getArea", "get_area"):
+    f = getattr(shape, name, None)
+    if f:
+      return f()
+
+# 使用operator.methodcaller
+def getArea1(shape):
+  for name in ("area", "getArea", "get_area"):
+    f = methodcaller(name)
+    try:
+      return f(shape)
+    except:
+      pass
+
+shape1 = Circle(2)
+shape2 = Triangle(3, 4, 5)
+shape3 = Rectangle(6, 4)
+
+shapes = [shape1, shape2, shape3]
+list(map(getArea, shapes))  # [12.56, 6.0, 24]
+```
+
+`operator.methodcaller`的使用方法举例：
+
+```python
+s = "abc123abc456"
+s.find("abc", 4)   # 6
+methodcaller("find", "abc", 4)(s)  # 6
+```
 
 
 
@@ -2471,6 +3072,11 @@ https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c
 
 [python的threading和multiprocessing模块初探](https://blog.csdn.net/mydear_11000/article/details/52767976)
 
+
+* `multriprocessing.Queue`
+* `multriprocessing.Pipe()`
+
+
 多进程
 
 要让Python程序实现多进程（multiprocessing），我们先了解操作系统的相关知识。
@@ -2904,10 +3510,350 @@ END
 
 
 
+
+
+
+
 ### 6. 多线程
 
 * [Python：使用threading模块实现多线程编程一[综述]](https://blog.csdn.net/bravezhe/article/details/8585437)
 * [Python-threading并发操作](http://blog.csdn.net/y2701310012/article/details/40863145)
+
+**生产者模式**
+
+实际案例：
+
+我们现在要通过雅虎网站获下载多只股票的csv数据，并将其转换成xml文件。
+
+由于全局解释器锁(GIL)的存在，多线程进行CPU密集型操作并不能提高执行效率，
+我们修改程序架构：
+
+1. 使用多个DownloadThread线程进行下载(I/O操作)，
+2. 使用一个ConvertThread线程进行转换(CPU密集型操作)，
+3. 下载线程把下载数据安全的传递给转换线程，
+4. 打包线程TarThread将转换出的xml文件压缩打包。如转换线程每生成100个xml文件，
+就通知打包线程将它们打包成一个xxx.tgz文件，并删除xml文件。打包完成后，打包
+线程反过来通知转换线程，转换线程继续转换。
+
+
+提示：
+
+线程间的事件通知，可以使用标准库中Threading.Event:
+1. 等待事件一端调用wait，等待事件
+2. 通知事件一端调用set, 通知事件。
+
+```python
+import os
+import csv
+import tarfile
+from xml.etree.ElementTree import Element, ElementTruee
+import requests
+from StringIO import StringIO
+from xml_pretty import pretty
+from threading import Thread, Event
+from Queue import Queue  # 线程安全队列(数据结构)
+
+class DownloadThread(Thread):
+  # 下载线程(IO密集型)
+
+  def __init__(self, sid， queue):
+    Thread.__init__(self)
+    self.sid = sid
+    self.url = "http://table.finance.yahoo.com/table.csv?s=%s.sz"
+    self.url %= str(sid).rjust(6, '0')
+    self.queue = queue
+
+  def download(self, url):
+    response = requests.get(url, timeout=3)
+    if response.ok:
+      return StringIO(response.content)
+
+  def run(self):
+    # 1. 
+    data = self.download(self.url)
+    # 2. (sid, data)
+    q.append((sid, data))
+    self.queue.put((self.sid, data))
+
+
+class ConvertThread(Thread):
+  # csv到xml转换线程(CPU密集型)
+
+  def __init__(self, queue, cEvent, tEvent):
+    Thread.__init__(self)
+    self.queue = queue
+    self.cEvent = cEvent
+    self.tEvent = tEvent
+
+  def csvToXml(self, scsv, fxml):
+    reader = csv.reader(scsv)
+    headers = read.next()
+    headers = map(lambda h: h.replace(" ", ""), headers)
+
+    root = Element("Data")
+    for row in reader:
+      eRow = Element("Row")
+      root.append(eRow)
+      for tag, text in zip(headers, row):
+        e = Element(tag)
+        e.text = text
+        eRow.append(e)
+
+    pretty(root)
+    et = ElementTree(root)
+    et.write(fxml)
+
+  def run(self):
+    count = 0
+    while 1:
+      sid, data = self.queue.get()
+      if sid == -1:
+        self.cEvent.set()
+        self.tEvent.wait()
+        break
+      if data:
+        fname = str(sid).rjust(6, "0") + ".xml"
+        with open(fname, "wb") as wf:
+          self.csvToXml(data, wf)
+        count += 1
+        if count == 5:
+          self.cEvent.set()    # 通知打包线程工作
+
+          self.tEvent.wait()   # 等待打包线程通知
+          self.tEvent.clear()  # 清除通知码
+          count = 0            # 清空计数
+
+
+class TarThread(Thread):
+
+  def __init__(self, cEvent, tEvent):
+    Thread.__init__(self)
+    self.count = 0
+    self.cEvent = cEvent
+    self.tEvent = tEvent
+    self.setDaemon(True)  # 将打包线程设置为守护线程，等其他线程退出后，其也退出。
+
+  def tarXML(self):
+    self.count ++ 1
+    tfname = "%d.tgz" % self.count
+    tf = tarfile.open(tfname, "w:gz")
+    for fname in os.listdir("."):
+      if fname.endswith(".xml"):
+        tf.add(fname)
+        os.remove(fname)
+    tf.close()
+    if not tf.members:
+      os.remove(tfname)
+
+  def run(self):
+    while 1:
+      self.cEvent.wait()      # 等待转换程序通知打包
+      self.tarXML()           # 打包
+      self.cEvent.clear()     # 清除通知码，下次循环继续等待
+
+      self.tEvent.set()       # 打包完成后，通知转换程序继续工作
+
+
+q = Queue()
+dThreads = [DownloadTrhead(i, q) for i in range(1, 11)]
+cEvent = Event()
+tEvent = Event()
+cThread = ConvertThread(q, cEvent, tEvent)
+tThread = TarThread(cEvent, eEvent)
+cThread.start()
+tThread.start()
+for t in dThreads:
+  t.start()
+
+for t in dThreads:
+  t.join()
+
+q.put((-1, None))
+
+```
+
+
+**使用线程本地数据和线程池**
+
+实际案例：
+
+我们实现了一个web视频监控服务器，服务器端采集摄像头数据，客户端使用浏览器通过http请求接收数据。
+服务器使用推送的方式(multipart/x-mixed-repalce)一直使用一个tcp连接向客户端传递数据。这种方式
+将持续占用一个线程，导致单线程服务器无法处理多客户端请求。
+
+请改写程序，在每个线程中处理一个客户端请求，支持多客户端访问。
+
+另外，我们需要对请求连接数做限制，以防止恶意用户发起大量连接而导致服务器创建大量线程，最终
+因资源耗尽而瘫痪。（可以使用线程池，代替原来的每次请求创建线程。）
+
+解决方案：
+
+* `threading.local`函数可以创建线程本地数据空间。其下属性对每个线程独立存在，读个线程之间都是互不干扰的。
+* python3中有线程池实现：使用标准库中`concurrent.futures`下的`ThreadPoolExecutor`，对象的`submit`和
+`map`方法可以用来启动线程池中线程执行任务。
+
+```python
+import os, cv2, time, struct, threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from socketserver import TCPServer, ThreadingTCPServer
+from threading import Thread, RLock
+from select import select
+from concurrent.futures import ThreadPoolExecutor
+
+class JpegStreamer(Thread):
+  """
+  采集数据，从摄像头一帧一帧采集数据，相当于数据源
+  """
+
+  def __init__(self, camera):
+    Thread.__init__(self)
+    self.cap = cv2.VideoCapture(camera)
+    self.lock = RLock()
+    self.pipes = {}
+
+  def register(self):
+    # 实现了注册的接口，如果你想获得源中的数据，
+    # 你就调用register函数
+    # 在内部创建一个管道，我们维护一个写段，并返回读端给用户。
+    pr, pw = os.pipe()
+    self.lock.acquire()
+    self.pipes[pr] = pw
+    self.lock.release()
+    return pr
+
+  def unregister(self, pr):
+    self.lock.acquire()
+    self.pipes.pop(pr)
+    self.lock.release()
+    pr.close()
+    pw.close()
+
+  def capture(self):
+    # 数据采集函数
+    cap = self.cap
+    while cap.isOpened():
+      ret, frame = cap.read()   # 采用opencv库从摄像头采用数据
+      if ret:
+        # 将数据并编码成jpg图片
+        ret, data = cv2.imencode(".jpg", frame, (cv2.IMWRITE_JPEG_QUALITY, 40))
+        yield data.tostring()
+
+  def send(self, frame):
+    # 把管道中的一帧数据发给所有已注册的管道中去。
+    n = struct.pack("l", len(frame))
+    self.lock.acquire()
+    if len(self.pipes):
+      _, pipes, _ = select([], self.pipes.itervalues(), [], 1)
+      for pipe in pipes:
+        os.write(pipe, n)
+        os.write(pipe, frame)
+    self.lock.release()
+
+  def run(self):
+    for frame in self.capture():
+      self.send(frame)
+
+
+class JpegRetriever(object):
+  """
+  为了更灵活的将源上的数据传输到多个目的上去，
+  它可以从JpegStreamer中一帧一帧的获取到数据。
+  """
+
+  def __init__(self, streamer):
+    self.streamer = streamer
+    self.local = threading.local()
+    #self.pipe = streamer.register()  # 拿到一个管道
+
+  def retrieve(self):
+    # 每次从管道中读取一帧数据并返回
+    while True:
+      ns = os.read(self.local.pipe, 8)
+      n = struct.unpack("l", ns)[0]
+      data = os.read(self.local.pipe, n)
+      yield data
+
+  # 上下文管理
+  def __enter__(self):
+    # 本地化pipe，个线程间互补干扰。
+    if hasattr(self.local, "pipe"):
+      raise RuntimeError()
+
+    self.local.pipe = streamer.register()
+    return self.retrieve()
+
+  # 上下文管理
+  def __exit__(self, *args):
+    self.streamer.unregister(self.local.pipe)
+    del self.local.pipe
+    return True
+
+
+class Handler(BaseHTTPRequestHandler):
+  """
+  负责处理HTTP请求，它持有一个JpegRetriever对象，每次从中拿到一帧视频数据，
+  发给客户端，在获取一帧数据，再发给客户端。
+  """
+  retriever = None
+
+  @staticmethod
+  def setJpegRetriever(retriever):
+    Handler.retriever = retriever
+
+  def do_GET(self):
+    if self.retriever is None:
+      raise RuntimeError("no retriver")
+
+    if self.path != "/":
+      return
+
+    # http相应头部的构造
+    self.send_response(200)
+    self.send_header("Content-type", "multipart/x-mixed-replace;boundary=abcde")
+    self.end_headers()
+
+    # 调用retriever.retrieve，拿到一帧数据，并通过send_frame变成一个http相应，发送出去
+    with self.retrievr as frames:
+      for frame in frames:
+        self.send_frame(frame)
+
+  def send_frame(self, frame):
+    self.wfile.write("--abcde\r\n")
+    self.wfile.write("Content-Type: image/jpeg\r\n")
+    self.wfile.write("Content-Length: %d\r\n\r\n" %len(frame))
+    self.wfile.write(frame)
+
+
+class ThreadingPoolTCPServer(ThreadingTCPServer):
+
+  def __init__(self, server_address, RequestHandlerClass, bind_and_activate=Ture, max_thread_num=100):
+    super().__init__(server_address, RequestHandlerClass, bind_and_activate)
+    self.executor = ThreadPoolExecutor(max_thread_num)
+
+  def process_request(self, request, client_address):
+    self.executor.submit(self.process_request_thread, request, client_address)
+
+
+if __name__ == "__main__":
+  streamer = JpegStreamer(0)
+  streamer.start()
+
+  retriever = JpegRetriever(streamer)
+  Handler.setJpegRetriever(retriever)
+
+  print("Start server...")
+  # 为了实现多客户端连接，我们必须使用TreadingTCPServer，而不能使用TCPServer
+  # 在每次处理HTTP请求的时候，ThreadingTCPServer会创建一个独立的线程，来执行
+  # do_GET函数。
+  # httpd = TCPServer(("", 9000), Handler)  # 不支持多用户连接
+  # httpd = ThreadingTCPServer(("", 9000), Handler)  # 支持多用户连接 
+  # 未知支持线程池，需要改写ThreadingTCPServer类
+  httpd = ThreadingPoolTCPServer(("", 9000), Handler, max_thread_num=3)
+  httpd.serve_forever()
+
+```
+
+
 
 **控制线程数**
 
@@ -3868,6 +4814,9 @@ for i in chain(class1, class2, class3):
 
 ## 标准模块
 
+[python3的所有标准库](https://docs.python.org/zh-cn/3.7/library/index.html)
+
+
 ### 1. `sys`
 
 * `sys.platform`：查看底层操作系统名称
@@ -3880,6 +4829,7 @@ for i in chain(class1, class2, class3):
 * `sys.stdin` 、`sys.stdout`、`sys.stderr`: 标准输入，标准输出，错误输出
 * `sys.stdin.isatty()`：判断标准输入是否是控制台（console），如果从windows的DOS，或者类unix的终端输入，则为console，如果将stdin重定向到文件（< filename）以及通过管道（|）将内容输出到stdin则不是console
 * `sys.getsizeof()`: 查看变量占用内存大小
+* `sys.getrefcount()`: 查看某对象的引用计数(用于垃圾回收)
 
 ### 2. `os`
 
@@ -5255,35 +6205,59 @@ mappingproxy({'KEYWORD_ONLY': <_ParameterKind.KEYWORD_ONLY: 3>,
 
 [operator 模块简单介绍](https://www.cnblogs.com/nju2014/p/5568139.html)
 
-简单介绍几个常用的函数，其他的请参考[文档](https://docs.python.org/2/library/operator.html#operator.delitem)。
+operator模块输出一系列对应Python内部操作符的函数。
 
-`operator.concat(a, b)`: 对于 a、b序列，返回 a + b(列表合并）
+* `operator.lt(a, b)` : a小于b
+* `operator.le(a, b)` : a小于等于b
+* `operator.eq(a, b)` : a等于b
+* `operator.ne(a, b)` : a不等于b
+* `operator.ge(a, b)` : a大于等于b
+* `operator.gt(a, b)` : a大于b
+* `operator.not_(obj)` : 非
+* `operator.truth(obj)` : 等价于布尔构造器
+* `operator.is_(a, b)` : a is b
+* `operator.is_not(a, b)` : a is not b
+* `operator.abs(obj)` : abs
+* `operator.add(a, b)` : a + b
+* `operator.sub(a, b)` : a - b
+* `operator.mul(a, b)` : a \* b
+* `operator.truediv(a, b)`: a / b
+* `operator.mod(a, b)` : a % b
+* `operator.pow(a, b)` : a \*\* b
+* `operator.floordiv(a, b)` : a // b
+* `operator.matmul(a, b)` : 矩阵相乘(a @ b)
+* `operator.nge(obj)` : 取负(-obj)
+* `operator.pos(obj)` : 取正(+obj)
+* `operator.index(a)` : 将a转换为整数数据并返回。
+* `operator.and(a, b)` : a & b (按位与运算)
+* `operator.or(a, b)` : a | b (按位求或)
+* `operator.inv(obj)` : 按位取反(~obj)
+* `operator.invert(obj)` : 按位取反(~obj)
+* `operator.lshift(a, b)` : a左移b位(a << b)
+* `operator.rshift(a, b)` : a右移b位(a>>b)
+* `operator.xor(a, b)` : a ^ b(按位异或)
 
-`operator.countOf(a, b)`: 返回 b 在 a 中出现的次数
 
-`operator.delitem(a, b)`: 删除 a 中索引为 b 的值
+简单介绍几个常用的和序列相关的操作函数，其他的请参考[文档](https://docs.python.org/2/library/operator.html#operator.delitem)。
 
-`operator.getitem(a, b)`: 返回 a 中索引为 b 的值
-
-`operator.indexOf(a, b)`: 返回 b 在 a 中首次出现位置的索引值。
-
-`operator.setitem(a, b, c)`: 设置 a 中索引值为 b 的项目值更改为 c
+* `operator.concat(a, b)`: 对于 a、b序列，返回 a + b (列表合并)
+* `operator.contains(a, b)`: 返回测试b in a的结果。请注意反转操作数
+* `operator.countOf(a, b)`: 返回 b 在 a 中出现的次数
+* `operator.delitem(a, b)`: 删除 a 中索引为 b 的值
+* `operator.getitem(a, b)`: 返回 a 中索引为 b 的值
+* `operator.indexOf(a, b)`: 返回 b 在 a 中首次出现位置的索引值。
+* `operator.setitem(a, b, c)`: 设置 a 中索引值为 b 的项目值更改为 c
+* `operator.length_hint(obj, default=0)`: 返回对象obj的估算长度。首先试图返回真实的长度，不行的话使用obj.__length_hint__()估算长度，再不行的话返回默认值规定的长度。
 
 operator 模块也为属性和项目的查找提供了一些工具。这些工具使得 map(), sorted(), itertools.groupby() 或其他函数 需要的参数的提取更方便更快速。上面的函数有一个共同点，即均接受函数参数。
 
-`operator.attrgetter(attr)`, `operator.attrgetter(*attrs)`: 返回一个可调用的对象，该对象从运算中获取 'attr' 。如果请求的属性不止一个的话， 返回属性的元组。这些属性的名字可以包括 '.'。比如：
-
-`f = attrgetter('name')`: 调用 `f(b)` 返回 `b.name`
-
-`f = attrgetter('name', 'date')`: 调用 `f(b)` 返回 `(b.name, b.date)`
-
-`f = attrgetter('name.first', 'name.last')`: 调用 `f(b)` 返回 `(b.name.first, b.name.last)`
-
-`operator.itemgetter(item)`, `operator.itemgetter(*items)`: 返回一个可调用的对象，该对象通过运算符的 __getitem__()的方法 从运算中获取 item 。如果指定了多个 item ， 返回查找值的元组。比如：
-
-`f = itemgetter(2)`: 调用 `f(r)` 返回 `r[2]`
-
-`g = itemgetter(2, 5, 3)`, 调用 `f(r)` 返回 `(r[2], r[3], r[3])`
+* `operator.attrgetter(attr)`, `operator.attrgetter(*attrs)`: 返回一个可调用的对象，该对象从运算中获取 'attr' 。如果请求的属性不止一个的话， 返回属性的元组。这些属性的名字可以包括 '.'。比如：
+* `f = attrgetter('name')`: 调用 `f(b)` 返回 `b.name`
+* `f = attrgetter('name', 'date')`: 调用 `f(b)` 返回 `(b.name, b.date)`
+* `f = attrgetter('name.first', 'name.last')`: 调用 `f(b)` 返回 `(b.name.first, b.name.last)`
+* `operator.itemgetter(item)`, `operator.itemgetter(*items)`: 返回一个可调用的对象，该对象通过运算符的 __getitem__()的方法 从运算中获取 item 。如果指定了多个 item ， 返回查找值的元组。比如：
+* `f = itemgetter(2)`: 调用 `f(r)` 返回 `r[2]`
+* `g = itemgetter(2, 5, 3)`, 调用 `f(r)` 返回 `(r[2], r[3], r[3])`
 
 相当于：
 
@@ -5362,6 +6336,26 @@ def itemgetter(*items):
 |Difference|a != b|ne(a, b)|
 |Ordering|a >= b|ge(a, b)|
 |Ordering|a > b|gt(a, b)|
+
+
+原值操作
+
+许多操作都有其原地操作版本。以下列出的函数提供了比普通语法操作更原始的原址操作。例如：语句x += y等价于x = operator. iadd(x, y)。其它方法提出说z = operatgor.iadd(x, y)等价于复合语句 z= x; z += y。
+
+* `operator.iadd(a, b)`: a += b
+* `operator.iand(a, b)`: a &= b
+* `operator.iconcat(a, b)`: a += b (a,b为序列)
+* `operator.ifloordiv(a, b)`: a //= b
+* `operator.ilshift(a, b)`: a <<= b
+* `operator.imod(a, b)`: a %= b
+* `operator.imul(a, b)`: a \*= b
+* `operator.imatmul(a, b)`: a @= b
+* `operator.ior(a, b)`: a |= b
+* `operator.ipow(a, b)`: a \*\*= b
+* `operator.irshift(a, b)`: a >>= b
+* `operator.isub(a, b)`: a -= b
+* `operator.itruediv(a, b )`: a /= b
+* `operator.ixor(a, b)`: a ^= b
 
 
 
