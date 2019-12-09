@@ -331,12 +331,13 @@ NS500832:569:HNN3VAFXY:3:21405:22082:10749   147   chr6  29794856 27 136M  =  29
 
 ## 专业名词
 
-* VUS (Variant Uncertain Significance)：未知的变异，意义不确定的变异
-* AF (Allele Frequency): 等位基因频率
-* MAF (Minor Allele Frequency): 多个群体中总的AF?
-* X-inactivation ([X染色体去激活](https://en.wikipedia.org/wiki/X-inactivation)): 
+* `VUS (Variant Uncertain Significance)`：未知的变异，意义不确定的变异
+* `AF (Allele Frequency)`: 等位基因频率
+* `MAF (Minor Allele Frequency)`: 多个群体中总的AF?
+* `X-inactivation` ([X染色体去激活](https://en.wikipedia.org/wiki/X-inactivation)): 
 又称X染色体失活或里昂化，是指雌性哺乳类细胞中两条X染色体的其中之一失去活性的现象。
 X染色体会被包装成异染色质，进而因功能受抑制而沉默化。
+* `canonical transcript`： 经典转录本
 
 
 ## 综合征
@@ -2052,4 +2053,21 @@ def get_seq(self, fbuffer, start, end, offset, line, size):
 
 # 下载
 
-* affyCytoScan探针: http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/affyCytoScan.txt.gz
+* affyCytoScan探针:   http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/affyCytoScan.txt.gz
+* 染色体条带坐标文件：http://hgdownload.cse.ucsc.edu/goldenpath/hg19/database/cytoBand.txt.gz
+* 转录本注释文件：    http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/refGene.txt.gz
+* 经典转录本：        http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/knownCanonical.txt.gz
+                      http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/kgXref.txt.gz(对应ID)
+
+
+----
+
+## BioStars
+
+* [How To Get Bed File Containing Exons Of Canonical Transcripts And Their Corresponding Gene Symbols](https://www.biostars.org/p/93011/)
+* [Why the list of genes in UCSC "knownGene" table is strikingly different than the list of genes in UCSC "known canonical" table?](https://www.biostars.org/p/367011/)
+* [How to tell which transcript is the canonical transcript?](https://www.biostars.org/p/209633/)
+
+
+## StackExchange-Bioinformatics
+* [How to obtain .bed file with coordinates of all genes](https://bioinformatics.stackexchange.com/questions/895/how-to-obtain-bed-file-with-coordinates-of-all-genes)
