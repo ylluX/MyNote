@@ -2798,6 +2798,118 @@ hello world!</after>
 7. before_decorator(after_decorator(hello))()函数获得了after_decorator(hello)()函数修饰后的结果，再进行修饰，所以输出："<before>hello world!</after>"
 
 
+**如何为被装饰的函数保存元数据**
+
+实际案例：
+
+在函数对象中保存着一些函数的元数据，例如：
+
+* `f.__name__`:      函数的名字
+* `f.__doc__`:       函数的文档字符串
+* `f.__moudle__`:    函数所属模块名
+* `f.__dict__`:      属性字典
+* `f.__defaults__`:  默认参数元组
+
+...
+
+我们再使用装饰器后，再使用上面这些属性访问时，看到的是内部包裹函数的元数据，
+原来函数的元数据便丢失掉了，应该如何解决？
+
+解决方案：
+
+使用标准库functools中的装饰器wraps装饰内部包裹函数，可以制定将原函数的某些属性，更新
+到包裹函数上面。
+
+
+**带参数的装饰器_1**
+
+实际案例：
+
+实现一个装饰器，它用来检查被装饰函数的参数类型。装饰器可以通过参数指明函数参数的类型，调用时如果检测出
+类型不匹配则抛出异常。
+
+解决方案：
+
+带参数的装饰器，也就是根据参数定制化一个装饰器。可以看成生产装饰器的工厂。每次调用typeassert, 返回一个
+特定的装饰器，然后用它装饰其他函数。
+
+```python
+from inspect import signature
+
+def typeassert(*ty_args, **ty_kargs):
+  def decorator(func):
+    sig = signature(func)
+    btypes = sig.bind_partial(*ty_args, **ty_kargs).arguments
+    def wrapper(*args, **kwargs):
+      for name, obj in sig.bind(*args, **kargs).arguments.iterms():
+        if name in btypes:
+          if not isinstance(obj, btypes[name]):
+            raise TypeError("%s must be '%s'" % (name, btypes[name]))
+      return func(*args, **kargs)
+    return wrapper
+  return decorator
+
+@typeassert(int, str, list)
+def f(a, b, c):
+  print(a, b, c)
+
+f(1, 'abc', [1,2,3])  # 运行成功
+f(1, 2, [1,2,3])      # 报错
+```
+
+
+**如何实现属性可修改的函数装饰器**
+
+实际案例：
+
+为分析程序内哪些函数执行实际开销较大，我们定义一个带timeout参数的函数装饰器，装饰功能如下：
+
+1. 统计被装饰函数单次调用运行时间。
+2. 时间大于参数timeout的，将此次函数调用记录到log日志中。
+3. 运行时可修改timeout的值。
+
+解决方案：
+
+为包裹函数添加一个函数，用来修改闭包中使用的自由变量。在python3中：使用nonlocal访问嵌套
+作用域的变量引用。
+
+```python
+import time
+import logging
+from functools import wraps
+
+def warn(timeout):
+  def decorator(func):
+    def wrapper(*args, **kargs):
+      start = time.time()
+      res = func(*args, **kwargs)
+      used = time.time() - start
+      if used > timeout:
+        msg = '"%s": %s > %s' %(func.__name__, used, timeout)
+        logging.warn(msg)
+      return res
+    # 运行时修改timeout的值
+    def setTimeout(k):
+      nonlocal timeout
+      timeout = k
+    wrapper.setTimeout = setTimeout
+    return wrapper
+  return decorator
+
+form random import randint
+@warn(1.5)
+def test():
+  print("In test")
+  while randint(0, 1):
+    time.sleep(0.5)
+
+for _ in range(30):
+  test()
+test.setTimeout(1)
+for _ in range(30):
+  test()
+```
+
 
 
 ### 2. 回调函数
@@ -6216,6 +6328,34 @@ mappingproxy({'KEYWORD_ONLY': <_ParameterKind.KEYWORD_ONLY: 3>,
 # VAR_KEYWORD ： 可变关键字参数 (4)
 
 ```
+
+
+**获得函数签名**
+
+```python
+from inspect import signature
+
+def f(a, b, c=1):
+  pass
+
+sig = signature(f)
+a = sig.parameters["a"]
+a.name     # 'a'
+a.kind     # <_ParameterKind: 'POSITIONAL_OR_KEYWORD'>
+a.default  # inspect._empty
+c = sig.parameters['c']
+c.default  # 1
+
+# 为每个参数指定类型
+bargs = sig.bind(str, int, int)   # <inspect.BoundArguments at 0x7fdcad6ca5c0>
+bargs.arguments  # OrderedDict([('a', <class 'str'>), ('b', <class 'int'>), ('c', <class 'int'>)])
+bargs.arguments['a']  # builtins.str
+bargs.arguments['b']  # builtins.int
+
+# 为某些参数指定类型
+bargs = sig.bind_partial(str)  # <inspect.BoundArguments at 0x7fdcad47f6d8>
+```
+
 
 ### 14. operator
 
