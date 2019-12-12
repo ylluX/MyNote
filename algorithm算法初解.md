@@ -1,6 +1,13 @@
-* [求解素数(质数)](#求解素数质数)
+# 目录
+<!--自动插入TOC：https://github.com/ekalinin/github-markdown-toc-->
+<!--ts-->
+<!--te-->
 
-# 求解素数(质数)
+----
+
+# 初级算法
+
+## 求解素数(质数)
 
 有三种方法：
 
@@ -63,3 +70,44 @@ for i in PrimeNumbers(0, 100):
 # 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97
 ```
 
+## 深度优先和广度优先
+
+```
+             a
+           /   \
+          b     c
+         / \   / \
+        d   e f   g
+           /
+          i
+```
+
+深度优先通过递归来实现：
+
+```python
+def depth_tree(tree_node):
+	if tree_node is not None:
+		print(tree_node._data)
+		if tree_node._left is not None:
+			return depth_tree(tree_node._left)
+		if tree_node._right is not None;
+			return depth_tree(tree_node._right)
+```
+
+广度优先通过队列来实现：
+
+```python
+def level_queue(root):
+	if root is None:
+		return
+	my_queue - []
+	node = root
+	my_queue.append(node)
+	while my_queue:
+		node = my_queue.pop(0)
+		print(node.elem)
+		if node.lchild is not None:
+			my_queue.append(node.lchild)
+		if node.rchild is not None:
+			my_queue.append(node.rchild)
+```
