@@ -9706,7 +9706,67 @@ MKL( Intel Math Kernel Library)是`英特尔`的`数学核心函数库`。
 
 # 7. 优秀框架
 
-## 爬虫
+
+## url去重策略
+
+1. 将访问过的url保存到数据库中(查询慢，效率低)
+2. 将访问过的url保存到set中，只需要O(1)的代价就可以查询ulr (但内存占用大)
+    100000000\*2byte\*50个字符/1024/1024/1024 = 9G
+3. url经过md5等方法哈希后保存到set中 (md5一般编码为128个bit,也就是16byte，很大程度的节省了内存，scrapy常用该方法)
+4. 用bitmap方法，将访问过的url通过hash函数映射到某一位。(内存进一步压缩，但冲突的可能性较大，该方法并不常用)
+5. bloomfilter方法对bitmap进行改进，多重hash函数降低冲突
+
+
+## xpath选择器
+
+|表达式|说明|
+|----|----|
+|article|选取所有article元素的所有子节点|
+|/article|选取根元素article|
+|article/a|选取所有属于article子元素的a元素|
+|//div|选取所有div子元素(不论出现在文档任何地方)|
+|article//div|选取所有属于article元素的后代的div元素，不管它出现在article之下的任何位置|
+|//@class|选取所有名为class的属性|
+|/article/div[1]|选取属于article子元素的第一个div元素|
+|/article/div[last()]|选取属于article子元素的最后一个div元素|
+|/article/div[last()-1]|选取属于artilce子元素的倒数第二个div元素|
+|//div[@lang]|选取所有拥有lang属性的div元素|
+|//div[@lang="eng"]|选取所有lang属性为eng的div元素|
+|//div[contains(@lang, "eng")]|选取所有朗属性中包含eng的div元素|
+|/div/\*|选取属于div元素的所有子节点|
+|//\*|选取所有元素|
+|//div[@\*]|选取所有带属性的title元素|
+|/div/a\|//div/p|选取所有div元素的a和p元素|
+|//span\|//ul|选取文档中span和ul元素|
+|article/div/p\|//span|选取所有属于article元素的div元素的p元素以及文档中所有的span元素|
+
+
+## css选择器
+
+|表达式|说明|
+|----|----|
+|\*|选择所有节点|
+|#container|选择id为container的节点|
+|.container|选取所有class包含container的节点|
+|li a|选择所有li下的所有a节点|
+|ul + p|选择ul后面的第一个p元素(兄弟节点)|
+|div#container > ul|选取id为container的div的第一个ul子元素|
+|ul ~ p|选取与ul相邻的所有p元素|
+|a[title]|选取所有有title属性的a元素|
+|a[href="http://jobbole.com"]|选取所有href属性为jobbole.com值的a元素|
+|a[href\*="jobole"]|选取所有href属性包含jobbole的a元素|
+|a[href^="http"]|选取所有href属性值以http开头的a元素|
+|a[href$=".jpg"]|选取所有href属性值以.jpg结尾的a元素|
+|input[type=radio]:checked|选择选中的radio的元素(单选按钮中选中的元素)|
+|div:not(#container)|选取所有id非container的div属性|
+|li:nth-child(3)|选取第三个li元素|
+|tr:nth-child(2n)|第偶数个tr|
+
+
+
+
+
+## 爬虫框架
 
 ### pyspider
 
@@ -9720,6 +9780,21 @@ MKL( Intel Math Kernel Library)是`英特尔`的`数学核心函数库`。
 
 ### scrapy
 
+**extract和extract_first**
+
+```python
+# 提取文章标题
+title = response.xpath('h1[@class="title"]/text()').extract()[0]
+
+# 但如果没有文章标题的话，使用[0]就会报错，此时我们可以使用extract_first
+# 此时，如果title不存在会返回None
+title = response.xpath('h1[@class="title"]/text()').extract_first()
+
+# 但如果我们还想使用str的方法对title处理时，就又会报错
+# 此时，可以设置default参数
+title = response.xpath('h1[@class="title"]/text()').extract_first(default="")
+```
+
 **scrapy如何处理404等状态的地址**
 
 >默认情况下scrapy会把404等一些错误状态码的response直接过滤掉，我现在想让它不过滤掉，然后我自己判断状态码是否为404，进行后续操作，我查过官方文档，可以通过自己编写一个中间件，设置HttpErrorMiddleware.handle_httpstatus_list=[404]，就可以处理返回为404的response，但我试了，也不行，我想问问有什么办法可以达到我说的这种效果？
@@ -9730,6 +9805,8 @@ MKL( Intel Math Kernel Library)是`英特尔`的`数学核心函数库`。
 class MySpider(CrawlSpider):
     handle_httpstatus_list = [404]
 ```
+
+
 
 
 ## web服务
