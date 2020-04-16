@@ -11,6 +11,7 @@
    * [vim,less中文乱码](#vimless中文乱码)
    * [Shell脚本并发及并发数的控制](#shell脚本并发及并发数的控制)
    * [比较两个文件是否相同](#比较两个文件是否相同)
+   * [${a##.*}, ${a%%.*}用法](#a-a用法)
 * [基础命令](#基础命令)
    * [查看图片信息`identify`](#查看图片信息identify)
    * [转换图片格式`convert`](#转换图片格式convert)
@@ -139,6 +140,21 @@ fi
 ```
 
 
+## ${a##.*}, ${a%%.*}用法
+
+* `${varible##*string}` 从左向右截取最后一个string后的字符串
+* `${varible#*string}` 从左向右截取第一个string后的字符串
+* `${varible%%string*}` 从右向左截取最后一个string后的字符串
+* `${varible%string*}` 从右向左截取第一个string后的字符串
+
+```ssh
+a="abcXXdefXXghiXXlmnXXopq"
+echo "${a##*XX}"   # opq
+echo "${a#*XX}"    # defXXghiXXlmnXXopq
+echo "${a%%XX*}"   # abc
+echo "${a%XX*}"    # abcXXdefXXghiXXlmn
+```
+
 
 ----
 
@@ -213,4 +229,3 @@ fi
 * 查看所有节点正在运行的任务: `qhost -j`
 * 查看某队列中正在运行的任务: `qhost –j | grep "xxx.q"`
 * 查看提交过的历史任务：`qacct -o luyl -b YYYYMMDDHHmm -j`
-

@@ -22,6 +22,7 @@
    * [HMM](#hmm)
    * [贝叶斯](#贝叶斯)
    * [随机森林](#随机森林)
+   * [logit模型和probit模型](#logit模型和probit模型)
 * [深度学习](#深度学习)
    * [TensorFlow](#tensorflow)
 * [分布](#分布)
@@ -1194,6 +1195,17 @@ C越大，我们越倾向于没有松弛变量，即模型会尽可能分对每�
 ## 随机森林
 
 * [机器学习算法---随机森林实现（包括回归和分类）](https://blog.csdn.net/jiede1/article/details/78245597)
+
+
+## logit模型和probit模型
+
+* [Logit究竟是个啥？——离散选择模型之三](https://zhuanlan.zhihu.com/p/27188729)
+
+首先它们是广义线性模型(glm).
+
+Odds(比值比，等于P/(1-P))的对数称之为Logit。从概率P -> Odds -> Logit, 这就是一个Logit变换。
+实际上，所谓 Logit 模型可以理解成 Log-it（即 it 的自然对数——这里的 it 指的就是Odds）。
+
 
 
 ----

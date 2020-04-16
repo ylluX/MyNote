@@ -63,6 +63,8 @@
    * [sam](#sam)
 * [期刊杂志](#期刊杂志)
 * [下载](#下载)
+   * [BioStars](#biostars)
+   * [StackExchange-Bioinformatics](#stackexchange-bioinformatics)
 <!--te-->
 
 ----
@@ -338,7 +340,8 @@ NS500832:569:HNN3VAFXY:3:21405:22082:10749   147   chr6  29794856 27 136M  =  29
 又称X染色体失活或里昂化，是指雌性哺乳类细胞中两条X染色体的其中之一失去活性的现象。
 X染色体会被包装成异染色质，进而因功能受抑制而沉默化。
 * `canonical transcript`： 经典转录本
-
+* `AD (Autosomal Dominant Inheritance)`: 常染色体显性遗传
+* `AR (Autosomal Recessive Inheritance)`: 常染色体隐性遗传
 
 ## 综合征
 
