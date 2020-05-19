@@ -11,6 +11,9 @@
 * [浏览器](#浏览器)
    * [chrome](#chrome)
       * [常见问题](#常见问题)
+* [CMD](#cmd)
+   * [配置windows的bashrc](#配置windows的bashrc)
+   * [常用命令](#常用命令)
 <!--te-->
 
 ----
@@ -167,3 +170,109 @@ ISNONTEXT(value)，ISNUMBER(value)，ISREF(value)，ISTEXT(value)
 ### 常见问题
 
 * [Google Chrome如何将网页保存为mhtml 单文件](https://www.cnblogs.com/hutuchong/articles/8555919.html) ，或者使用插件，如SingleFile
+
+
+----
+
+# CMD
+
+## 配置windows的bashrc
+
+1. 新建cmd-init.cmd文件
+
+```
+@echo off
+doskey ls=dir $*
+doskey pwd=chdir
+doskey rm=del $*
+doskey cat=type $*
+doskey touch=type nul ^> $*
+doskey python3=C:\Users\LUYL\Anaconda3\python.exe $*
+doskey ipython3=C:\Users\LUYL\Anaconda3\Scripts\ipython.exe $*
+doskey conda3=C:\Users\LUYL\Anaconda3\Scripts\conda.exe $*
+doskey pip3=C:\Users\LUYL\Anaconda3\Scripts\pip.exe $*
+doskey vim=D:\Software\Sublime_Text\subl.exe $*
+doskey ghmd=python D:\Learning\github\python_script\ghmd3.py $*
+```
+
+2. 通过注册表指定加载命令行时需要先加载cmd-init.cmd文件
+
+```
+reg add "HKLM\Software\Microsoft\Command Processor" /v "AutoRun" /t REG_SZ /d "C:\Users\luyl\cmd-init.cmd" /f
+```
+
+3. 重启CMD即可
+
+
+## 常用命令
+
+* `CLS`: 清除屏幕。
+* `TITLE`: 设置 CMD.EXE 会话的窗口标题
+* `PROMPT`: 更改 Windows 命令提示符。
+* `START`: 启动另一个窗口来运行指定的程序或命令。
+* `ECHO`: 显示消息，或将命令回显打开或关上。
+* `DOSKEY`: 编辑命令行、调用 Windows 命令并创建宏（重命名：doskey ls=dir）
+* `EXIT`: 退出 CMD.EXE 程序(命令解释程序)。
+* `HELP`: 提供 Windows 命令的帮助信息。
+* `PATH`: 显示或设置可执行文件的搜索路径。
+* `SET`: 显示、设置或删除 Windows 环境变量
+* `chcp 936`: 控制DOS显示中文
+* `chcp 437`: 控制DOS显示英文
+
+
+* `DATE`: 显示或设置日期。
+* `TIME`: 显示或设置系统时间。
+
+* `CD`: 显示当前目录的名称或将其更改。
+* `CHDIR`: 显示当前目录的名称或将其更改。
+* `ATTRIB`: 显示或更改文件属性。
+
+* `COPY`: 将至少一个文件复制到另一个位置
+* `XCOPY`: 复制文件和目录树。   
+* `DEL`: 删除至少一个文件。
+* `REN`: 重命名文件。
+* `RENAME`: 重命名文件。
+* `REPLACE`: 替换文件。
+* `TYPE`: 显示文本文件的内容。
+* `DIR`: 显示一个目录中的文件和子目录。
+* `MD`: 创建目录。
+* `MKDIR`: 创建目录。
+* `MOVE`: 将文件从一个目录移到另一个目录。
+* `RD`: 删除目录
+* `RMDIR`: 删除目录。
+* `TREE`: 以图形模式显示驱动器或路径的目录结构。（tree /f       tree/a）
+
+
+* `FIND`: 在文件中搜索文字字符串。
+* `FINDSTR`: 在文件中搜索字符串。
+
+* `COMP`: 比较两个或两套文件的内容。
+* `FC`: 比较两个或两套文件，并显示不同处。
+* `DISKCOMP`: 比较两个软盘的内容。
+* `DISKCOPY`: 将一个软盘的内容复制到另一个软盘。
+
+* `IF`: 执行批处理程序中的条件性处理。
+* `FOR`: 为一套文件中的每个文件运行一个指定的命令。
+* `GOTO`: 将 Windows 命令解释程序指向批处理程序中某个标明的行。
+* `PRINT`: 打印文本文件。
+
+
+* `calc`: 启动计算器
+* `explorer`: 打开资源管理器
+* `notepad`: 打开记事本
+* `nusrmgr.cpl`: 同control userpasswords，打开用户帐户控制面板
+
+我们可以使用 `type nul>a.txt，copy nul>a.txt` 三种方式创建空文件；
+
+用 `echo [file content]>a.txt` 创建非空文件
+
+使用`del a.txt` 删除文件
+
+
+
+1.在win的dos窗口下查看环境变量值 ，并设置对应环境变量。通过`echo %变量名%` 查看环境变量值，`set 变量名`查看环境变量名  或者`set 变量名=新值`   设置新值（当前窗口有效） 
+1）.查看path变量值: `echo %path%`
+2）.设置环境变量: `set abcd="aaaaaaa"`
+
+
+2.切换管理员权限: `runas /noprofile /user:Administrator cmd`   （如果管理员名字更改过，直接将Administrator改为新名字即可）
