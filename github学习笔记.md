@@ -242,6 +242,16 @@ git clone只能clone远程库的master分支，无法clone所有分支，解决�
 8. `git checkout dev`，切换回dev分支，并开始开发。
 
 
+另一种方法：
+
+```
+git branch -r | grep -v '\->' | while read remote; do git branch --track "${remote#origin/}" "$remote"; done
+git fetch --all
+git pull --all
+```
+
+
+
 ## git本地的撤销修改和删除操作
 
 [git本地的撤销修改和删除操作](https://www.cnblogs.com/qlqwjy/p/8378851.html)
