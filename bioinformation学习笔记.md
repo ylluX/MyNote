@@ -324,6 +324,20 @@ NS500832:569:HNN3VAFXY:3:21405:22082:10749   147   chr6  29794856 27 136M  =  29
 然后进行比对，所以比对得到的SAM和BAM文件中read1和read2有一条是被转了的。
 
 
+
+## mappability
+
+[ENCODE mappability and repeats](https://davetang.org/muse/2013/07/08/encode-mappability/)
+
+这里有两个概念：
+
+   * alignability: 可比对性，允许2个错配
+   * uniqueness： 唯一性，0个错配
+
+
+
+
+
 ----
 
 # 概念
@@ -2057,7 +2071,10 @@ def get_seq(self, fbuffer, start, end, offset, line, size):
 * 染色体条带坐标文件：http://hgdownload.cse.ucsc.edu/goldenpath/hg19/database/cytoBand.txt.gz
 * 转录本注释文件：    http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/refGene.txt.gz
 * 经典转录本：        http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/knownCanonical.txt.gz
-                      http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/kgXref.txt.gz(对应ID)
+                     http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/kgXref.txt.gz(对应ID)
+* mappability-Kmer: http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeMapability
+* RepeatMasker: http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/rmsk.txt.gz
+
 
 
 ----
@@ -2071,3 +2088,10 @@ def get_seq(self, fbuffer, start, end, offset, line, size):
 
 ## StackExchange-Bioinformatics
 * [How to obtain .bed file with coordinates of all genes](https://bioinformatics.stackexchange.com/questions/895/how-to-obtain-bed-file-with-coordinates-of-all-genes)
+
+
+----
+
+# 其他
+
+[2020年生物信息学领域前75名的博客和网站](https://blog.feedspot.com/bioinformatics_blogs/)

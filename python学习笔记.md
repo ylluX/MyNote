@@ -7977,7 +7977,113 @@ math.log(4,3)
 * `np.concatenate`: 连接数组
 * `np.vstack`: 垂直连接数组
 * `np.hstack`: 水平连接数组
+* `np.dstack`: 将数组摞起来
 * `np.c_[]`: 将向量按列合并
+
+```python
+# vstack和hstack是长度和宽度的问题，dstack是高度的问题
+
+a = np.array([[1,2],
+              [3,4]])
+b = np.array([[5,6],
+              [7,8]])
+c = np.dstack([a,b])
+print(c)
+'''
+[[[1 5]
+  [2 6]]
+ [[3 7]
+  [4 8]]]
+'''
+print(c[:,:,0])
+'''
+[[1 2]
+ [3 4]] 
+'''
+print(c[:,:,1])
+'''
+[[5 6]
+ [7 8]]
+'''
+```
+
+```python
+x, y = np.mgrid[-2:2:1, -2:2:1]
+z = np.dstack((x,y))
+print(x)
+'''
+array([[-2, -2, -2, -2],
+       [-1, -1, -1, -1],
+       [ 0,  0,  0,  0],
+       [ 1,  1,  1,  1]])
+'''
+print(y)
+'''
+array([[-2, -1,  0,  1],
+       [-2, -1,  0,  1],
+       [-2, -1,  0,  1],
+       [-2, -1,  0,  1]])
+'''
+print(z)
+'''
+array([[[-2, -2],
+        [-2, -1],
+        [-2,  0],
+        [-2,  1]],
+
+       [[-1, -2],
+        [-1, -1],
+        [-1,  0],
+        [-1,  1]],
+
+       [[ 0, -2],
+        [ 0, -1],
+        [ 0,  0],
+        [ 0,  1]],
+
+       [[ 1, -2],
+        [ 1, -1],
+        [ 1,  0],
+        [ 1,  1]]])
+'''
+```
+
+**最大值最小值调整**
+
+* `np.maximum`: X和Y逐位进行比较,选择最大值.
+* `np.minimum`: X和Y逐位进行比较,选择最小值.
+
+```python
+x = np.array([[1.0, 0.0],
+              [0.0, 1.0]])
+y = np.finfo(float).tiny   # 2.22507386e-308
+z = np.maximum(x, y)  # 将x中的各个元素与y比较，选择最大值放入z
+print(z)
+'''
+array([[1.00000000e+000, 2.22507386e-308],
+       [2.22507386e-308, 1.00000000e+000]])
+'''
+```
+
+**用于浮点错误处理的上下文管理器**
+
+* `np.errstate`
+
+```python
+x = np.arange(3)/0
+'''
+ipython:1: RuntimeWarning: divide by zero encountered in true_divide
+ipython:1: RuntimeWarning: invalid value encountered in true_divide
+'''
+
+with np.errstate(divide="ignore"):
+  x = np.arange(3)/0
+'''
+ipython:2: RuntimeWarning: invalid value encountered in true_divide
+'''
+
+with np.errstate(invalid="ignore"):
+```
 
 
 **调整轴顺序**
@@ -8042,6 +8148,7 @@ buffer 是字符串的时候，Python3 默认 str 是 Unicode 类型，所以要
 * `np.arange`:
 * `np.linspace`: 函数用于创建一个一维数组，数组是一个等差数列构成的
 * `np.logspace`: 函数用于创建一个于等比数列
+* `np.mgrid`: 生成多维结构(常见的如2D图形，3D图形), 用法：np.mgrid[0:5,0:5]
 
 
 **算数函数**
@@ -8176,6 +8283,9 @@ np.savetxt(outfile, x, delimiter="\t", header=title, comments="# ", fmt="%s")
 `np.packbits`, `np.unpackbits`: 将二进制值数组的元素打包成uint8数组中的位
 `np.nbytes`: 查看数组占用的总内存空间  (也可以用sys.getsizeof函数)
 `np.itemsize`: 查看数组中单个元素占用的内存空间
+`np.finfo`: 查看float类型的机器限制
+`np.iinfo`: 查看int类型的机器限制
+`np.info`: 查看函数、类、模块的帮助信息
 
 
 **参考**
@@ -9026,6 +9136,8 @@ rect = patches.Rectangle((1,0), width=1, height=1,
 **其它**
 
 `ax.axis("equal")` # 这个是将X轴和Y轴坐标设置为一样。
+`ax.tick_params(length=0)` # 隐藏ticks
+`ax.spines["right"].set_visible(False)`, `spines["top"].set_visible(False)` # 隐藏上边和右边的axis
 
 
 
@@ -9704,7 +9816,7 @@ MKL( Intel Math Kernel Library)是`英特尔`的`数学核心函数库`。
 
 ----
 
-# 7. 优秀框架
+# 7. 爬虫
 
 
 ## url去重策略
@@ -9764,11 +9876,7 @@ MKL( Intel Math Kernel Library)是`英特尔`的`数学核心函数库`。
 
 
 
-
-
-## 爬虫框架
-
-### pyspider
+## pyspider
 
 [pyspider源码](https://github.com/binux/pyspider)
 
@@ -9778,7 +9886,8 @@ MKL( Intel Math Kernel Library)是`英特尔`的`数学核心函数库`。
 
 []()
 
-### scrapy
+
+## scrapy
 
 **extract和extract_first**
 
@@ -9807,11 +9916,222 @@ class MySpider(CrawlSpider):
 ```
 
 
+## selenium
 
 
-## web服务
+**1. 基本用法**
 
-### Flask
+```python
+import time
+from selenium import webdriver
+
+# 设置chromedriver不加载图片
+chrome_option = webdriver.ChromeOptions()
+prefs = {"profile.managed_default_content_sttings.images":2}
+chrome_option.add_experimental_option("prefs",prefs)
+
+# 创建一个浏览器
+browser = webdriver.Chrome(executable_path="path/chromedriver.exe", chrome_options=chrome_option)
+# phantomjs, 无界面浏览器，多进程情况下性能验证下降
+browser = webdriver.Chrome(executable_path="path/phantomjs.exe")
+
+# 请求网址
+url = "https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html"
+browser.get(url)
+
+# 等待页面加载完成 (不然后续可能找不到元素)
+time.sleep(5)
+
+# 打印网址内容
+print(browser.page_source)
+
+# 查找元素 (速度慢)
+browser.find_element()
+browser.find_element_by_class_name()
+browser.find_element_by_css_selector()
+browser.find_element_by_id()
+browser.find_element_by_link_text()
+browser.find_element_by_name()
+browser.find_element_by_partial_link_text()
+browser.find_element_by_tag_name()
+browser.find_element_by_xpath()
+browser.find_elements()
+browser.find_element_by_class_name()
+# ...
+
+# 查找元素并进行操作
+browser.find_element_by_xpath("//input[name='username']").send_keys("myname") # 输入用户名
+browser.find_element_by_css_selector(".signin input[name='password']").send_keys("mypassword") # 输入密码
+browser.find_element_by_css_selector(".signin button").click() # 点击登录
+
+
+# 使用scrapy的Selector (速度快)
+from scrapy.selector import selector
+
+sel = Selector(text=browser.page_source)
+sel.css()
+sel.xpah()
+
+
+# 鼠标滚动 (执行javascript代码)
+for i in range(3):  # 下拉3次
+  browser.execute_script("""
+    window.scrollTo(0, document.body.scrollHeight);
+    var lenOfPage = document.body.scrollHeight;
+    return lenOfPage;
+    """)
+  time.sleep(3)
+
+
+# 关闭浏览器
+browser.quit()
+```
+
+
+**2. 将selenium集成到scrapy中**
+
+1. 写爬虫
+
+```python
+# spiders/jobbole.py
+
+import scrapy
+from selenium import webdriver
+from scrapy.xlib.pydispatch import dispatcher # 分发器
+from scrapy import signals  # 信号
+
+class JobboleSpider(scarpy.Spider):
+  name = "jobbole"
+  allowed_domains = ["blog.jobbole.com"]
+  start_urls = []
+
+  def __init__(self):
+    self.browser = webdriver.Chrome(executable_path="")
+    super(JobboleSpider, self).__init__()
+    # 信号链(爬出退出信号)
+    dispatcher.connect(self.spider_colsed, singals.spider_closed)
+  
+  def spider_closed(self, spider):
+    # 定义一个spider关闭时需要执行的函数
+    # 当爬虫退出时关闭browser
+    self.browser.quit()
+
+  def parse(self, response):
+    pass
+```
+
+
+1. 书写中间件
+
+```python
+# 在middlewares.py中设置一个中间件
+
+class JSPageMiddleware(object):
+  # 通过chrome请求动态网页
+
+  def process_request(self, request, spider):
+    # if spider.name == "jobbole":
+    if request.url == "http://jobbole.com":
+      spider.browser.get(request.url)
+      time.sleep(3)
+      # 将browser请求的数据传给HtmlResponse，这样scrapy的下载器就不会重复请求该网页
+      return HtmlResponse(url=browser.current_url, body=browser.page_source, encoding="utf-8")
+```
+
+2. 配置settings
+
+```python
+# 在settings.py中添加JSPageMiddleware中间件
+DOWNLOADER_MIDDLEWARES = {
+  "ArticleSpider.middlewares.JSPageMiddleware": 1,
+}
+```
+
+
+**3. 用selenium模拟知乎登录，然后将获得的cookies放入到scrapy中使用**
+
+```python
+
+import scrapy
+from selenium import webdriver
+
+class ZhihuSpider(scarpy.Spider):
+  name = "zhihu"
+  allowed_domains = ["www.zhihu.com"]
+  start_urls = ["https://www.zhihu.com/"]
+
+  headers = {
+    "HOST": "www.zhihu.com",
+    "Referer": "https://www.zhihu.com",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"
+  }
+
+  custom_settings = {
+    "COOKIES_ENABLED": True
+  }
+
+  def start_requests(self):
+    # 爬虫的植入口
+    return [scrapy.Request("https://www.zhihu.com/#signin", headers=self.headers, callback=self.login)]
+
+  def login(self, response):
+    import time
+    import pickle
+    from selenium import webdriver
+
+    browser = webdriver.Chrome(executable_path="path/chromedriver.exe")
+
+    browser.get("https://www.zhihu.com/signin")
+    browser.find_element_by_css_selector("input[name='username']").send_keys("xxx")
+    browser.find_element_by_css_selector("input[name='password']").send_keys("xxx")
+    browser.find_element_by_css_selector("button").click()
+    time.sleep(10)
+
+    cookies = browser.get_cookies()
+    cookie_dict = {}
+    # 写入文件，下次登录可以直接读取cookie
+    for cookie in cookies:
+      f = open("zhihu_cookies", "wb")
+      pickle.dump(cookie, f)
+      f.close()
+      cookie_dict[cookie['name']] = cookie['value']
+    browser.close()
+    return [scrapy.Request(url=self.start_urls[0], dont_filter=True, cookies=cookie_dict)]
+    # 需要特别注意：要在settings文件中将COOKIES_ENABLED置为True，
+    # 这样在首次Request中添加cookies后，后续Request都会默认添加该cookies
+
+  def parse(self, response):
+    pass
+
+```
+
+知乎已经做了selenium反爬机制，以上代码已失效。此时我们需要使用其他方法进行登录
+
+## mitmproxy
+
+[selenium爬虫被检测到 该如何破？](https://www.zhihu.com/question/50738719)
+
+mitmproxy 是一款工具，也可以说是 python 的一个包，在命令行操作的工具。
+
+MITM 即中间人攻击（Man-in-the-middle attack）
+
+1. 安装： `pip install mitmproxy`
+2. 设置本机代理： ip：127.0.0.1 port：8001(或其他)
+3. 启用mitmproxy: windows：`mitmdump -p 8001`; linux: `mitmproxy -p 8001`
+4. 安装证书： 浏览器访问`http://mitm.it/`, 安装
+5. 
+
+## 远程debugging的chrome浏览器
+
+
+
+
+
+----
+
+# web服务
+
+## Flask
 
 [从零开始搭建论坛（1）：Web服务器与Web框架](http://python.jobbole.com/85874/)
 
@@ -9841,7 +10161,7 @@ class MySpider(CrawlSpider):
 [创建和部署flask中有关migrate可能遇到的问题](http://blog.csdn.net/kkevinyang/article/details/52183768)
 
 
-### Django
+## Django
 
 文档：
 
@@ -9875,9 +10195,9 @@ Bootstrap美化：
 
 ----
 
-# 8. 第三方包安装教程
+# 9. 第三方包安装教程
 
-## 8.1 pypcap
+## 9.1 pypcap
 
 [github](https://github.com/pynetwork/pypcap)
 
@@ -9894,9 +10214,9 @@ pypcap 是 WinPcap 的python接口。安装前需要先安装WinPcap，但win10�
 
 
 
-# 9. 常见问题及解决方案
+# 10. 常见问题及解决方案
 
-## 9.1 numpy: ImportError: DLL load failed
+## 10.1 numpy: ImportError: DLL load failed
 
 解决方案：
 
