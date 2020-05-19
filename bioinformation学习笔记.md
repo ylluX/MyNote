@@ -72,6 +72,18 @@
 # 常见问题
 
 
+## PhD;MD;MSc;MPhil;BSc
+
+* MD: 医学博士 (Medicinae Doctor)
+* PhD: 学术研究型博士学位 (Philosophic Doctor)
+* MSc: 理学硕士 (Master of Science)
+* MPhil: 理学硕士 master
+* BSc: 理学学士
+
+Mphil的毕业论文要求要比 MA/MSC的要求高
+
+
+
 ## gtf和gff中，exon, UTR, 和CDS区别？
 
 * [彻底搞清楚promoter, exon, intron, and UTR](http://www.xybiotech.com/resources/support/667.html)
@@ -1924,7 +1936,39 @@ Hisat2和bowtie2比对后产生的Alignment summary的格式是一样的，如�
 * [学IGV必看的初级教程](https://tiramisutes.github.io/2018/02/05/IGV.html)
 
 
+## Kraken2
 
+1. 安装：
+
+```
+# https://github.com/bioconda/bioconda-recipes/issues/15202
+conda create -c bioconda -c conda-forge -n kraken2 kraken2=2.0.8_beta bracken=2.2
+```
+
+2. 下载比对数据库
+
+```
+wget https://www.ccb.jhu.edu/software/kraken2/dl/minikraken2_v2_8GB.tgz
+# 或：
+# wget -c -b ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz
+tar zxvf minikraken2_v2_8GB.tgz -C $HOME/dbs/minikraken2
+```
+
+3. 使用
+
+# [Pathogen NGS 数据分析入门](https://indexofire.github.io/pathongs/C12_Metagenomics-Analysis/01_kraken/)
+
+使用kraken2需要用--db指向其数据库，比如微生物鉴定常用minikraken2数据库。
+用--report参数生成结果报告。
+
+```
+$ conda activate kraken2
+(kraken)$ kraken2 --use-names --threads 4 --db $HOME/dbs/minikraken2 --report report.txt assembly.fna > result.kraken
+(kraken)$ kraken2 --use-names --threads 4 --db $HOME/dbs/minikraken2 --report report2.txt --fastq-input --paired S1_R1.fq.gz S1_R2.fq.gz > result2.kraken
+(kraken)$ wget https://ccb.jhu.edu/software/bracken/dl/minikraken2_v2/database200mers.kmer_distrib
+(kraken)$ mv database200mers.kmer_distrib $HOME/dbs/minikraken2
+(kraken)$ bracken -d $HOME/dbs/minikraken2 -i kraken2.report -o bracken.species.txt -l S
+```
 
 ----
 
@@ -2061,6 +2105,7 @@ def get_seq(self, fbuffer, start, end, offset, line, size):
 * 转录本注释文件：    http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/refGene.txt.gz
 * 经典转录本：        http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/knownCanonical.txt.gz
                       http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/kgXref.txt.gz(对应ID)
+* repeats-RepeatMasker:  http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/rmsk.txt.gz  [【深入UCSC Genome Browser】repeats-RepeatMasker](https://blog.csdn.net/tanzuozhev/article/details/80958785)
 
 
 ----
@@ -2074,3 +2119,46 @@ def get_seq(self, fbuffer, start, end, offset, line, size):
 
 ## StackExchange-Bioinformatics
 * [How to obtain .bed file with coordinates of all genes](https://bioinformatics.stackexchange.com/questions/895/how-to-obtain-bed-file-with-coordinates-of-all-genes)
+
+----
+
+# 比较酷的事情
+
+## 不同k值下基因组间的k-mer相似度近似于物种分类间的相似度
+
+ the authors show that k-mer similarity between genomes at different k approximates 
+ various degrees of taxonomic similarity. Roughly, high similarity at k=21 defines 
+ genus-level similarity, k=31 defines species-level, and k=51 defines strain-level. 
+ (This is an ad-lib from what is much more precisely and carefully stated within the paper.) 
+ This relationship is something that we already sorta knew from Kraken and similar k-mer-based 
+ taxonomic efforts, but the MetaPalette paper was the first paper I remember reading 
+ where the specifics really stuck to me.
+
+ [A post about k-mers - this time for taxonomy!](http://ivory.idyll.org/blog/2017-something-about-kmers.html)
+
+
+## DUP/DEL的发生机制
+
+* [基因组拷贝数变异及其突变机理与人类疾病](http://m-learning.zju.edu.cn/G2S/eWebEditor/uploadfile/20140917085256342.pdf)
+
+人类基因组上大量的 CNV 是如何产生的？其中一类已知的机制是 DNA 重组, 包括**非等位同源重
+组(Nonallelic homologous recombination, NAHR)**和**非同源末端连接(Nonhomologous end-joining, 
+NHEJ)**等。最近, 一种新的基于 DNA 错误复制的机制被发现, 即“复制叉停滞与模板交换”(Fork 
+stalling and template switching, FoSTeS)模型。此种机制可以解释那些不符合 NAHR、NHEJ 
+等突变机制的具有复杂结构的 CNV.
+
+前人类基因组序列其实只包括了绝大部分常染色质区域, 而且有很多空隙(Gap)。常染色质区域的空隙
+中大约有 54%在其附近有片段重复序列(Segmental duplication, SD; 长度大于 1 kb), 它们更倾向于
+产生 CNV。而反过来, CNV 也可能是造成难以填补序列空隙的因素之一。即使是在有参考序列的基因组
+区域, 我们将来也可能发现更多的新 CNV。基因组结构比较复杂的区域含有较多的 SD 序列, 这为 CNV 
+的产生提供了结构基础。
+
+NAHR 是由两条同源的、但在基因组不同位置重复出现的、高度相似性的 DNA 序列配对并发生序列交换
+造成的。相同染色体上的同向重复序列间的 NAHR 会导致重复或缺失, 反向重复序列间的NAHR 会导致
+倒位。不同染色体上的重复序列间的 NAHR 可能会造成染色体易位.
+
+其中涉及到的专业数据：
+
+* [非等位同源重组](https://en.wikipedia.org/wiki/Non-allelic_homologous_recombination)
+* [非同源末端连接](https://en.wikipedia.org/wiki/Non-homologous_end_joining)
+* [片段重复序列](https://en.wikipedia.org/wiki/Low_copy_repeats)
