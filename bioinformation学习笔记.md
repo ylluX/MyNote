@@ -4,6 +4,7 @@
 <!--ts-->
 * [目录](#目录)
 * [常见问题](#常见问题)
+   * [PhD;MD;MSc;MPhil;BSc](#phdmdmscmphilbsc)
    * [gtf和gff中，exon, UTR, 和CDS区别？](#gtf和gff中exon-utr-和cds区别)
    * [序列比对时，E值是什么？为什么E值越小越好？](#序列比对时e值是什么为什么e值越小越好)
    * [GC偏好](#gc偏好)
@@ -16,6 +17,7 @@
    * [芯片(microArray)和panel区别](#芯片microarray和panel区别)
    * [怎么获取unique mapping read？](#怎么获取unique-mapping-read)
    * [双端测序中read1和read2的关系](#双端测序中read1和read2的关系)
+   * [mappability](#mappability)
 * [概念](#概念)
    * [专业名词](#专业名词)
    * [综合征](#综合征)
@@ -31,6 +33,8 @@
    * [XO核型](#xo核型)
    * [染色体](#染色体)
    * [剂量敏感基因(Dosage Sensitivity Gene)](#剂量敏感基因dosage-sensitivity-gene)
+   * [正义链(sense strand)和反义链(antisense strand)](#正义链sense-strand和反义链antisense-strand)
+   * [冈崎片段(Okazaki fragment)](#冈崎片段okazaki-fragment)
    * [基因组变异检测](#基因组变异检测)
       * [基本概念](#基本概念)
       * [检测流程](#检测流程)
@@ -58,6 +62,8 @@
          * [实例](#实例)
    * [BWA & Bowtie2](#bwa--bowtie2)
    * [IGV](#igv)
+   * [Kraken2](#kraken2)
+* [Pathogen NGS 数据分析入门](#pathogen-ngs-数据分析入门)
 * [文件格式](#文件格式)
    * [.fai (索引文件)](#fai-索引文件)
    * [sam](#sam)
@@ -65,6 +71,10 @@
 * [下载](#下载)
    * [BioStars](#biostars)
    * [StackExchange-Bioinformatics](#stackexchange-bioinformatics)
+* [其他](#其他)
+* [比较酷的事情](#比较酷的事情)
+   * [不同k值下基因组间的k-mer相似度近似于物种分类间的相似度](#不同k值下基因组间的k-mer相似度近似于物种分类间的相似度)
+   * [DUP/DEL的发生机制](#dupdel的发生机制)
 <!--te-->
 
 ----
@@ -574,6 +584,9 @@ UPD是卵子或精子形成期间发生的随机事件，或者是在早期胎�
 由UPD或染色体15的长臂上的基因的印记中的其他错误引起。其它病症, 例如Beckwith-Wiedemann综合征
 （以加速生长和癌性肿瘤的风险增加为特征的病症）与染色体11短臂上印迹基因的异常相关。
 
+单亲二体可分为单亲同二体(isodisomy, 来自同一亲体的同一染色体)和单亲异二体(heterodisomy, 
+分别来自同一亲体的两条同源染色体)
+
 
 ## 印记基因
 
@@ -903,6 +916,26 @@ pLI分值是一个给定基因归类到Haploinsufficient 类别中的概率，�
 也就是纯合缺失也不会引起表型变化】
 
 
+## 正义链(sense strand)和反义链(antisense strand)
+
+与mRNA核苷酸序列相同的那条链(U代替T),称编码链或正义链
+
+DNA双链分子中只有一条链通过碱基互补原则转录为一条mRNA链,指导合成RNA的那条链称模板链或反义链或转录链.
+
+
+
+## 冈崎片段(Okazaki fragment)
+
+冈崎片段（英语：Okazaki fragment）是DNA复制过程中，一段属于不连续合成的延迟股，
+即相对来说长度较短的DNA片段。
+
+冈崎片段之所以存在是因为DNA聚合酶无法在模板DNA的5'端往3'端的方向上合成DNA，
+因此只能反向合成在模板DNA上产生了许多以3'到5'方向合成的冈崎片段（复制的片
+段与模板DNA方向相反，故依旧是5'往3'），再由DNA黏合酶将其黏合。在前导链
+（领先股）上DNA的合成是连续的，在后滞链（延迟股）上则是不连续的。
+
+
+
 
 ## 基因组变异检测
 
@@ -1062,7 +1095,6 @@ snpEff dump ebola_zaire | less
 snpEff ebola_zaire ${SRR}_freebayes.vcf > ${SRR}_annotated.vcf
 # 最终会生成注释后的VCF文件以及变异位点的描述性报告。
 ```
-
 
 ----
 
@@ -2087,12 +2119,67 @@ def get_seq(self, fbuffer, start, end, offset, line, size):
 * `YS:i:<N>` Alignment score for opposite mate in the paired-end alignment. 当该read是双末端测序中的另一条时出现
 * `XN:i:<N>` Thenumber of ambiguous bases in the reference covering this alignment.（推测是指不知道错配发生在哪个位置，推测是针对于插入和缺失，待查证）
 * `XM:i:<N>` 错配碱基的数目
-* `XO:i:<N>` Thenumberof gap opens(针对于比对中的插入和缺失)
-* `XG:i:<N>` Thenumberof gap extensions(针对于比对中的插入和缺失延伸数目)
-* `NM:i:<N>` Theeditdistance。（edits:插入/缺失/替换数目)
+* `XO:i:<N>` The number of gap opens(针对于比对中的插入和缺失)
+* `XG:i:<N>` The number of gap extensions(针对于比对中的插入和缺失延伸数目)
+* `NM:i:<N>` The edit distance。（edits:插入/缺失/替换数目)
 * `YF:Z:<S>` 该reads被过滤掉的原因。可能为LN(错配数太多，待查证)、NS(read中包含N或者．)、SC(match bonus低于设定的阈值)、QC(failing quality control，待证)
 * `YT:Z:<S>` 值为UU表示不是pair中一部分、CP是pair且可以完美匹配、DP是pair但不能很好的匹配、UP是pair但是无法比对到参考序列上。
 * `MD:Z:<S>` 比对上的错配碱基的字符串表示。
+
+
+**1. Edit Distance编辑距离（NM tag）**
+
+[参考](https://www.cnblogs.com/leezx/p/5978014.html)
+
+今天要介绍的是如何通过bam文件统计比对的indel和mismatch信息
+
+首先要介绍一个非常重要的概念--编辑距离
+
+定义：从字符串a变到字符串b，所需要的最少的操作步骤（插入，删除，更改）为两个字符串之间的编辑距离。
+
+（2016年11月17日：增加，有点误导，如果一个插入有两个字符，那编辑距离变了几呢？1还是2？我又验证了一遍：确实是2）
+
+这也是sam文档中对NM这个tag的定义。
+
+
+
+编辑距离是对两个字符串相似度的度量（参见文章：Edit Distance）
+
+举个栗子：两个字符串“eeba”和“abca”的编辑距离是多少？
+
+根据定义，通过三个步骤：1.将e变为a 2.删除e 3.添加c，我们可以将“eeba”变为“abca”
+
+```
+e e b   a
+a   b c a
+```
+所以，“eeba”和“abca”之间的编辑距离为3
+
+
+
+回到序列比对的问题上
+
+下面是常见的二代比对到ref的结果（bwa）：
+
+```
+D00360:96:H2YLYBCXX:1:2110:18364:84053    353    seq1_len154_cov5    1    1    92S59M8I17M1D6M1D67M    seq30532_len2134_cov76    1    0    AAAAAAAAAAAAAAAAAAAAAAAACCCTGTCTCTAATAAAATACAAACAATTAGCCGGGCATGGTGGCACGCGCCTTTAGTCCCAGCTACTAGGGAGGCTGAGGCAGGGGAATTGTTTGAACCCGGGAGGTGGAGGTTGCAGTGAGCGGAGTTTTTTTCACTGCACTCCAGCCTGGTGACAAATCAAAAATCCATTTCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAACAACAAA  DDDDDHIIIIIIII<EHHII?EHH0001111111<11<DEH1D1<FH1D<<<C<@GEHD</<11<101<1D<<C<E0D11<<1<D?1F1CC1DE110C0D1011100////0DD<1=@1=FGHCDHH<FG<D0<<<EF?CE<00<<0<D//0;<:D/////;///////;8F.;/.8.8......88.9........-8BBGADHIIHD?>D?HH<,>=HHDD,5CHDCDHD><,,,--8----8-8--    NM:i:25    MD:Z:16A21C16C0A3T15^A6^G1G0T0G3C2T0G1C41A4A2A3    AS:i:49    XS:i:42    SA:Z:seq13646_len513_cov63,125,-,103S125M21S,1,11;    RG:Z:chr22
+```
+
+cigar字段包含了序列比对的简化信息，** M（匹配比对，包含match和mismatch），=（纯match），
+X（纯mismatch），I（插入），D（删除），还有N、P和S、H。（注：目前只在blasr比对结果中见过=和X）**
+
+根据cigar字段可以统计indel信息，但是无法统计mismatch。
+
+这个时候就可以用到`NM tag`了，mismatch = NM – I - D = 25 – 8 – 1 – 1 = 15
+
+
+**2. CIGAR字段中H和S区别**
+
+[Difference between Hard Clip（H） and Soft Clip（S） in Samtools CIGAR string](https://www.cnblogs.com/leezx/p/6105646.html)
+
+
+
+
 
 
 ----
@@ -2190,4 +2277,3 @@ NAHR 是由两条同源的、但在基因组不同位置重复出现的、高度
 * [非等位同源重组](https://en.wikipedia.org/wiki/Non-allelic_homologous_recombination)
 * [非同源末端连接](https://en.wikipedia.org/wiki/Non-homologous_end_joining)
 * [片段重复序列](https://en.wikipedia.org/wiki/Low_copy_repeats)
-
