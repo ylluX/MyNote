@@ -2002,7 +2002,7 @@ tar zxvf minikraken2_v2_8GB.tgz -C $HOME/dbs/minikraken2
 
 3. 使用
 
-# [Pathogen NGS 数据分析入门](https://indexofire.github.io/pathongs/C12_Metagenomics-Analysis/01_kraken/)
+[Pathogen NGS 数据分析入门](https://indexofire.github.io/pathongs/C12_Metagenomics-Analysis/01_kraken/)
 
 使用kraken2需要用--db指向其数据库，比如微生物鉴定常用minikraken2数据库。
 用--report参数生成结果报告。
