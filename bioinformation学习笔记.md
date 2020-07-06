@@ -18,6 +18,7 @@
    * [怎么获取unique mapping read？](#怎么获取unique-mapping-read)
    * [双端测序中read1和read2的关系](#双端测序中read1和read2的关系)
    * [mappability](#mappability)
+   * [BWA输出的sam文件中可选字段(tag)的含义](#bwa输出的sam文件中可选字段tag的含义)
 * [概念](#概念)
    * [专业名词](#专业名词)
    * [综合征](#综合征)
@@ -63,7 +64,6 @@
    * [BWA & Bowtie2](#bwa--bowtie2)
    * [IGV](#igv)
    * [Kraken2](#kraken2)
-* [Pathogen NGS 数据分析入门](#pathogen-ngs-数据分析入门)
 * [文件格式](#文件格式)
    * [.fai (索引文件)](#fai-索引文件)
    * [sam](#sam)
@@ -360,6 +360,35 @@ NS500832:569:HNN3VAFXY:3:21405:22082:10749   147   chr6  29794856 27 136M  =  29
 
 
 
+## BWA输出的sam文件中可选字段(tag)的含义
+
+* `XT:A:?`: 代表mapping类型，数值类型为A(可打印字符), 其值可以是Unique/Repeat/N/Mate-sw，`XT:A:U`就代表这一条是unique read
+* `X0:i:?`: Number of best hits(最优匹配的数目)
+* `X1:i:?`: Number of suboptimal hits found by BWA(次优匹配的数目)
+* `XN:i:?`: Number of ambiguous bases in the referenece(参考基因组中模糊碱基(N)的数目)
+* `XM:i:?`: Number of mismatches in the alignment(错配的碱基数) 
+* `XO:i:?`: Number of gap opens(gap的数目)
+* `XG:i:?`: Number of gap extentions(gap延申的碱基数目)
+* `XA:Z:?`: Alternative hits; format: (chr,pos,CIGAR,NM;)*, 其他最优匹配，如`XA:Z:chr7,+48079409,36M,0;`
+* `AS:i:?`: Alignment score(该匹配的得分)
+* `XS:i:?`: Suboptimal alignment score(次优匹配的得分)
+* `YS:i:?`: mate序列匹配的得分
+* `XF:`: Support from forward/reverse alignment
+* `XE:`: Number of supporting seeds
+* `NM:i:?`: Edit distance(编辑距离)
+* `MD:Z:?`: Mismatching positions/bases(不匹配的位置和碱基);代表序列和参考序列错配的字符串（字符指的是参考序列的碱基，不是read的碱基，如`MD:Z:29G6`代表参考基因组该位点的碱基为G）
+* `YT:Z:?`: UU表示不是pair中一部分、CP是pair且可以完美匹配、DP是pair但不能很好的匹配、UP是pair但是无法比对到参考序列上
+* `BC:`: Barcode sequence
+
+下面通过一些例子说明：
+
+**`XT:A:U  NM:i:1  X0:i:1  X1:i:78 XM:i:1  XO:i:0  XG:i:0  MD:Z:12G23`**:
+只有1个最优匹配，有78个次优匹配，最优匹配中没有gap，有1个错配(基因组上第13个碱基是G)，编辑距离为1. 是unique read。
+`CIAGR`字段为"36M"(注意：CIAGR中M可是mismatch)
+
+**`XT:A:U  NM:i:2  X0:i:1  X1:i:0  XM:i:1  XO:i:1  XG:i:1  MD:Z:1G33`**:
+只有1个最优匹配，有1个错配，1个gap(gap的碱基数为1)，编辑距离为2。
+`CIAGR`字段为"10M1I25M"
 
 
 ----
@@ -1974,6 +2003,11 @@ Hisat2和bowtie2比对后产生的Alignment summary的格式是一样的，如�
 
 对剩余reads（既不能concordantly，也不能discordantly 1 time）的单端模式的比对
 
+
+**[bwa aln常见参数](https://blog.csdn.net/Doris_xixi/article/details/80842353?utm_source=blogxgwz9)**
+
+* `-n`: 允许最大错配数(mismatch + gap)
+* `-o`: 允许的gap数
 
 
 
