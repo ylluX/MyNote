@@ -373,12 +373,12 @@ NS500832:569:HNN3VAFXY:3:21405:22082:10749   147   chr6  29794856 27 136M  =  29
 * `AS:i:?`: Alignment score(该匹配的得分)
 * `XS:i:?`: Suboptimal alignment score(次优匹配的得分)
 * `YS:i:?`: mate序列匹配的得分
-* `XF:`: Support from forward/reverse alignment
-* `XE:`: Number of supporting seeds
+* `XF:?:?`: Support from forward/reverse alignment
+* `XE:?:?`: Number of supporting seeds
 * `NM:i:?`: Edit distance(编辑距离)
 * `MD:Z:?`: Mismatching positions/bases(不匹配的位置和碱基);代表序列和参考序列错配的字符串（字符指的是参考序列的碱基，不是read的碱基，如`MD:Z:29G6`代表参考基因组该位点的碱基为G）
 * `YT:Z:?`: UU表示不是pair中一部分、CP是pair且可以完美匹配、DP是pair但不能很好的匹配、UP是pair但是无法比对到参考序列上
-* `BC:`: Barcode sequence
+* `BC:?:?`: Barcode sequence
 
 下面通过一些例子说明：
 
@@ -389,6 +389,8 @@ NS500832:569:HNN3VAFXY:3:21405:22082:10749   147   chr6  29794856 27 136M  =  29
 **`XT:A:U  NM:i:2  X0:i:1  X1:i:0  XM:i:1  XO:i:1  XG:i:1  MD:Z:1G33`**:
 只有1个最优匹配，有1个错配，1个gap(gap的碱基数为1)，编辑距离为2。
 `CIAGR`字段为"10M1I25M"
+
+获得完全匹配(perfect match)的reads: `NM:i:0 XM:i:0 X0:i:1`
 
 
 ----
