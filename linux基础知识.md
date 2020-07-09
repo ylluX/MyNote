@@ -195,6 +195,19 @@ echo "${a%XX*}"    # abcXXdefXXghiXXlmn
 
 
 ----
+# awk
+
+[Linux三剑客之awk命令](https://www.cnblogs.com/ginvip/p/6352157.html)
+
+1. 对test.txt文件中的第三行求和
+
+```sh
+awk 'BEGIN{SUM=0}{SUM+=$3}END{print SUM}'
+```
+
+
+
+----
 
 # zsh
 
