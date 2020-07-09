@@ -3208,9 +3208,11 @@ https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c
 多进程
 
 要让Python程序实现多进程（multiprocessing），我们先了解操作系统的相关知识。
-Unix/Linux操作系统提供了一个`fork()`系统调用，它非常特殊。普通的函数调用，调用一次，返回一次，但是`fork()`调用一次，返回两次，因为操作系统自动把当前进程（称为父进程）复制了一份（称为子进程），然后，分别在父进程和子进程内返回。
+Unix/Linux操作系统提供了一个`fork()`系统调用，它非常特殊。普通的函数调用，调用一次，返回一次，但是`fork()`调用一次，返回两次，
+因为操作系统自动把当前进程（称为父进程）复制了一份（称为子进程），然后，分别在父进程和子进程内返回。
 
-子进程永远返回0，而父进程返回子进程的ID。这样做的理由是，一个父进程可以fork出很多子进程，所以，父进程要记下每个子进程的ID，而子进程只需要调用getppid()就可以拿到父进程的ID。
+子进程永远返回0，而父进程返回子进程的ID。这样做的理由是，一个父进程可以fork出很多子进程，所以，父进程要记下每个子进程的ID，
+而子进程只需要调用getppid()就可以拿到父进程的ID。
 
 Python的os模块封装了常见的系统调用，其中就包括`fork`，可以在Python程序中轻松创建子进程：
 
@@ -3233,9 +3235,11 @@ I (876) just created a child process (877).
 I am child process (877) and my parent is 876.
 ```
 
-由于Windows没有`fork`调用，上面的代码在Windows上无法运行。由于Mac系统是基于BSD（Unix的一种）内核，所以，在Mac下运行是没有问题的，推荐大家用Mac学Python！
+由于Windows没有`fork`调用，上面的代码在Windows上无法运行。由于Mac系统是基于BSD（Unix的一种）内核，所以，在Mac下运行是没有问题的，
+推荐大家用Mac学Python！
 
-有了`fork`调用，一个进程在接到新任务时就可以复制出一个子进程来处理新任务，常见的Apache服务器就是由父进程监听端口，每当有新的http请求时，就fork出子进程来处理新的http请求。
+有了`fork`调用，一个进程在接到新任务时就可以复制出一个子进程来处理新任务，常见的Apache服务器就是由父进程监听端口，每当有新的http请求时，
+就fork出子进程来处理新的http请求。
 
 **multiprocessing**
 
@@ -3326,7 +3330,8 @@ All subprocesses done.
 
 对`Pool`对象调用`join()`方法会等待所有子进程执行完毕，调用`join()`之前必须先调用`close()`，调用`close()`之后就不能继续添加新的`Process`了。
 
-请注意输出的结果，task 0，1，2，3是立刻执行的，而task 4要等待前面某个task完成后才执行，这是因为Pool的默认大小在我的电脑上是4，因此，最多同时执行4个进程。这是Pool有意设计的限制，并不是操作系统的限制。如果改成：
+请注意输出的结果，task 0，1，2，3是立刻执行的，而task 4要等待前面某个task完成后才执行，这是因为Pool的默认大小在我的电脑上是4，因此，
+最多同时执行4个进程。这是Pool有意设计的限制，并不是操作系统的限制。如果改成：
 
 p = Pool(5) 
 就可以同时跑5个进程。
@@ -3453,7 +3458,9 @@ Get B from queue.
 Put C to queue...
 Get C from queue.
 ```
-在Unix/Linux下，`multiprocessing`模块封装了`fork()`调用，使我们不需要关注`fork()`的细节。由于Windows没有`fork`调用，因此，`multiprocessing`需要“模拟”出`fork`的效果，父进程所有Python对象都必须通过`pickle`序列化再传到子进程去，所有，如果`multiprocessing`在Windows下调用失败了，要先考虑是不是`pickle`失败了。
+在Unix/Linux下，`multiprocessing`模块封装了`fork()`调用，使我们不需要关注`fork()`的细节。由于Windows没有`fork`调用，因此，
+`multiprocessing`需要“模拟”出`fork`的效果，父进程所有Python对象都必须通过`pickle`序列化再传到子进程去，所有，如果
+`multiprocessing`在Windows下调用失败了，要先考虑是不是`pickle`失败了。
 
 **小结**
 
@@ -3462,6 +3469,7 @@ Get C from queue.
 要实现跨平台的多进程，可以使用`multiprocessing`模块。
 
 进程间通信是通过`Queue`、`Pipes`等实现的。
+
 
 
 **捕捉异常**
@@ -3636,6 +3644,21 @@ END
 2. 通过消息，通知主进程关闭所有子进程后再退出。[multiprocessing.Process 产生的子进程如何正常退出？](http://bbs.chinaunix.net/thread-4133313-1-1.html)
 
 
+
+**常见错误知识点**
+
+* `multiprocessing.Lock()`创建的锁不能在多进程间传递，需要使用`multiprocessing.Manager().Lock()`
+来创建。`multiprocessing.Manager()`可创建字典，也可创建list，lock，它创建的变量可用于多进程间传递才不会出错。
+* `file-lick object`也不能在多进程间传递，必须在子进程中打开文件。如下面代码错误：
+```python
+of = open("outfile.txt", "w")
+p = Pool(5)
+for i in range(10):
+    p.apply_async(test, args=(i, of))  # 错误，不能传递of
+p.close()
+p.join()
+of.close()
+```
 
 
 
