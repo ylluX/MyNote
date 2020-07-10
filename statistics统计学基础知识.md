@@ -738,7 +738,7 @@ Z检验是一般用于大样本(即样本容量大于30)平均值差异性检验
 
 1. 如果检验一个样本平均数（X）与一个已知的总体平均数(μ0)的差异是否显著。其Z值计算公式为：
 
-   ![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X}-\\mu_{0}}{\\sigma/\\sqrt{n}})
+![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X}-\\mu_{0}}{\\sigma/\\sqrt{n}})
 
    其中：X是检验样本的均值；μ0是已知总体的平均数；S是总体的标准差；n是样本容量。
 
