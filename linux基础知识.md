@@ -18,6 +18,7 @@
    * [软连接的删除](#软连接的删除)
 * [VIM](#vim)
    * [基础操作](#基础操作)
+* [awk](#awk)
 * [zsh](#zsh)
 * [QSUB](#qsub)
 <!--te-->
@@ -200,7 +201,6 @@ echo "${a%XX*}"    # abcXXdefXXghiXXlmn
 [Linux三剑客之awk命令](https://www.cnblogs.com/ginvip/p/6352157.html)
 
 1. 对test.txt文件中的第三行求和
-
 ```sh
 awk 'BEGIN{SUM=0}{SUM+=$3}END{print SUM}'
 ```

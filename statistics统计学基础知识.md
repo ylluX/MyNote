@@ -22,9 +22,12 @@
    * [4. beta分布](#4-beta分布)
    * [一句话说分布](#一句话说分布)
 * [4. 统计检验](#4-统计检验)
-   * [1. 卡方检验](#1-卡方检验)
-   * [2. 多变量逻辑回归分析](#2-多变量逻辑回归分析)
-   * [3. 参数检验和非参数检验](#3-参数检验和非参数检验)
+   * [假设检验的4中方法](#假设检验的4中方法)
+   * [U检验(Z检验)](#u检验z检验)
+   * [T检验](#t检验)
+   * [卡方检验](#卡方检验)
+   * [多变量逻辑回归分析](#多变量逻辑回归分析)
+   * [参数检验和非参数检验](#参数检验和非参数检验)
 * [5. 回归](#5-回归)
    * [1. 线性回归](#1-线性回归)
 * [6. 各种定理](#6-各种定理)
@@ -706,7 +709,76 @@ r:失败的次数，k:成功的次数，p:成功的概率
 
 # 4. 统计检验
 
-## 1. 卡方检验
+
+## 假设检验的4中方法
+
+[假设检验-U检验、T检验、卡方检验、F检验](https://blog.csdn.net/qq_22592457/article/details/92982170)
+
+1. 有关平均值参数u的假设检验
+
+   根据是否已知方差,分为两类检验：U检验(Z检验)和T检验。
+
+   如果**已知方差**，则使用U检验，如果**方差未知**则采取T检验。
+
+2. 有关参数方差σ2的假设检验
+
+   F检验是对两个正态分布的方差齐性检验，简单来说，就是检验两个分布的方差是否相等
+
+3. 检验两个或多个变量之间是否关联
+
+   卡方检验属于非参数检验，主要是比较两个及两个以上样本率（构成比）以及两个分类变量的关联性分
+   析。根本思想在于比较理论频数和实际频数的吻合程度或者拟合优度问题
+
+
+
+## U检验(Z检验)
+
+Z检验是一般用于大样本(即样本容量大于30)平均值差异性检验的方法（总体的方差已知）。
+它是用标准正态分布的理论来推断差异发生的概率，从而比较两个平均数的差异是否显著。
+
+1. 如果检验一个样本平均数（X）与一个已知的总体平均数(μ0)的差异是否显著。其Z值计算公式为：
+
+   ![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X}-\\mu_{0}}{\\sigma/\\sqrt{n}})
+
+   其中：X是检验样本的均值；μ0是已知总体的平均数；S是总体的标准差；n是样本容量。
+
+2. 如果检验来自两个的两组样本平均数的差异性，从而判断它们各自代表的总体的差异是否显著。
+其Z值计算公式为：
+
+   ![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X_{1}}-\\bar{X_{2}}}{\\sqrt{\\sigma_{1}/n_{1}+\\sigma_{2}/n_{2}}})
+
+
+**注意Z值和Z检验公式的区别**
+
+Z值计算公式：![](http://latex.codecogs.com/gif.latex?Z=\\frac{x-\\mu}{\\sigma})
+
+Z检验公式：![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{x}-\\mu}{\\sigma/\\sqrt{n}})
+
+Z检验公式中，用样本平均值代替了x，用标准误代替了标准差sigma.
+
+
+
+## T检验
+
+亦称student t检验（Student's t test），主要用于样本含量较小（例如n<30），
+总体标准差σ未知的正态分布。目的是用来比较样本均数所代表的未知总体均数μ和已知总体均数μ0。
+
+T统计量计算公式：
+
+   ![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X}-\\mu_{0}}{S_{\\bar{X}}}=\\frac{\\bar{X}-\\mu_{0}}{s/\\sqrt{n}})
+   
+   自由度df=n-1
+
+1. 如果要评断一个总体中的小样本平均数与总体平均值之间的差异程度，其统计量T值的计算公式为：
+
+   ![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X}-\\mu_{0}}{S_{\\bar{X}}}=\\frac{\\bar{X}-\\mu_{0}}{S/\\sqrt{n-1}})
+
+2. 如果要评断两组样本平均数之间的差异程度，其统计量T值的计算公式为：
+
+   ![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X_{1}}-\\bar{X_{2}}}{\\sqrt{\\frac{\\sum&space;x_{1}^{2}+\\sum&space;x_{2}^{2}}{n_{1}+n_{2}-2}}\\times&space;\\frac{n_{1}+n_{2}}{n_{1}\\times&space;n_{2}}})
+
+
+## 卡方检验
 
 * [MBAlib智库百科](https://wiki.mbalib.com/wiki/%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C)
 * [Wikipedia](https://zh.wikipedia.org/wiki/%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C)
@@ -723,7 +795,7 @@ r:失败的次数，k:成功的次数，p:成功的概率
 利用样本数据以检验总体分布是否为某一特定分布的统计方法。
 
 
-## 2. 多变量逻辑回归分析
+## 多变量逻辑回归分析
 
 * **[如何理解回归模型中的"调整"和"独立作用"](https://www.mediecogroup.com/method_topic_article_detail/157/)**
 * **[Python实现逻辑回归(Logistic Regression in Python)](https://blog.csdn.net/zj360202/article/details/78688070)**
@@ -755,13 +827,13 @@ r:失败的次数，k:成功的次数，p:成功的概率
 [Find p-value (significance) in scikit-learn LinearRegression](https://stackoverflow.com/questions/27928275/find-p-value-significance-in-scikit-learn-linearregression)
 
 
-## 3. 参数检验和非参数检验
+## 参数检验和非参数检验
 
 * [关于显著性检验，你想要的都在这儿了！！（基础篇）](https://www.cnblogs.com/hdu-zsk/p/6293721.html)
 
 
 | 编号 | 数据正态（参数检验） | 非正态（非参数检验） | 功能 |
-| ---- | ---- | ---- | ---- | |
+| ---- | ---- | ---- | ---- |
 | 1 | 单样本T检验 | 单样本Wilcoxon检验 | 与某数字对比差异 |
 | 2 | 配对T检验 | 配对Wilcoxon检验 | 配对数据差异 |
 | 3 | 独立样本T检验（也称T检验） | Mann-Whitney检验（也称非参数检验） | 2组数据的差异 |
