@@ -738,7 +738,7 @@ Z检验是一般用于大样本(即样本容量大于30)平均值差异性检验
 
 1. 如果检验一个样本平均数（X）与一个已知的总体平均数(μ0)的差异是否显著。其Z值计算公式为：
 
-![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X}-\\mu_{0}}{\\sigma/\\sqrt{n}})
+   ![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X}-\\mu_{0}}{\\sigma/\\sqrt{n}})
 
    其中：X是检验样本的均值；μ0是已知总体的平均数；S是总体的标准差；n是样本容量。
 
@@ -746,6 +746,7 @@ Z检验是一般用于大样本(即样本容量大于30)平均值差异性检验
 其Z值计算公式为：
 
    ![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X_{1}}-\\bar{X_{2}}}{\\sqrt{\\sigma_{1}/n_{1}+\\sigma_{2}/n_{2}}})
+
 
 
 **注意Z值和Z检验公式的区别**
@@ -769,9 +770,11 @@ T统计量计算公式：
    
    自由度df=n-1
 
+
 1. 如果要评断一个总体中的小样本平均数与总体平均值之间的差异程度，其统计量T值的计算公式为：
 
    ![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X}-\\mu_{0}}{S_{\\bar{X}}}=\\frac{\\bar{X}-\\mu_{0}}{S/\\sqrt{n-1}})
+
 
 2. 如果要评断两组样本平均数之间的差异程度，其统计量T值的计算公式为：
 
