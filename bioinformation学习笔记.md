@@ -398,6 +398,8 @@ NS500832:569:HNN3VAFXY:3:21405:22082:10749   147   chr6  29794856 27 136M  =  29
 
 ## 下载sra数据
 
+[NCBI-SRA数据下载的3种方法](https://www.jianshu.com/p/e72c72c1f181)
+
 下载常用sra数据，通常有三种方法：
 
 * aspera
