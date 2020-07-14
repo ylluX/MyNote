@@ -19,6 +19,7 @@
    * [双端测序中read1和read2的关系](#双端测序中read1和read2的关系)
    * [mappability](#mappability)
    * [BWA输出的sam文件中可选字段(tag)的含义](#bwa输出的sam文件中可选字段tag的含义)
+   * [下载sra数据](#下载sra数据)
 * [概念](#概念)
    * [专业名词](#专业名词)
    * [综合征](#综合征)
@@ -41,6 +42,7 @@
       * [检测流程](#检测流程)
          * [变异检测](#变异检测)
          * [变异注释](#变异注释)
+   * [homozygous/hemizygous/heterozygous deletions区别](#homozygoushemizygousheterozygous-deletions区别)
 * [技术原理](#技术原理)
    * [PGS/PGD](#pgspgd)
       * [FISH](#fish)
@@ -391,6 +393,33 @@ NS500832:569:HNN3VAFXY:3:21405:22082:10749   147   chr6  29794856 27 136M  =  29
 `CIAGR`字段为"10M1I25M"
 
 获得完全匹配(perfect match)的reads: `NM:i:0 XM:i:0 X0:i:1`
+
+
+
+## 下载sra数据
+
+下载常用sra数据，通常有三种方法：
+
+* aspera
+* prefetch
+* wget
+
+现在NCBI更改了sra数据的存储协议，所以aspera方法已经失效。
+
+
+prefetch下载sra步骤：
+
+1. NCBI搜索SRA号
+2. 点击"Send to:",选中"File",格式选择"Accesion List",下载文件(SraAccList.txt)
+3. 执行下载命令: `prefetch --option-file SraAccList.txt`
+
+wget下载sra步骤：
+
+1. NCBI搜索SRA号
+2. 点击"Send to:",选中"File",格式选择"RunInfo",下载文件(SraRunInfo.csv)
+3. 从SraRunInfo.csv中提取'download_path'字段信息
+4. 使用wget下载
+
 
 
 ----
@@ -1126,6 +1155,29 @@ snpEff dump ebola_zaire | less
 snpEff ebola_zaire ${SRR}_freebayes.vcf > ${SRR}_annotated.vcf
 # 最终会生成注释后的VCF文件以及变异位点的描述性报告。
 ```
+
+
+## homozygous/hemizygous/heterozygous deletions区别
+
+[What is the Difference Between a Hemizygous and Heterozygous Deletion?](https://tinyheero.github.io/2016/06/04/hemi-vs-het-del.html)
+
+I have been using the term hemizygous and heterozygous deletion interchangeably 
+for the last few years to describe a single allele/copy deletion in cancer 
+genomes. But it was recently brought to my attention that the term heterozygous 
+dletion is not always correct when describing single copy deletions. The term 
+heterozygous implies that the original two alleles of a genomic locus were 
+different. But we may observe a single allele deletion where the original two 
+alleles were identical. In this case, this would not be a heterozygous deletion, 
+but rather it would be a hemizygous deletion which implies there is only copy 
+remaining but makes no claim that the two original alleles were different.
+
+So basically if you are describing a single allele/copy deletion, then it is 
+always safe to call it a hemizygous deletion. You can only call it a heterozygous 
+deletion if you are sure that the original two alleles were actually different 
+from each other.
+
+
+
 
 ----
 
