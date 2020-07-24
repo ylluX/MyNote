@@ -117,6 +117,7 @@
       * [14. statsmodels](#14-statsmodels)
       * [15. sklearn](#15-sklearn)
       * [15. seaborn](#15-seaborn)
+      * [16. rpy2](#16-rpy2)
    * [黑客模块](#黑客模块)
       * [1. pywin32](#1-pywin32)
       * [2. psutil](#2-psutil)
@@ -139,17 +140,22 @@
 * [6. 常见问题](#6-常见问题)
    * [6.1 `mkl_serv_getenv: undefined symbol: mkl_serv_getenv`](#61-mkl_serv_getenv-undefined-symbol-mkl_serv_getenv)
    * [6.2 `nicodeEncodeError: 'charmap' codec can't encode characters in position 7-8: character maps to <undefined>`](#62-nicodeencodeerror-charmap-codec-cant-encode-characters-in-position-7-8-character-maps-to-undefined)
-* [7. 优秀框架](#7-优秀框架)
-   * [爬虫](#爬虫)
-      * [pyspider](#pyspider)
-      * [scrapy](#scrapy)
-   * [web服务](#web服务)
-      * [Flask](#flask)
-      * [Django](#django)
-* [8. 第三方包安装教程](#8-第三方包安装教程)
-   * [8.1 pypcap](#81-pypcap)
-* [9. 常见问题及解决方案](#9-常见问题及解决方案)
-   * [9.1 numpy: ImportError: DLL load failed](#91-numpy-importerror-dll-load-failed)
+* [7. 爬虫](#7-爬虫)
+   * [url去重策略](#url去重策略)
+   * [xpath选择器](#xpath选择器)
+   * [css选择器](#css选择器)
+   * [pyspider](#pyspider)
+   * [scrapy](#scrapy)
+   * [selenium](#selenium)
+   * [mitmproxy](#mitmproxy)
+   * [远程debugging的chrome浏览器](#远程debugging的chrome浏览器)
+* [web服务](#web服务)
+   * [Flask](#flask)
+   * [Django](#django)
+* [9. 第三方包安装教程](#9-第三方包安装教程)
+   * [9.1 pypcap](#91-pypcap)
+* [10. 常见问题及解决方案](#10-常见问题及解决方案)
+   * [10.1 numpy: ImportError: DLL load failed](#101-numpy-importerror-dll-load-failed)
 <!--te-->
 
 ----
@@ -9092,6 +9098,16 @@ plt.boxplot(data, meanprops=meanpointprops, meanline=False,
 ```
 
 
+**柱状图**
+
+```
+ax.bar(x, y, width=0.8, label="test", edgecolor="k", fill=False, hatch='x'*10)
+
+# hatch: 设置填充图形
+```
+
+
+
 **设置中文字体**
 
 ```
@@ -9115,6 +9131,14 @@ plt.show()
 
 
 **画图例(legend)**
+
+一般用法
+
+```
+ax.legend(bbox_to_anchor=(0,1,1,0.1), loc="lower left", ncol=2, mode="expand",
+          borderaxespad=0, framealpha=0)
+```
+
 
 画方块
 
@@ -9156,11 +9180,15 @@ rect = patches.Rectangle((1,0), width=1, height=1,
 
 
 
+
 **其它**
 
-`ax.axis("equal")` # 这个是将X轴和Y轴坐标设置为一样。
-`ax.tick_params(length=0)` # 隐藏ticks
-`ax.spines["right"].set_visible(False)`, `spines["top"].set_visible(False)` # 隐藏上边和右边的axis
+* `ax.axis("equal")` # 这个是将X轴和Y轴坐标设置为一样。
+* `ax.tick_params(length=0)` # 隐藏ticks
+* `ax.spines["right"].set_visible(False)`, `spines["top"].set_visible(False)` # 隐藏上边和右边的axis
+* `plt.subplots(figsize=(17/2.54, 8/2.54))` # 将图片大小设置为17cm X 8cm; 1英寸(in) = 2.54cm
+* `from matplotlib import rcParam; rcParams["font.sans-serif"] = "Arial"` # 将字体设置为Arial
+* `plt.subplots_adjust(bottom=0.15, top=0.85, left=0.1, right=0.98)`  # 调整subplot的位置
 
 
 
@@ -9347,6 +9375,46 @@ gs.tight_layout(fig)
 
 plt.show()
 ```
+
+
+### 16. rpy2
+
+rpy2的安装
+
+rpy2的安装非常麻烦或者困难，踩过各种坑，常见的有几种：
+
+1. 按照官方方法：`pip install rpy2`
+
+  该方法不会自动安装R，所以最总rpy2无法调用R
+
+2. 按照网上的安装方法：`conda install -c r rpy2`
+
+  该方法按理说没有问题，但如果安装失败，最大可能是channel的问题。
+
+  如果channel(在~/.condarc文件中)如下所示：
+  ```
+  channels:
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda/
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+  - defaults
+  ```
+  这种情况基本会失败，因为会从bioconda中安装rpy2，但bioconda中rpy2一般比较老旧。
+
+
+可以在[anaconda cloud](https://anaconda.org/)搜索rpy2，找到比较新的版本。
+下面从r/rpy2中安装。
+
+首先配置channel:
+
+```
+channels:
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r/
+  - defaults
+```
+
+然后运行`conda install -c r rpy2`，即可安装成功。
 
 
 

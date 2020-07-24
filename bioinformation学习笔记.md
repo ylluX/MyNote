@@ -59,13 +59,12 @@
       * [bcftools](#bcftools)
    * [python模块](#python模块)
       * [pysam](#pysam)
-         * [基础操作](#基础操作)
-         * [API](#api)
-            * [SAM/BAM/CRAM files](#sambamcram-files)
-         * [实例](#实例)
+      * [pyfaidx - 对fasta进行快速随机访问](#pyfaidx---对fasta进行快速随机访问)
    * [BWA & Bowtie2](#bwa--bowtie2)
    * [IGV](#igv)
    * [Kraken2](#kraken2)
+   * [CNVkit](#cnvkit)
+   * [samtools](#samtools)
 * [文件格式](#文件格式)
    * [.fai (索引文件)](#fai-索引文件)
    * [sam](#sam)
@@ -1711,9 +1710,9 @@ filter
 bcftools-1.3的核心功能，能在编程时非常灵活的处理bam和bcf文件。
 
 
-#### 基础操作
+*** 基础操作**
 
-**1.安装**
+1.安装
 
 如果Linux上安装了pip，可以一键安装
 ```
@@ -1721,7 +1720,7 @@ pip3 install pysam
 ```
 
 
-**2.读取bam文件(pysam.AlignmentFile)**
+2.读取bam文件(pysam.AlignmentFile)
 
 bam是sam的二进制文件，因其占用空间少，所以都会使用bam进行存储和操作。
 
@@ -1748,7 +1747,7 @@ print(type(line))
 ```
 
 
-**3.读取vcf/bcf文件(pysam.VariantFile)**
+3.读取vcf/bcf文件(pysam.VariantFile)
 
 读取方法同上,只是使用的是VariantFile方法:
 
@@ -1758,7 +1757,7 @@ vcf_in = pysam.VariantFile(gvcf)
 ```
 
 
-**4.创建并写入到新的bam或vcf文件**
+4.创建并写入到新的bam或vcf文件
 
 pysam的核心功能是可以随心所欲的读取数据,处理之后,写入到一个新建的bam或bcf文件里.
 
@@ -1797,22 +1796,22 @@ outf = pysam.AlignmentFile(path_out, "wb", template=samfile)
 以上template参数指定了模板bam文件.
 
 
-**5.关闭文件**
+5.关闭文件
 
 ```
 outf.close()
 ```
 
-**总结:**
+总结:
 
 pysam模块非常实用,有了pysam模块,我们就可以非常灵活的操纵bam/bcf文件,
 而不必依赖于samtools或bcftools. pysam可以随机读取bam/bcf文件,
 也可以将处理后的内容自定义输出到bam/bcf文件.
 
 
-#### API
+**API**
 
-##### SAM/BAM/CRAM files
+SAM/BAM/CRAM files
 
 >pysam.AlignmentFile
 
@@ -1892,37 +1891,7 @@ operation的类型：
 * **qual**: 抛弃，用query_qualities 代替
 * **query**: 抛弃，用query_alignment_sequence 代替
 * **query_alignment_end**: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****: 
-* ****:
+
 
 
 >class pysam.PileupColumn
@@ -1932,9 +1901,9 @@ operation的类型：
 >class pysam.IndexedReads(AlignmentFile samfile, int multiple_iterators=True)
 
 
-#### 实例
+**实例**
 
-**统计指定SNP位点各碱基的数目**
+1.统计指定SNP位点各碱基的数目
 
 ```
 import pysam
@@ -1953,7 +1922,7 @@ def get_snp_count(samf, chrom, snp):
     return data
 ```
 
-**提取比对到某SNP位点的非uniq reads**
+2.提取比对到某SNP位点的非uniq reads
 
 ```
 import pysam
@@ -1984,6 +1953,20 @@ def get_reads(bamfile, outsamfile, ids):
     samf.close()
     outfile.close()
 ```
+
+
+### pyfaidx - 对fasta进行快速随机访问
+
+Samtools provides a function “faidx” (FAsta InDeX), which creates a small flat index file “.fai” 
+allowing for fast random access to any subsequence in the indexed FASTA file, while loading a minimal 
+amount of the file in to memory. This python module implements pure Python classes for indexing, 
+retrieval, and in-place modification of FASTA files using a samtools compatible index. The pyfaidx 
+module is API compatible with the pygr seqdb module. A command-line script “faidx” is installed 
+alongside the pyfaidx module, and facilitates complex manipulation of FASTA files without any 
+programming knowledge.
+
+[例子](https://pypi.org/project/pyfaidx/)
+
 
 
 ## BWA & Bowtie2
@@ -2105,6 +2088,41 @@ $ conda activate kraken2
 (kraken)$ mv database200mers.kmer_distrib $HOME/dbs/minikraken2
 (kraken)$ bracken -d $HOME/dbs/minikraken2 -i kraken2.report -o bracken.species.txt -l S
 ```
+
+
+## CNVkit
+
+* [使用CNVkit进行CNV分析](http://www.360doc.com/content/19/1224/13/68068867_881784738.shtml)
+* [CNV分析工具之一：CNVkit](https://www.dxy.cn/bbs/newweb/pc/post/38832790?from=recommend)
+
+cnvkit.py调用samtools失败：
+* [samtools的库的问题](https://www.jianshu.com/p/9ae2219e237b)
+* [如何用conda安装软件|处理conda安装工具的动态库问题](https://www.jianshu.com/p/f8a0692df264)
+
+cnvkit.py调用R包DNAcopy失败：
+
+>错误: package or namespace load failed for ‘DNAcopy’:
+ package ‘DNAcopy’ was installed before R 4.0.0: please re-install it
+
+[重新安装DNAcopy包](https://bioconductor.org/packages/release/bioc/html/DNAcopy.html)：
+
+```R
+# To install this package, start R (version "4.0") and enter:
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("DNAcopy")
+```
+
+
+
+## samtools
+
+[samtools-manual](http://www.htslib.org/doc/samtools.html)
+
+1. 将sam转成bam: `samtools view -b -S a.sam > a.bam`  或者 `cat a.sam | samtools view -b -S - > a.bam`
+2. 
 
 ----
 
