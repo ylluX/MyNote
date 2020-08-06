@@ -737,15 +737,15 @@ r:失败的次数，k:成功的次数，p:成功的概率
 
 定义：
 
-设X<sub>1<sub>, X<sub>2<sub>, ..., X<sub>n<sub>  i.i.d. ~N(0,1), 令![](http://latex.codecogs.com/gif.latex?X=\\sum_{i=1}^{n}X_{i}^{2}),
-则称X是自由度为n的χ<sup>2<sup>变量，其分布称为自由度为n的χ<sup>2<sup>分布，记作 X ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n}^{2}).
+设X<sub>1</sub>, X<sub>2</sub>, ..., X<sub>n</sub>  i.i.d. ~N(0,1), 令![](http://latex.codecogs.com/gif.latex?X=\\sum_{i=1}^{n}X_{i}^{2}),
+则称X是自由度为n的χ<sup>2</sup>变量，其分布称为自由度为n的χ<sup>2</sup>分布，记作 X ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n}^{2}).
 
 
 性质：
 
 1. 设随机变量X ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n}^{2}),则有`E(X)=n`; `Var(X)=2n`。
 2. 设X1 ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n1}^{2})，X2 ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n2}^{2})，且X1和X2独立，
-则`X1+X2 ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n1+n2}^{2})`。
+则X1+X2 ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n1+n2}^{2})。
 
 
 **t分布**
@@ -756,7 +756,7 @@ r:失败的次数，k:成功的次数，p:成功的概率
 
 ![](http://latex.codecogs.com/gif.latex?T=\\frac{X}{\\sqrt{Y/n}})
 
-为自由度为n的t变量，其分布称为自由度为n的t分布，记为 `T~t<sub>n</sub>`
+为自由度为n的t变量，其分布称为自由度为n的t分布，记为 T~t<sub>n</sub>
 
 性质：
 
@@ -769,12 +769,12 @@ r:失败的次数，k:成功的次数，p:成功的概率
 
 定义：
 
-设随机变量X ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{m}^{2}), Y ~ ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n}^{2}),且X和Y独立，
+设随机变量X ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{m}^{2}), Y ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n}^{2}),且X和Y独立，
 则称：
 
 ![](http://latex.codecogs.com/gif.latex?F&space;=&space;\\frac{X/m}{Y/n})
 
-为自由度分别是m和n的F变量，其分布称为F分布，记为 `F ~ F<sub>m,n</sub>`
+为自由度分别是m和n的F变量，其分布称为F分布，记为 F ~ F<sub>m,n</sub>
 
 
 性质：
