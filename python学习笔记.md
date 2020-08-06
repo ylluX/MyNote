@@ -7655,6 +7655,68 @@ area,error = quad(func, a, b)
 ```
 
 
+**自定义连续性分布**
+
+```
+# coding:utf-8
+#
+# 该脚本主要用于实现以下文献中关于数据量的研究
+#   High-resolution mapping of copy-number alterations with massively parallel sequencing
+#   DOI: https://doi.org/10.1038/nmeth.1276
+#   算法公式见Supplementary Text
+#
+#
+# 参考：
+#  1. 两个独立正态分布的随机变量的比值，服从怎样的分布？
+#     https://www.zhihu.com/question/29552486
+#
+#  2. Ratio distribution
+#     https://en.wikipedia.org/wiki/Ratio_distribution
+#
+#  3. Simulating ratio of two independent normal variables
+#     https://stats.stackexchange.com/questions/355673/simulating-ratio-of-two-independent-normal-variables
+#
+#  4. stats.rv_continuous slow when when using custom pdf
+#     https://stackoverflow.com/questions/51946345/stats-rv-continuous-slow-when-when-using-custom-pdf
+#
+
+import numpy as np
+from scipy import stats
+from scipy.stats import rv_continuous
+import warnings
+warnings.filterwarnings("ignore")
+
+class norm_ratio_gen(rv_continuous):
+    "The distribution of ratios of two independent normal random variables."
+    def _pdf(self, x, u0, u1, d0, d1):
+        a = np.sqrt(x**2 / d0**2 + 1 / d1**2)
+        b = u0 * x / d0**2 + u1 / d1**2
+        _t = (u0**2 / d0**2 + u1**2 / d1**2)
+        c = np.exp(0.5 * b**2 / a**2 - 0.5 * _t)
+        f = b * c / a**3 * 1 / (np.sqrt(2*np.pi) * d0 * d1) * \
+            (2 * stats.norm.cdf(b / a) - 1) + 1 / (a**2 * np.pi * d0 * d1) * \
+            np.exp(-0.5 * _t)
+        return f
+
+    # 不重写该方法的话，nr.pdf(1,u0=0,u1=0,d0=1,d1=1)会返回nan
+    def _argcheck(self, *args):
+        return 1
+
+    # 累计分布函数，不重写的话，可能会在一些极值点出现异常
+    # 公式太复杂，暂不实现
+    # def _cdf(self, *args):
+
+    # 不重写_ppf方法(累计分布函数的逆函数)的话, rvs()很慢，尽量别用rvs
+    # 累计分布的逆运算没退出来，无法实现
+    # def _ppf(self, *args):
+
+
+
+normratio = norm_ratio_gen(name="norm_ratio", shapes="u0 u1 d0 d1")
+
+```
+
+
 
 ### 2. pandas
 

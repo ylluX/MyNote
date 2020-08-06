@@ -730,6 +730,60 @@ r:失败的次数，k:成功的次数，p:成功的概率
 **[三大抽样分布：卡方分布，t分布和F分布的简单理解](https://blog.csdn.net/anshuai_aw1/article/details/82735201)**
 
 
+**卡方分布**
+
+卡方分布（chi-square distribution[2], χ²-distribution，或写作χ²分布）:k个独立的标准正态分布变量的
+平方和服从自由度为k的卡方分布。卡方分布是一种特殊的伽玛分布。
+
+定义：
+
+设X<sub>1<sub>, X<sub>2<sub>, ..., X<sub>n<sub>  i.i.d. ~N(0,1), 令![](http://latex.codecogs.com/gif.latex?X=\\sum_{i=1}^{n}X_{i}^{2}),
+则称X是自由度为n的χ<sup>2<sup>变量，其分布称为自由度为n的χ<sup>2<sup>分布，记作 X ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n}^{2}).
+
+
+性质：
+
+1. 设随机变量X ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n}^{2}),则有`E(X)=n`; `Var(X)=2n`。
+2. 设X1 ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n1}^{2})，X2 ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n2}^{2})，且X1和X2独立，
+则`X1+X2 ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n1+n2}^{2})`。
+
+
+**t分布**
+
+定义：
+
+设随机变量X ~ N(0, 1), Y ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n}^{2}), 且X和Y独立，则称
+
+![](http://latex.codecogs.com/gif.latex?T=\\frac{X}{\\sqrt{Y/n}})
+
+为自由度为n的t变量，其分布称为自由度为n的t分布，记为 `T~t<sub>n</sub>`
+
+性质：
+
+1. 若随机变量`T~t<sub>n</sub>`，则当n>=2时，`E(T) = 0`, 当n>=3时，`Var(T) = n/(n-2)`
+2. 当n趋于正无穷时，t变量的极限分布为N(0,1)
+
+
+
+***F分布*
+
+定义：
+
+设随机变量X ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{m}^{2}), Y ~ ~ ![](http://latex.codecogs.com/gif.latex?\\chi_{n}^{2}),且X和Y独立，
+则称：
+
+![](http://latex.codecogs.com/gif.latex?F&space;=&space;\\frac{X/m}{Y/n})
+
+为自由度分别是m和n的F变量，其分布称为F分布，记为 `F ~ F<sub>m,n</sub>`
+
+
+性质：
+
+1. 若Z ~ F<sub>m,n</sub>，则1/Z ~ F<sub>m,n</sub>
+2. 若T ~ t<sub>n</sub>, 则T<sup>2</sup> ~ F<sub>1,n</sub>
+3. F<sub>m,n</sub>(1-α) = 1/F<sub>m,n</sub>(α)
+
+
 
 ----
 
@@ -767,7 +821,7 @@ Z检验是一般用于大样本(即样本容量大于30)平均值差异性检验
 
    ![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X}-\\mu_{0}}{\\sigma/\\sqrt{n}})
 
-   其中：X是检验样本的均值；μ0是已知总体的平均数；S是总体的标准差；n是样本容量。
+   其中：X是检验样本的均值；μ0是已知总体的平均数；σ是总体的标准差；n是样本容量。
 
 2. 如果检验来自两个的两组样本平均数的差异性，从而判断它们各自代表的总体的差异是否显著。
 其Z值计算公式为：
@@ -793,19 +847,19 @@ Z检验公式中，用样本平均值代替了x，用标准误代替了标准差
 
 T统计量计算公式：
 
-   ![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X}-\\mu_{0}}{S_{\\bar{X}}}=\\frac{\\bar{X}-\\mu_{0}}{s/\\sqrt{n}})
+   ![](http://latex.codecogs.com/gif.latex?T=\\frac{\\bar{X}-\\mu_{0}}{S_{\\bar{X}}}=\\frac{\\bar{X}-\\mu_{0}}{s/\\sqrt{n}})
    
    自由度df=n-1
 
 
 1. 如果要评断一个总体中的小样本平均数与总体平均值之间的差异程度，其统计量T值的计算公式为：
 
-   ![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X}-\\mu_{0}}{S_{\\bar{X}}}=\\frac{\\bar{X}-\\mu_{0}}{S/\\sqrt{n-1}})
+   ![](http://latex.codecogs.com/gif.latex?T=\\frac{\\bar{X}-\\mu_{0}}{S_{\\bar{X}}}=\\frac{\\bar{X}-\\mu_{0}}{S/\\sqrt{n-1}})
 
 
 2. 如果要评断两组样本平均数之间的差异程度，其统计量T值的计算公式为：
 
-   ![](http://latex.codecogs.com/gif.latex?Z=\\frac{\\bar{X_{1}}-\\bar{X_{2}}}{\\sqrt{\\frac{\\sum&space;x_{1}^{2}+\\sum&space;x_{2}^{2}}{n_{1}+n_{2}-2}}\\times&space;\\frac{n_{1}+n_{2}}{n_{1}\\times&space;n_{2}}})
+   ![](http://latex.codecogs.com/gif.latex?T=\\frac{\\bar{X_{1}}-\\bar{X_{2}}}{\\sqrt{\\frac{\\sum&space;x_{1}^{2}+\\sum&space;x_{2}^{2}}{n_{1}+n_{2}-2}}\\times&space;\\frac{n_{1}+n_{2}}{n_{1}\\times&space;n_{2}}})
 
 
 ## 卡方检验
