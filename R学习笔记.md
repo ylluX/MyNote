@@ -13,6 +13,7 @@
    * [R之向量的创建和数据框的转换](#r之向量的创建和数据框的转换)
 * [包](#包)
    * [stringr](#stringr)
+   * [DNAcopy](#dnacopy)
 <!--te-->
 
 ----
@@ -107,4 +108,26 @@ str_split(ks, "\\[", simplify=T)
      [,1]    [,2]  
 [1,] "46,XY" "30%]"
 [2,] "46,XX" "70%]"
+```
+
+
+## DNAcopy
+
+安装
+
+[4.0以上版本R安装方法：](http://www.bioconductor.org/packages/release/bioc/html/DNAcopy.html)
+
+```r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("DNAcopy")
+```
+
+[4.0以下版本R安装方法：](https://bioconductor.riken.jp/packages/3.1/bioc/html/DNAcopy.html)
+
+```r
+## try http if https is not available
+source("https://bioconductor.org/biocLite.R")
+biocLite("DNAcopy")
 ```
