@@ -9441,7 +9441,7 @@ plt.show()
 
 ### 16. rpy2
 
-rpy2的安装
+**rpy2的安装**
 
 rpy2的安装非常麻烦或者困难，踩过各种坑，常见的有几种：
 
@@ -9477,6 +9477,43 @@ channels:
 ```
 
 然后运行`conda install -c r rpy2`，即可安装成功。
+
+
+***[另一种更简单的安装方法](https://anaconda.org/conda-forge/rpy2)***：
+
+```
+conda install -c conda-forge/label/cf202003 rpy2
+```
+
+
+**常见操作**
+
+1. 将`R dataframe`转成`pandas dataframe`
+
+```
+import rpy2.robjects as ro
+from rpy2.robjects import pandas2ri
+pandas2ri.activate()
+
+dt = pd.DataFrame()
+# To R DataFrame
+r_dt = ro.conversion.py2rpy(dt)
+# To pandas DataFrame
+pd_dt = ro.conversion.rpy2py(r_dt)
+```
+
+
+
+**一些常见问题**
+
+1. R dataframe 转 pandas dataframe时失败
+
+   报错信息：`ValueError: Buffer for this type not yet supported.`
+
+   主要原因是：[rpy与numpy不兼容](https://github.com/conda-forge/rpy2-feedstock/issues/28)
+
+   解决方案：[更新rpy到3.0以上版本](https://github.com/xlwings/xlwings/issues/1198)
+
 
 
 
