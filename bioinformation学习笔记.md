@@ -20,6 +20,8 @@
    * [mappability](#mappability)
    * [BWA输出的sam文件中可选字段(tag)的含义](#bwa输出的sam文件中可选字段tag的含义)
    * [下载sra数据](#下载sra数据)
+   * [fastq/fasta downsample](#fastqfasta-downsample)
+   * [截短reads](#截短reads)
 * [概念](#概念)
    * [专业名词](#专业名词)
    * [综合征](#综合征)
@@ -421,6 +423,55 @@ wget下载sra步骤：
 3. 从SraRunInfo.csv中提取'download_path'字段信息
 4. 使用wget下载
 
+
+
+## fastq/fasta downsample
+
+如果fastq/fasta不是很大，比如还有几个G，可以使用`seqtk`：
+
+```shell
+# 从fastq中随机挑选1000条reads
+seqtk sample -s 10 test.fastq.gz 1000 > test_1000.fastq
+# 输入文件可以是压缩文件也可以是文本文件
+# 也可以
+seqtk sample -s 10 test.fastq.gz 1000 | gzip - > test_1000.fastq.gz
+```
+
+`seqtk`有以下两个问题：
+
+1. 问输入文件过大时(如几十个G)，速度很慢；
+2. 很耗内存 (可以使用-2参数解决，但速度更慢)
+
+
+如果碰到以上问题，有个折中的方法：因为fastq/fasta文件里面存放的reads就是按照随机顺序
+存放的，所以我们可以直接取前1000行。
+
+```shell
+# 1. 使用head
+gunzip -c test.fastq.gz | head -4000 | gzip - > test_1000.fastq.gz
+
+# 2. 使用fastp (速度更快)
+fastp -i test.fastq.gz -o test_1000.fastq.gz -A -G -Q -L -j test_1000.fastq.json --reads_to_process 1000
+# 注意：--reads_to_process参数在低版本中不存在
+```
+
+
+
+## 截短reads
+
+1. 使用fastx_trimmer
+
+```shell
+# 截取第15个碱基到第50个碱基之间的36个碱基
+gunzip -c test.fastq.gz | fastx_trimmer -f 15 -l 50 -z -o test_1.fastq.gz
+```
+
+2. 使用fastp
+
+```shell
+# 截取前1000条reads的前50bp
+fastp -i test.fastq.gz -o test_1000.fastq.gz -j test_1000.fastq.json -A -G -Q -L -b 50 --reads_to_process 1000
+```
 
 
 ----
@@ -1179,8 +1230,20 @@ from each other.
 
 
 
+上边的解释可能有问题，要想正确回答这个问题，需要搞清楚homozygous(纯合子)/hemizygous(半合子)/heterozygous(杂合子)的概念。
+
+
+* `homozygous(纯合子)`：当等位基因的某一SNP位点碱基相同，我们称该位点为纯合位点。
+* `heterozygous(杂合子)`：当等位基因的某一SNP位点碱基不同，我们称该位点为杂合位点。
+* `hemizygous(半合子)`：某个没有等位基因的基因的某一SNP位点，我们称为半合位点。(如男性X染色体上的大部分基因都是半合子)
+
+以上是我自己总结的概念，可能不准确，如有疑问请看[Wiki](https://en.wikipedia.org/wiki/Zygosity#Heterozygous)
+
+
 
 ----
+
+
 
 # 技术原理
 
