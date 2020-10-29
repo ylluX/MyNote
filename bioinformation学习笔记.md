@@ -69,7 +69,7 @@
    * [samtools](#samtools)
 * [文件格式](#文件格式)
    * [.fai (索引文件)](#fai-索引文件)
-   * [sam](#sam)
+   * [bam/sam](#bamsam)
 * [期刊杂志](#期刊杂志)
 * [下载](#下载)
    * [BioStars](#biostars)
@@ -200,6 +200,17 @@ PCR放大成百上千倍，为什么NGS的Dup rate只有十位数甚至是个位
 大多数人认为NGS数据的Dup主要来自于上述第二种。但据真实案例显示，第三种荧光信号采集单元
 生成的过程中引入的Dup和第四种芯片测序过程中引入的光学Dup居多。而第一种样本本身的Dup反倒
 是我们生物学中应真正关注，并与测序数据的Dup加以区分的一种“有用的”Dup。
+
+
+
+**去重(或标记)的方法**
+
+[去重工具到底哪家强](http://www.360doc.com/content/18/0806/10/19913717_776047876.shtml)
+
+1. picard的MarkDuplicates
+2. **sambamba的markdup** (注意：加上-r参数才会去重，否则仅标记(FLAG存在1024))【速度最快，常用】
+3. samtools的markdup(标记)、rmdup(去重)
+4. samblaster的markdup（-r: 去重）
 
 
 
@@ -397,6 +408,8 @@ NS500832:569:HNN3VAFXY:3:21405:22082:10749   147   chr6  29794856 27 136M  =  29
 
 
 
+
+
 ## 下载sra数据
 
 [NCBI-SRA数据下载的3种方法](https://www.jianshu.com/p/e72c72c1f181)
@@ -427,7 +440,7 @@ wget下载sra步骤：
 
 ## fastq/fasta downsample
 
-如果fastq/fasta不是很大，比如还有几个G，可以使用`seqtk`：
+如果fastq/fasta不是很大，比如只有几个G，可以使用`seqtk`：
 
 ```shell
 # 从fastq中随机挑选1000条reads
@@ -439,9 +452,8 @@ seqtk sample -s 10 test.fastq.gz 1000 | gzip - > test_1000.fastq.gz
 
 `seqtk`有以下两个问题：
 
-1. 问输入文件过大时(如几十个G)，速度很慢；
+1. 当输入文件过大时(如几十个G)，速度很慢；
 2. 很耗内存 (可以使用-2参数解决，但速度更慢)
-
 
 如果碰到以上问题，有个折中的方法：因为fastq/fasta文件里面存放的reads就是按照随机顺序
 存放的，所以我们可以直接取前1000行。
@@ -472,6 +484,10 @@ gunzip -c test.fastq.gz | fastx_trimmer -f 15 -l 50 -z -o test_1.fastq.gz
 # 截取前1000条reads的前50bp
 fastp -i test.fastq.gz -o test_1000.fastq.gz -j test_1000.fastq.json -A -G -Q -L -b 50 --reads_to_process 1000
 ```
+
+
+
+
 
 
 ----
@@ -767,7 +783,7 @@ AOH（不存在杂合性）。
 
 	* 在NGS，也只能见到这种纯合现象，在正常人中出现杂合的多态性区域，检材出现纯合状态，若是个别的点，
 	只能说是此位点“纯合”，若是多个（一溜儿，run）多态性位点出现纯合现象，就是ROH。
-
+	
 	长筒袜上出现跳丝，也叫run：先是一个小眼，如果用手一抻，脱扣更多，就像跑步一样，向两头延长了。
 
 这种ROH提示缺失也可能是UPD，因为点突变不会有这么多点同时发生（N个点的突变率的积，可能性太低！）；
@@ -2273,7 +2289,30 @@ def get_seq(self, fbuffer, start, end, offset, line, size):
 我一般会用同样的坐标在用samtools查一遍。确认没问题。
 
 
-## sam
+## bam/sam
+
+[sam/bam及相关规范](http://samtools.github.io/hts-specs/)
+
+
+
+**FLAG数值含义**
+
+| 数值 | 二进制         | 解释                                                        |
+| ---- | -------------- | ----------------------------------------------------------- |
+| 1    | 0000 0000 0001 | 该read是成对的paired reads中的一个                          |
+| 2    | 0000 0000 0010 | paired reads中每个都正确比对到参考序列上                    |
+| 4    | 0000 0000 0100 | 该read没比对到参考序列上                                    |
+| 8    | 0000 0000 1000 | 与该read成对的matepair read没有比对到参考序列上             |
+| 16   | 0000 0001 0000 | 该read其反向互补序列能够比对到参考序列                      |
+| 32   | 0000 0010 0000 | 与该read成对的matepair read其反向互补序列能够比对到参考序列 |
+| 64   | 0000 0100 0000 | 在paired reads中，该read是与参考序列比对的第一条            |
+| 128  | 0000 1000 0000 | 在paired reads中，该read是与参考序列比对的第二条            |
+| 256  | 0001 0000 0000 | 该read是次优的比对结果                                      |
+| 512  | 0010 0000 0000 | 该read没有通过质量控制                                      |
+| 1024 | 0100 0000 0000 | 由于PCR或测序错误产生的重复reads                            |
+| 2048 | 1000 0000 0000 | 补充匹配的read                                              |
+
+
 
 **各标签含义**
 

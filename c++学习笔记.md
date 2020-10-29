@@ -2,14 +2,15 @@
 
 <!--自动插入TOC：https://github.com/ekalinin/github-markdown-toc-->
 <!--ts-->
-   * [目录](#目录)
-   * [基础知识点](#基础知识点)
-      * [1. 指针](#1-指针)
-      * [2. 变量](#2-变量)
-      * [typedef 和 #defind](#typedef-和-defind)
-
-<!-- Added by: luyl, at: 2018-12-25T17:37+08:00 -->
-
+* [目录](#目录)
+* [基础知识点](#基础知识点)
+   * [1. 指针](#1-指针)
+   * [2. 变量](#2-变量)
+   * [3. typedef 和 #defind](#3-typedef-和-defind)
+* [define只是作简单的字符串替换，不表达 任何含义。如：](#define只是作简单的字符串替换不表达-任何含义如)
+* [define是一个宏定义命令，用来定义一个常量(包括无参常量和有参常量)，它本身并不在编译过程中执行，而是在预处理阶段就已经完成了，](#define是一个宏定义命令用来定义一个常量包括无参常量和有参常量它本身并不在编译过程中执行而是在预处理阶段就已经完成了)
+* [特殊场景](#特殊场景)
+   * [1. 两个类相互调用](#1-两个类相互调用)
 <!--te-->
 
 ----
@@ -173,7 +174,7 @@ const int * const b = &a;//指向常量的指针常量
 * 外部全局变量要服从单定义规则(整个程序内只能有一处定义, 其它地方用extern来引用) 
 
 
-## typedef 和 #defind
+## 3. typedef 和 #defind
 
 `typedef` 用来为一个已有的数据类型起一个别名，而`#define`是用来定义一个宏定义常量。下面谈谈两者在实际使用中应当注意的地方。
 
@@ -258,3 +259,160 @@ int s=ADD(i,j)*k;
 
 程序可能想求算的是(i+j)*k的结果，然而这段程序并没有达到这种效果，由于宏替换只是进行简单的字符串替换，那么ADD(i,j)*k相当于i+j*k，
 并不是想象中的(i+j)*k。
+
+
+
+# 特殊场景
+
+## 1. 两个类相互调用
+
+[C++两个类互相调用彼此的方法](https://blog.csdn.net/wuchuanpingstone/article/details/52384933?utm_source=app)
+
+两个类A和B实现互相调用彼此的方法，如果采用彼此包含对方头文件的方式会出现循环引用，所以采用了类的前置声明的方式
+
+1，class A采用前置声明的方式声明class B
+
+2，在ClassB的头文件中包含class A 的头文件
+
+3，在class A中只能声明class B类型的指针或者引用
+
+具体代码如下：
+
+A.h:
+
+```c++
+#pragma once
+ 
+class B;
+class A
+{
+public:
+	A();
+	A(class B* pB);
+	~A();
+ 
+public:
+	void displayA();
+	void invokeClassBInClassA();
+private:
+	class B *mB;
+};
+ 
+```
+
+A.cpp
+
+```c++
+#include "A.h"
+#include "B.h"
+#include <iostream>
+using namespace std;
+ 
+ 
+A::A()
+{
+}
+ 
+A::A(B * pB)
+{
+	mB = pB;
+}
+ 
+ 
+A::~A()
+{
+}
+ 
+ 
+void A::displayA()
+{
+	cout << "this is A" << endl;
+}
+ 
+ 
+void A::invokeClassBInClassA()
+{
+	cout << "class A invoke class B starts>>" << endl;
+	mB->displayB();
+}
+```
+
+B.h
+
+```c++
+#pragma once
+#include "A.h"
+ 
+class B
+{
+public:
+	B();
+	~B();
+ 
+public:
+	void displayB();
+	void invokeClassAInClassB();
+private:
+	class A * mA;
+};
+ 
+```
+
+B.cpp
+
+```c++
+#include "B.h"
+#include <iostream>
+using namespace std;
+ 
+ 
+B::B()
+{
+	mA = new A();
+}
+ 
+ 
+B::~B()
+{
+}
+ 
+void B::displayB()
+{
+	cout << "this is the B" << endl;
+}
+ 
+void B::invokeClassAInClassB()
+{
+	cout << "class B invoke class A starts >>" << endl;
+	mA->displayA();
+}
+```
+
+main.cpp
+
+```c++
+ 
+#include <iostream>
+#include "A.h"  
+#include "B.h"
+using namespace std;
+ 
+ 
+ 
+int main()
+{
+	cout << "----------main starts---------------" << endl;
+	class B* pB = new B();
+	class A* pA = new A(pB);
+ 
+	pA->displayA();
+	pA->invokeClassBInClassA();
+ 
+	
+	pB->displayB();
+	pB->invokeClassAInClassB();
+ 
+	cout << "----------main  ends----------------" << endl;
+	return 0;
+}
+```
