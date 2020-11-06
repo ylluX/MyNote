@@ -8,9 +8,9 @@
    * [2. 变量](#2-变量)
    * [3. typedef 和 #defind](#3-typedef-和-defind)
 * [define只是作简单的字符串替换，不表达 任何含义。如：](#define只是作简单的字符串替换不表达-任何含义如)
-* [define是一个宏定义命令，用来定义一个常量(包括无参常量和有参常量)，它本身并不在编译过程中执行，而是在预处理阶段就已经完成了，](#define是一个宏定义命令用来定义一个常量包括无参常量和有参常量它本身并不在编译过程中执行而是在预处理阶段就已经完成了)
 * [特殊场景](#特殊场景)
    * [1. 两个类相互调用](#1-两个类相互调用)
+   * [2.反射机制](#2反射机制)
 <!--te-->
 
 ----
@@ -180,6 +180,8 @@ const int * const b = &a;//指向常量的指针常量
 
 **1.typedef关键字**
 
+[typedef特殊用法：typedef void\* (\*fun)(void\*)](https://blog.csdn.net/weixin_42255385/article/details/82261774)
+
 在C/C++中，我们平时写程序可能经常会用到typedef关键字和#define宏 定义命令，在某些情况下使用它们会达到相同的效果，
 但是它们是有实质性的区别，一个是C/C++的**关键字**，一个是C/C++的**宏定义命令**，typedef是用来声明类型别名的，在
 实际编写代码过程使用typedef往往是为了增加代码的可读性。它可以为一串很长的类型名起一个别名，那么使用这个别名可以
@@ -243,9 +245,11 @@ unsigned INT a;
 
 是绝对错误的用法。
 
+
+
 **2.#define宏定义**
 
-#define是一个宏定义命令，用来定义一个常量(包括无参常量和有参常量)，它本身并不在编译过程中执行，而是在预处理阶段就已经完成了，
+`#define`是一个宏定义命令，用来定义一个常量(包括无参常量和有参常量)，它本身并不在编译过程中执行，而是在预处理阶段就已经完成了，
 因此不作任 何正确性检查，只进行不关含义的字符串替换。在使用宏定义时，如果稍不注意就会发生错误，而且这个错误往往是你意想不到的。如：
 
 ```
@@ -257,8 +261,7 @@ int k=3;
 int s=ADD(i,j)*k;
 ```
 
-程序可能想求算的是(i+j)*k的结果，然而这段程序并没有达到这种效果，由于宏替换只是进行简单的字符串替换，那么ADD(i,j)*k相当于i+j*k，
-并不是想象中的(i+j)*k。
+程序可能想求算的是(i+j)\*k的结果，然而这段程序并没有达到这种效果，由于宏替换只是进行简单的字符串替换，那么ADD(i,j)*k相当于i+j\*k，并不是想象中的(i+j)\*k。
 
 
 
@@ -416,3 +419,9 @@ int main()
 	return 0;
 }
 ```
+
+## 2.反射机制
+
+[我所理解的 C++ 反射机制](https://dablelv.blog.csdn.net/article/details/51698184?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-7.channel_param&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-7.channel_param)
+
+[C++反射机制的实现](https://blog.csdn.net/cen616899547/article/details/9317323)
