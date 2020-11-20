@@ -1054,6 +1054,7 @@ pip install six --target="/usr/lib/python2.7/dist-packages"
 `setup.py`
 
 ```
+
 ```
 
 
@@ -1069,7 +1070,7 @@ pip install six --target="/usr/lib/python2.7/dist-packages"
 
 但是发现页面上打印的命令执行结果 0或者1，当然不满足需求了。
 
- 
+
 尝试第二种方案 `os.popen()`
 
 ```python
@@ -1109,7 +1110,7 @@ Python Document 中给的一个例子，
 >>> commands.getstatus('/bin/ls')  
 '-rwxr-xr-x 1 root 13352 Oct 14 1994 /bin/ls'
 ```
- 
+
 
 第四种方法`subprocess.call`
 
@@ -3074,23 +3075,23 @@ class ObjectDict(dict):
 【str】: 
 
     返回一个可以用来表示对象的可打印的友好的字符串
-
+    
     对字符串，返回本身。 
-
+    
     没有参数，则返回空字符串 
-
+    
     对类，可通过__str__() 成员控制其行为。该成员不存在，则使用其 __repr__() 成员。
-
+    
     与 repr 区别：不总是尝试生成一个传给 eval 的字符串，其目标是可打印字符串。
 
 【repr】：
 
     返回一个可以用来表示对象的可打印字符串
-
+    
     首先，尝试生成这样一个字符串，将其传给 eval()可重新生成同样的对象 
-
+    
     否则，生成用尖括号包住的字符串，包含类型名和额外的信息(比如地址) 
-
+    
     一个类(class)可以通过 __repr__() 成员来控制repr()函数作用在其实例上时的行为。
 
 示例：
@@ -4559,7 +4560,7 @@ chr()函数是ord()函数的反函数，其中ord()函数将字符串转换回AS
 Hello World
 >>>eval(a)
 Hello World
-``` 
+```
 由compile()函数编译的代码的类别
 ``` 
 Kind取值 编译生成的代码
@@ -4573,12 +4574,12 @@ Single 简单交互语句
 ```python
 >>>import sys
 >>>dir(sys)
-``` 
+```
 * `divmod(a,b)`: devmod()函数返回一个元组，该元组包含a除以b的商和余数，如下例所示：
 ```python
 >>>divmod(7,4)
 (1,3)
-``` 
+```
 对整数而言，返回值与a/b和a%b相同。如果给出的参数值是浮点数，则结果就是（q,a%b），其中：q通常是math.floor(a/b)，但是也可能比这小1，不管在什么情况下，q*b+a%b都非常逼近a；如果a%b是个非零值，则其正负号与b相同，并且有0<=abs(a%b) 
 ```python
 >>>divmod(3.75,1.125)
@@ -4630,7 +4631,7 @@ print b
 ``` python
 >>>map(None,[1,2,3,4],[4,5,6,7])
 [(1,4),(2,5),(3,6),(4,7)]
-``` 
+```
 上例的结果与zip()函数产生的结果等价
 * `max(s,[,args…])`: 当仅给定一个参数时，max()函数返回序列s的最大值。当给定一列参数时，max()函数返回给定参数的最大参数
 * `min(s[,args…])`: 当仅给定一个参数时，min()函数返回序列s的最小值。当给定一列参数时，min()函数返回给定参数中的最小值。记住：多参数调用的序列不被遍历，每个列表参数作为一个整体进行比较，如：
@@ -4659,7 +4660,7 @@ open()函数的bufsize选项参数决定从文件中读取数据时所使用的�
 行缓存
 >1 使用大小近似为bufsize字符长度的缓存
 <0 使用系统默认
-``` 
+```
 * `ord(c)`: 该函数返回由一个字符c组成的字符串的ASCII码值或Unicode数字码。ord()函数是chr()函数和nuichr()函数的反函数
 * `pow(x,y[,z])`: 该函数返回以x为底数以y为指数的幂值。如果给出z，该函数就计算x的y次幂值被z取模的值，这样的计算比利用：`pow(x,y)%z`
 的效率更高. 提供给pow()函数的参数应是数值型，并且给定的类型决定返回值的类型。如果计算得出的数值不能用给定参数值的类型表示，则引发异常，比如，以下对pow()的调用将失败： `pow(2,-1)`, 但是`pow(2.0,-1)`是有效的
@@ -6456,8 +6457,8 @@ def itemgetter(*items):
         def g(obj):
             return tuple(obj[item] for item in items)
     return g
-```   
- 
+```
+
 运算符的`__getitem__()`方法可接受任意类型的项目。字典接收任意的哈希值。列表、元组和字符串接收一个索引或字符片段。
 
 ```python
@@ -7059,14 +7060,14 @@ SciPy的stats模块提供了大约80种连续随机变量和10多种离散分布
 | rv_continuous.entropy(\*args, \*\*kwds) | Differential entropy of the RV. <br> 微分商 |
 | rv_continuous.fit(data, \*args, \*\*kwds) | Return MLEs for shape, location, and scale parameters from data. <br> 对一组随机取样进行拟合，找出最适合取样数据的概率密度函数的系数 |
 | rv_continuous.expect([func, args, loc, ...]) | Calculate expected value of a function with respect to the distribution. <br> 计算相对于分布的函数的预期值。 |
- 
+
 <br>可以通过如下语句获得stats模块中所有的连续随机变量，示例代码：
 ```
 from scipy import stats 
 [k for k, v in stats.__dict__.items() if isinstance(v, stats.rv_continuous)]
 ```
 结果为：`ksone`, `kstwobign`, `norm`, `alpha`, `anglit`, `arcsine`, `beta`, `betaprime`, `bradford`, `burr`, `burr12`, `fisk`, `cauchy`, `chi`, `chi2`, `cosine`, `dgamma`, `dweibull`, `expon`, `exponnorm`, `exponweib`, `exponpow`, `fatiguelife`, `foldcauchy`, `f`, `foldnorm`, `frechet_r`, `weibull_min`, `frechet_l`, `weibull_max`, `genlogistic`, `genpareto`, `genexpon`, `genextreme`, `gamma`, `erlang`, `gengamma`, `genhalflogistic`, `gompertz`, `gumbel_r`, `gumbel_l`, `halfcauchy`, `halflogistic`, `halfnorm`, `hypsecant`, `gausshyper`, `invgamma`, `invgauss`, `invweibull`, `johnsonsb`, `johnsonsu`, `laplace`, `levy`, `levy_l`, `levy_stable`, `logistic`, `loggamma`, `loglaplace`, `lognorm`, `gilbrat`, `maxwell`, `mielke`, `kappa4`, `kappa3`, `nakagami`, `ncx2`, `ncf`, `t`, `nct`, `pareto`, `lomax`, `pearson3`, `powerlaw`, `powerlognorm`, `powernorm`, `rdist`, `rayleigh`, `reciprocal`, `rice`, `recipinvgauss`, `semicircular`, `skewnorm`, `trapz`, `triang`, `truncexpon`, `truncnorm`, `tukeylambda`, `uniform`, `vonmises`, `vonmises_line`, `wald`, `wrapcauchy`, `gennorm`, `halfgennorm`
- 
+
 <br>下面以标准正态分布（函数表示f(x)=(1/√2π)exp(-x^2/2)）为例，简单介绍随机变量的用法。示例代码：
 ```
 from scipy import stats 
@@ -7076,7 +7077,7 @@ X = stats.norm(loc=1.0, scale=2.0)
 print(X.stats())
 ```
 运行结果：`(array(1.0), array(4.0))`
- 
+
 <br>以上代码说明，norm可以像函数一样调用，通过loc和scale参数可以指定随机变量的偏移和缩放参数。对于正态分布的随机变量来说，这两个参数相当于指定其期望值和标准差，标准差是方差的算术平方根。X的stats()方法，可以计算随机变量X分布的特征值，如期望值和方差。
 此外，通过调用随机变量X的rvs()方法，可以得到包含一万次随机取样值的数组x，然后调用NumPy的mean()和var()计算此数组的均值和方差，其结果符合随机变量X的特性，示例代码：
 ```
@@ -7199,7 +7200,7 @@ sample = dist.rvs(500)
 | fatiguelife | A fatigue-life (Birnbaum-Sanders) continuous random variable. <br> 疲劳寿命(伯恩鲍姆-桑德斯)分布 |
 | fisk | A Fisk continuous random variable. <br> 菲斯克分布 |
 | foldcauchy | A folded Cauchy continuous random variable. <br> 折叠柯西分布 |
-| foldnorm | A folded normal continuous random variable. <br> 折叠正态分布 | 
+| foldnorm | A folded normal continuous random variable. <br> 折叠正态分布 |
 | frechet_r | A Frechet right (or Weibull minimum) continuous random variable. <br> Frechet右(威布尔最小值)分布 |
 | frechet_l | A Frechet left (or Weibull maximum) continuous random variable. <br> Frechet左(威布尔最大值)分布 |
 | genlogistic | A generalized logistic continuous random variable. <br> 广义逻辑分布 |
@@ -8799,7 +8800,7 @@ with open(r"c:\pickle.txt","r") as f:
 
 1、JSON只能处理基本数据类型。pickle能处理所有Python的数据类型。
 2、JSON用于各种语言之间的字符转换。pickle用于Python程序对象的持久化或者Python程序间对象网络传输，但不同版本的Python序列化可能还有差异。
-  
+
 ### 7. six
 
 python2和3的兼容库
@@ -9115,11 +9116,11 @@ with PdfPages('multipage_pdf.pdf') as pdf:
 plt.boxplot(x, notch=None, sym=None, vert=None, whis=None, positions=None, widths=None, patch_artist=None,
 
             bootstrap=None, usermedians=None, conf_intervals=None, meanline=None, showmeans=None, 
-
+    
             showcaps=None, showbox=None, showfliers=None, boxprops=None, labels=None, flierprops=None,
-
+    
             medianprops=None, meanprops=None, capprops=None, whiskerprops=None, manage_xticks=True,
-
+    
             autorange=False, zorder=None, hold=None, data=None)
 
 * x：指定要绘制箱线图的数据；
@@ -9239,6 +9240,18 @@ rect = patches.Rectangle((1,0), width=1, height=1,
                          transform=trans, color='yellow',
                          alpha=0.5)
 ```
+
+
+
+**散点图画在折线图前边**
+
+```python
+# set the Z-order
+plt.plot(R,P,color='0.2',lw=1.5, zorder=1)
+plt.scatter(R,P,s=150,color=c, zorder=2)
+```
+
+
 
 
 
@@ -9635,7 +9648,7 @@ except ImportError:
 [github](https://github.com/jobbole/awesome-python-cn)
 
 我想很多程序员应该记得 GitHub 上有一个 Awesome - XXX 系列的资源整理。awesome-python 是 vinta 发起维护的 Python 资源列表，内容包括：Web 框架、网络爬虫、网络内容提取、模板引擎、数据库、数据可视化、图片处理、文本处理、自然语言处理、机器学习、日志、代码分析等。由伯乐在线持续更新。
- 
+
 Awesome 系列虽然挺全，但基本只对收录的资源做了极为简要的介绍，如果有更详细的中文介绍，对相应开发者的帮助会更大。这也是我们发起这个开源项目的初衷。
 
 
