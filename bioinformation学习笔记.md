@@ -22,6 +22,7 @@
    * [下载sra数据](#下载sra数据)
    * [fastq/fasta downsample](#fastqfasta-downsample)
    * [截短reads](#截短reads)
+   * [BAM文件排序异常](#bam文件排序异常)
 * [概念](#概念)
    * [专业名词](#专业名词)
    * [综合征](#综合征)
@@ -489,6 +490,21 @@ gunzip -c test.fastq.gz | fastx_trimmer -f 15 -l 50 -z -o test_1.fastq.gz
 # 截取前1000条reads的前50bp
 fastp -i test.fastq.gz -o test_1000.fastq.gz -j test_1000.fastq.json -A -G -Q -L -b 50 --reads_to_process 1000
 ```
+
+
+
+## BAM文件排序异常
+
+最近遇到了一个非常奇怪的现象：4个样本进行bwa比对，各自获得排序后的bam文件，其中，有3个文件中reads是从chr1，chr2开始排序，而剩余的1个文件却是从chr10，chr11开始排序。
+
+先来说说这个异常bam文件的一些异常点：
+
+1. 原始sam文件中，SQ字段就是从chr10开始的，而不是chr1。(samtools默认排序的方法是根据sam文件header的SQ字段进行排序的）
+2. 没有一条read是比对到chrM上的，所以SQ字段中就没有chrM。
+
+这个问题纠结了两天，测试了不同BWA版本，重新构建了基因组的index，调整了BWA/samtools的参数,更换了不同样本，均没有发现问题所在。在快要放弃时，发现原来是**计算节点**的问题—— 在这个节点上，BWA比对全都异常(从chr10开始，没有read比对到chrM)，而其他节点均正常。深层次原因未知，目前只能避开异常节点。
+
+
 
 
 
