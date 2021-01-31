@@ -11,6 +11,7 @@
    * [插入1行或1列](#插入1行或1列)
    * [生成随机数](#生成随机数)
    * [R之向量的创建和数据框的转换](#r之向量的创建和数据框的转换)
+   * [多维数组](#多维数组)
 * [包](#包)
    * [stringr](#stringr)
    * [DNAcopy](#dnacopy)
@@ -23,7 +24,12 @@
 ## 常用命令
 
 * 查看R版本：`version`
+
 * 安装包: `install.packages(package)`
+
+* 获得(设置)当前工作目录：`getwd()`, `setwd()`
+
+  
 
 ## 数组
 
@@ -33,7 +39,7 @@
 
 ## 创建空data.frame
 
-```
+```R
 mydata <- data.frame(age=numeric(0), gender=character(0), weight=numeric(0), stringsAsFactors=FALSE))
 mydata[1,] <- c(20,'a',70)
 mydata
@@ -43,7 +49,7 @@ mydata
 
 ## paste和cat区别
 
-```
+```R
 a<-c(1,2,3,4)
 b<-c(4,5,6,7)
 c<-c('hi','hello')
@@ -58,27 +64,34 @@ cat(a,b,c)
 
 ## 插入1行或1列
 
-如何向R中的dataframe的某一位置添加一行（rbind函数）或一列向量（cbind函数）
+如何向R中的`dataframe`的某一位置添加一行（`rbind`函数）或一列向量（`cbind`函数）
 
 插入一列
+
+```R
 y<-1:4
 data1 <- data.frame(x1=c(1,3,5,7), x2=c(2,4,6,8),x3=c(11,12,13,14),x4=c(15,16,17,18))
 data2 <- cbind(data1[,1:2],y,data1[,3:ncol(data1)])
+```
 
 插入一行
+
+```R
 data1<- data.frame(x1=runif(10),x2= runif(10),x3= runif(10))
 row<- c(1, 1, 1)
 data2 <- rbind(data1[1:5,], row, data1[6:nrow(data1), ])
+```
+
+
 
 
 ## 生成随机数
 
 [用R生成随机数](https://blog.csdn.net/wangd6/article/details/59119307)
 
-
 ## R之向量的创建和数据框的转换
 
-```
+```R
 a <- rnomal(12, mean=40, sd=20)
 is.verctor(a) # TRUE
 is.array(a)   # FALSE
@@ -92,6 +105,57 @@ is.numeric(a) # FALSE
 a <- as.data.frame(a)
 is.data.frame(a) # TRUE
 ```
+
+
+
+## 多维数组
+
+
+
+**生成多维数组**
+
+1. 一组值只有定义了维数向量（dim属性）后才能被看作是数组。
+
+```R
+a <- 1:24
+dim(a) <- c(3,4,2)
+```
+
+2. 用array()函数构造多维数组
+
+```R
+a <- array(0, dim=c(3,4,2))
+```
+
+**将两个二维数组合并成三维数组**
+
+1. 使用abind包
+
+```
+library(abind)
+abind(x,y,along=3)
+```
+
+2. 使用原生函数
+
+```R
+a1 <- array(1:12,dim=(3,4))
+a2 <- array(13:24, dim=(3,4))
+a <- array(c(a1,a2),dim=c(3,4,2))
+```
+
+**保存数组**
+
+```R
+# 保存
+save(a1,a2,a, file="test.RData")
+# 读取
+load("test.RData")
+```
+
+
+
+
 
 
 ----
