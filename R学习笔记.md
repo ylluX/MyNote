@@ -157,6 +157,35 @@ load("test.RData")
 
 
 
+## 安全导入数据
+
+[Safe Loading of RData Files](https://www.r-bloggers.com/2016/04/safe-loading-of-rdata-files-2/)
+
+如果直接用`load()`函数导入`RData`数据，可能会存在覆盖原有同名函数的风险，为了避免该问题，可以通过以下方式解决：
+
+```R
+# 将变量导入的新的环境中
+load_to_env <- fcuntion(RData, env = new.env()){
+    load(RData, env)
+    return(env) 
+}
+
+# 测试
+a <- array(1:20, dim=c(5,4))
+b <- c(1:5)
+save(a,b, "test.1.RData")
+a <- a * 2
+b <- b + 5
+save(a,b, "test.2.RData")
+data1 <- load_to_env("test.1.RData")
+data2 <- load_to_env("test.2.RData")
+print(data1$a)
+```
+
+
+
+
+
 
 ----
 
@@ -164,7 +193,7 @@ load("test.RData")
 
 ## stringr
 
-```
+```R
 ks = c("46,XY[30%]","46,XX[70%]")
 str_extract(ks,'\\d+%')
 [1] "30%" "70%"
