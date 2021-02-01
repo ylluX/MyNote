@@ -12,6 +12,9 @@
    * [生成随机数](#生成随机数)
    * [R之向量的创建和数据框的转换](#r之向量的创建和数据框的转换)
    * [多维数组](#多维数组)
+   * [安全导入数据](#安全导入数据)
+   * [获得对象内存地址](#获得对象内存地址)
+   * [多进程共享内存](#多进程共享内存)
 * [包](#包)
    * [stringr](#stringr)
    * [DNAcopy](#dnacopy)
@@ -181,6 +184,39 @@ data1 <- load_to_env("test.1.RData")
 data2 <- load_to_env("test.2.RData")
 print(data1$a)
 ```
+
+
+
+## 获得对象内存地址
+
+第一种方法：使用内置函数`tracemem`
+
+```R
+a <- c(1:4)
+tracemem(a)
+untracemem(a)
+```
+
+第二种方法：使用`pryr::address`
+
+```R
+library(pryr)
+
+a <- c(1:4)
+address(a)
+```
+
+
+
+## 多进程共享内存
+
+[Shared memory in parallel foreach in R](https://stackoverflow.com/questions/31575585/shared-memory-in-parallel-foreach-in-r)
+
+[Sharing a data.table in memory for parallel computing](https://stackoverflow.com/questions/32714692/sharing-a-data-table-in-memory-for-parallel-computing)
+
+[Shared memory for parallel processes](https://stackoverflow.com/questions/17000821/shared-memory-for-parallel-processes)
+
+
 
 
 
