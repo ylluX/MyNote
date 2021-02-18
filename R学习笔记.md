@@ -16,6 +16,7 @@
    * [获得对象内存地址](#获得对象内存地址)
    * [多进程共享内存](#多进程共享内存)
 * [包](#包)
+   * [conda安装R及R包](#conda安装r及r包)
    * [stringr](#stringr)
    * [DNAcopy](#dnacopy)
 <!--te-->
@@ -226,6 +227,41 @@ address(a)
 ----
 
 # 包
+
+
+
+## conda安装R及R包
+
+
+
+```
+conda create -n envR  # 创建环境envR
+source activate envR  # 进入环境envR
+conda install r-base  # 安装R （需要指定版本的话：conda install r-base=3.3.1）
+conda install r-sringi # 安装R包-stringi (R包以“r-”开头)
+conda deactivate  # 退出环境
+```
+
+
+
+如果conda在当前channel中找不到包，可以使用anoconda进行搜索对应R包的channel；如果还是没有合适的，可以尝试运行R程序，使用install.package()或者BiocInstaller::biocLite("")直接安装该R包。
+
+```
+anaconda search -t conda r-ggplot2  #若无法找到可以使用该命令搜索对应R包,此处的anaconda是原始conda的路径，而非R3.5环境下的
+anaconda show BioBuilds/r-ggplot2   #显示该包的chanel
+conda install --channel https://conda.anaconda.org/BioBuilds r-ggplot2  #根据anaconda show进行安装
+
+# 或者通过R安装，先进入R
+install.packages(ggplot2)
+# 或：
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("deseq2")
+```
+
+
+
+
 
 ## stringr
 

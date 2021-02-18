@@ -23,6 +23,7 @@
    * [fastq/fasta downsample](#fastqfasta-downsample)
    * [截短reads](#截短reads)
    * [BAM文件排序异常](#bam文件排序异常)
+   * [基因组fasta文件中小写碱基代表什么](#基因组fasta文件中小写碱基代表什么)
 * [概念](#概念)
    * [专业名词](#专业名词)
    * [综合征](#综合征)
@@ -505,6 +506,10 @@ fastp -i test.fastq.gz -o test_1000.fastq.gz -j test_1000.fastq.json -A -G -Q -L
 这个问题纠结了两天，测试了不同BWA版本，重新构建了基因组的index，调整了BWA/samtools的参数,更换了不同样本，均没有发现问题所在。在快要放弃时，发现原来是**计算节点**的问题—— 在这个节点上，BWA比对全都异常(从chr10开始，没有read比对到chrM)，而其他节点均正常。深层次原因未知，目前只能避开异常节点。
 
 
+
+## 基因组fasta文件中小写碱基代表什么
+
+UCSC官方解释： Repeats from RepeatMasker and Tandem Repeats Finder are shown in lower case; non-repeating sequence is in upper case.
 
 
 

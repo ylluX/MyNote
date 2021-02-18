@@ -27,7 +27,7 @@
    * [假设检验的4中方法](#假设检验的4中方法)
    * [U检验(Z检验)](#u检验z检验)
    * [T检验](#t检验)
-   * [卡方检验](#卡方检验)
+   * [卡方检验与fisher's精确检验](#卡方检验与fishers精确检验)
    * [多变量逻辑回归分析](#多变量逻辑回归分析)
    * [参数检验和非参数检验](#参数检验和非参数检验)
 * [5. 回归](#5-回归)
@@ -848,7 +848,7 @@ Z检验公式中，用样本平均值代替了x，用标准误代替了标准差
 T统计量计算公式：
 
    ![](http://latex.codecogs.com/gif.latex?T=\\frac{\\bar{X}-\\mu_{0}}{S_{\\bar{X}}}=\\frac{\\bar{X}-\\mu_{0}}{s/\\sqrt{n}})
-   
+
    自由度df=n-1
 
 
@@ -860,23 +860,65 @@ T统计量计算公式：
 2. 如果要评断两组样本平均数之间的差异程度，其统计量T值的计算公式为：
 
    ![](http://latex.codecogs.com/gif.latex?T=\\frac{\\bar{X_{1}}-\\bar{X_{2}}}{\\sqrt{\\frac{\\sum&space;x_{1}^{2}+\\sum&space;x_{2}^{2}}{n_{1}+n_{2}-2}}\\times&space;\\frac{n_{1}+n_{2}}{n_{1}\\times&space;n_{2}}})
+   
+   
 
 
-## 卡方检验
+## 卡方检验与fisher's精确检验
 
 * [MBAlib智库百科](https://wiki.mbalib.com/wiki/%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C)
 * [Wikipedia](https://zh.wikipedia.org/wiki/%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C)
 * [Python 卡方检验](https://blog.csdn.net/kk185800961/article/details/79054968)
 * [几种常见的滥（乱）用卡方检验的情况](http://paper.dxy.cn/article/78383)
 * [三维卡方检验](http://www.dxy.cn/bbs/thread/28440824#28440824) [三维卡方检验](http://www.dxy.cn/bbs/topic/25248045)
-
 * [chi-square卡方检验的理解与应用](http://typename.net/statistics/chi-square/)
 * [Does your data violate goodness of fit (chi-square) test assumptions?](https://www.quality-control-plan.com/StatGuide/gf-dist_ass_viol.htm)
-
 * `scipy.stats.chi2_contingency`: 列联表中变量间的独立性卡方检验，如统计收入是否与性别有关。
 * `scipy.stats.chisquare`: 单变量卡方检验(适合度卡方检验，卡方适度检验) (零假设：分类数据有相同频率)。
 实际执行多项式试验而得到的观察次数，与虚无假设的期望次数相比较，称为卡方适度检验，即在于检验二者接近的程度，
 利用样本数据以检验总体分布是否为某一特定分布的统计方法。
+
+
+
+**[卡方检验概述-博客园](https://www.cnblogs.com/liyongzhao/articles/3369117.html) **对卡方检验的**计算过程**讲解的非常详细。
+
+**[卡方检验的运用](http://biostar.blog.sohu.com/138497634.html)** 对卡方检验的在**不同场景的应用**讲解的非常详细。
+
+**[Fisher 精确检验 与卡方检验](https://www.jianshu.com/p/f0e1b0100e59)** 对fisher精确检验的**计算过程**讲解的非常详细。
+
+
+
+**卡方检验的使用范围：**
+
+1. 所有的理论数T≥5并且总样本量n≥40,用Pearson卡方进行检验.
+
+2. 如果理论数T＜5但T≥1,并且n≥40,用连续性校正的卡方进行检验.
+
+3. 如果有理论数T＜1或n＜40,则用Fisher’s检验.
+
+
+
+[卡方检验之两两比较](https://cloud.tencent.com/developer/news/235499) 可以通过SPSS来了解两两比较的过程。【可以结合**[卡方检验的运用](http://biostar.blog.sohu.com/138497634.html)**中的4.1案例进行扩展联系】
+
+**[Chi-square (and post-hoc) tests in Python](https://neuhofmo.github.io/chi-square-and-post-hoc-in-python/)** 卡方检验和事后检验的python实现【非常棒！】
+
+
+
+fisher's exact test 在python中只能使用2x2表，还没有稳定成熟的包来实现RxC表，但在R中有，所以需要通过rpy2来调用R的stats.fisher.test函数
+
+[Fisher's exact test for bigger than 2 by 2 contingency table](https://stackoverflow.com/questions/25368284/fishers-exact-test-for-bigger-than-2-by-2-contingency-table)
+
+[Fisher's Exact Test in contingency tables larger than 2x2](https://stats.stackexchange.com/questions/1805/fishers-exact-test-in-contingency-tables-larger-than-2x2)
+
+
+
+
+
+
+
+
+
+
 
 
 ## 多变量逻辑回归分析
